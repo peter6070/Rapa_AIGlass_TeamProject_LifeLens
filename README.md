@@ -45,7 +45,13 @@ npm run build
 ```
 
 ### 서버 실행
-
+주소: http://localhost:5580/#
 ```powershell
-npm run server
+# matter-server
+$ cd matterjs-server-main
+
+$ npm run server -- --storage-path "$PWD\data-fresh" --primary-interface "Wi-Fi" --ble-proxy --log-level debug
+
+# BLE(새 터미널)
+$ matter-ble-proxy --server ws://localhost:5580/ble
 ```
