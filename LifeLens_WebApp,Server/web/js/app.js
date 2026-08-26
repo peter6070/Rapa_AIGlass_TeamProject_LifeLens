@@ -13,11 +13,18 @@ let lastTwoFingerTapAt = 0;
 let twoFingerTapStartedAt = 0;
 let isTwoFingerTap = false;
 window.scrollTo(0, 0);
-const genUuid = () => (crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-  const r = Math.random() * 16 | 0;
-  return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-}));
-let deviceId = query.get('device_id') || localStorage.getItem('kimchi-device-id') || genUuid();
+// crypto.randomUUID() is only exposed in secure contexts in some browsers.
+// The web app is also used via a LAN HTTP address, so keep a safe fallback.
+const createDeviceId = () => {
+  if (window.crypto?.randomUUID) return window.crypto.randomUUID();
+  if (window.crypto?.getRandomValues) {
+    const values = new Uint32Array(4);
+    window.crypto.getRandomValues(values);
+    return Array.from(values, (value) => value.toString(16)).join('-');
+  }
+  return `lifelens-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+};
+let deviceId = query.get('device_id') || localStorage.getItem('kimchi-device-id') || createDeviceId();
 localStorage.setItem('kimchi-device-id', deviceId);
 const sharedLifeLogId = (() => {
   try { return window.NativeBridge?.getSharedLifeLogId?.() || 'lifelens-shared'; }
