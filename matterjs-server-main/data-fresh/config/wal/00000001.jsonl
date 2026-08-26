@@ -148,3 +148,13 @@
 {"ts":1787720487838,"ops":[{"op":"upd","key":"values","values":{"wifiSsid":"rapa_2.4G"}}]}
 {"ts":1787720487838,"ops":[{"op":"upd","key":"values","values":{"wifiCredentials":"rapa1015"}}]}
 {"ts":1787720487839,"ops":[{"op":"upd","key":"values","values":{"threadDataset":"{\"__object__\":\"Undefined\"}"}}]}
+{"ts":1787720925965,"ops":[{"op":"upd","key":"values","values":{"fabricLabel":"HomeAssistant"}}]}
+{"ts":1787720925968,"ops":[{"op":"upd","key":"values","values":{"nextNodeId":20}}]}
+{"ts":1787720925969,"ops":[{"op":"upd","key":"values","values":{"wifiSsid":"rapa_2.4G"}}]}
+{"ts":1787720925969,"ops":[{"op":"upd","key":"values","values":{"wifiCredentials":"rapa1015"}}]}
+{"ts":1787720925970,"ops":[{"op":"upd","key":"values","values":{"threadDataset":"{\"__object__\":\"Undefined\"}"}}]}
+{"ts":1787721801536,"ops":[{"op":"upd","key":"values","values":{"fabricLabel":"HomeAssistant"}}]}
+{"ts":1787721801539,"ops":[{"op":"upd","key":"values","values":{"nextNodeId":20}}]}
+{"ts":1787721801540,"ops":[{"op":"upd","key":"values","values":{"wifiSsid":"rapa_2.4G"}}]}
+{"ts":1787721801541,"ops":[{"op":"upd","key":"values","values":{"wifiCredentials":"rapa1015"}}]}
+{"ts":1787721801541,"ops":[{"op":"upd","key":"values","values":{"threadDataset":"{\"__object__\":\"Undefined\"}"}}]}
