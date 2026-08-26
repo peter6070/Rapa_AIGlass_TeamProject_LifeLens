@@ -1,0 +1,61 @@
+{
+    "name": "@matter-server/ws-controller",
+    "version": "0.0.0-git",
+    "description": "matter.js based Matter controller library",
+    "homepage": "https://github.com/matter-js/matterjs-server",
+    "bugs": {
+        "url": "https://github.com/matter-js/matterjs-server/issues"
+    },
+    "author": "Apollon77",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/matter-js/matterjs-server.git"
+    },
+    "files": [
+        "dist/**/*",
+        "src/**/*",
+        "LICENSE",
+        "README.md"
+    ],
+    "type": "module",
+    "main": "dist/esm/index.js",
+    "exports": {
+        ".": {
+            "dev-types": {
+                "types": "./src/index.ts"
+            },
+            "import": {
+                "types": "./dist/esm/index.d.ts",
+                "default": "./dist/esm/index.js"
+            }
+        }
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "scripts": {
+        "clean": "nacho-build clean",
+        "build": "nacho-build",
+        "build-clean": "nacho-build --clean",
+        "test": "matter-test --force-exit"
+    },
+    "dependencies": {
+        "@matter-server/ws-client": "*",
+        "@matter/dcl-data": ">=2026.8.5",
+        "@matter/main": "0.17.9",
+        "@matter/thread-br-client": "0.17.9",
+        "@project-chip/matter.js": "0.17.9",
+        "ws": "^8.21.3"
+    },
+    "devDependencies": {
+        "@types/node": "^26.2.0",
+        "@types/ws": "^8.18.1"
+    },
+    "optionalDependencies": {
+        "@matter/nodejs-ble": "0.17.9",
+        "dbus-next": "npm:@jellybrick/dbus-next@^0.10.3"
+    },
+    "engines": {
+        "node": ">=22.13.0"
+    }
+}

@@ -1,0 +1,90 @@
+{
+    "name": "matterjs-server-monorepo",
+    "private": true,
+    "homepage": "https://github.com/matter-js/matterjs-server",
+    "bugs": {
+        "url": "https://github.com/matter-js/matterjs-server/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/matter-js/matterjs-server.git"
+    },
+    "workspaces": [
+        "packages/custom-clusters",
+        "packages/ws-controller",
+        "packages/ws-client",
+        "packages/dashboard",
+        "packages/ble-proxy",
+        "packages/matter-server"
+    ],
+    "type": "module",
+    "scripts": {
+        "prepare": "npm run build-clean",
+        "clean": "nacho-build clean",
+        "build-only": "nacho-build",
+        "build": "npm run build-only && npm run generate --workspaces --if-present && npm run build-only && npm run bundle --workspaces --if-present",
+        "version": "nacho-build version",
+        "build-clean": "npm run clean && npm run build",
+        "lint": "oxlint --type-aware",
+        "lint-fix": "oxlint --fix --type-aware",
+        "format": "oxfmt \"packages/**/*.ts\"",
+        "format-verify": "oxfmt --check \"packages/**/*.ts\"",
+        "test": "matter-test --force-exit",
+        "relock": "node ./utils/relock.js && npm install",
+        "sync-matterjs": "node ./utils/sync-matterjs.js",
+        "server": "node --enable-source-maps packages/matter-server/dist/esm/MatterServer.js",
+        "server:win-ble": "npm run server -- --storage-path data-fresh --primary-interface \"Wi-Fi\" --ble-proxy --log-level debug",
+        "noble-ble-proxy": "npm run noble-ble-proxy -w packages/ble-proxy",
+        "send-command": "node --enable-source-maps packages/ws-controller/dist/esm/example/send-command.js",
+        "python:install": "cd python_client && python3 -m venv .venv && .venv/bin/pip install -e '.[test]'",
+        "python:generate": "npx tsx python_client/scripts/generate-python-clusters.ts",
+        "python:test": "cd python_client && .venv/bin/pytest tests/ -v --ignore=tests/test_integration.py",
+        "python:test-integration": "cd python_client && .venv/bin/pytest tests/test_integration.py -v",
+        "python:lint": "cd python_client && .venv/bin/ruff check . --exclude chip",
+        "python:lint-fix": "cd python_client && .venv/bin/ruff check . --exclude chip --fix --unsafe-fixes",
+        "python:typecheck": "cd python_client && .venv/bin/mypy .",
+        "python:test-all": "cd python_client && .venv/bin/pytest tests/ -v",
+        "python:build": "cd python_client && .venv/bin/pip install build && .venv/bin/python -m build",
+        "python-ble-proxy:install": "cd python_ble_proxy && python3 -m venv .venv && .venv/bin/pip install -e '.[test]'",
+        "python-ble-proxy:test": "cd python_ble_proxy && .venv/bin/pytest tests/ -v",
+        "python-ble-proxy:lint": "cd python_ble_proxy && .venv/bin/ruff check .",
+        "python-ble-proxy:lint-fix": "cd python_ble_proxy && .venv/bin/ruff check . --fix --unsafe-fixes",
+        "python-ble-proxy:typecheck": "cd python_ble_proxy && .venv/bin/mypy .",
+        "python-ble-proxy:build": "cd python_ble_proxy && .venv/bin/pip install build && .venv/bin/python -m build",
+        "python-ble-proxy:run": "cd python_ble_proxy && { [ -x .venv/bin/matter-ble-proxy ] || (python3 -m venv .venv && .venv/bin/pip install -e .); } && .venv/bin/matter-ble-proxy"
+    },
+    "devDependencies": {
+        "@matter/testing": "0.17.9",
+        "@nacho-iot/js-tools": "^0.2.0",
+        "@types/mocha": "^10.0.10",
+        "glob": "^13.0.6",
+        "globals": "^17.9.0",
+        "oxfmt": "^0.62.0",
+        "oxlint": "^1.77.0",
+        "oxlint-tsgolint": "^7.0.2001",
+        "tsx": "^4.23.11",
+        "typescript": "~7.0.2"
+    },
+    "overrides": {
+        "mocha": {
+            "diff": "^9.0.0",
+            "serialize-javascript": "^7.0.5"
+        }
+    },
+    "allowScripts": {
+        "cpu-features@0.0.10": true,
+        "esbuild@0.28.1": true,
+        "protobufjs@7.6.5": true,
+        "ssh2@1.17.0": true,
+        "usb@2.18.0": true,
+        "@serialport/bindings-cpp@12.0.1": true,
+        "@stoprocent/bleno@0.13.1": true,
+        "@stoprocent/bluetooth-hci-socket@2.3.0": true,
+        "@stoprocent/noble@2.7.1": true,
+        "fsevents@2.3.2": true,
+        "fsevents@2.3.3": true
+    },
+    "dependencies": {
+        "build": "^0.1.4"
+    }
+}

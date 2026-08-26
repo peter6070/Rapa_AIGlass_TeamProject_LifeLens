@@ -1,0 +1,61 @@
+{
+    "name": "matter-server",
+    "version": "0.0.0-git",
+    "description": "WebSocket Matter server based on matter.js",
+    "homepage": "https://github.com/matter-js/matterjs-server",
+    "bugs": {
+        "url": "https://github.com/matter-js/matterjs-server/issues"
+    },
+    "author": "Open Home Foundation",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/matter-js/matterjs-server.git"
+    },
+    "files": [
+        "dist/**/*",
+        "src/**/*",
+        "LICENSE",
+        "README.md"
+    ],
+    "type": "module",
+    "main": "dist/esm/MatterServer.js",
+    "exports": {
+        ".": {
+            "dev-types": {
+                "types": "./src/MatterServer.ts"
+            },
+            "import": {
+                "types": "./dist/esm/MatterServer.d.ts",
+                "default": "./dist/esm/MatterServer.js"
+            }
+        }
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "scripts": {
+        "clean": "nacho-build clean",
+        "build": "nacho-build",
+        "build-clean": "nacho-build --clean",
+        "server": "node --enable-source-maps dist/esm/MatterServer.js"
+    },
+    "dependencies": {
+        "@matter-server/ble-proxy": "*",
+        "@matter-server/custom-clusters": "*",
+        "@matter-server/dashboard": "*",
+        "@matter-server/ws-controller": "*",
+        "@matter/main": "0.17.9",
+        "commander": "^15.0.0",
+        "express": "^5.2.1"
+    },
+    "devDependencies": {
+        "@matter-server/ws-client": "*",
+        "@matter/nodejs": "0.17.9",
+        "@matter/testing": "0.17.9",
+        "@types/express": "^5.0.6",
+        "@types/node": "^26.2.0"
+    },
+    "engines": {
+        "node": ">=22.13.0"
+    }
+}

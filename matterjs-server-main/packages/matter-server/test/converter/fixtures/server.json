@@ -1,0 +1,57 @@
+{
+  "vendor_info": {
+    "4939": {
+      "vendor_id": 4939,
+      "vendor_name": "Test Vendor",
+      "company_legal_name": "Test Company LLC",
+      "company_preferred_name": "TestCo",
+      "vendor_landing_page_url": "https://example.com",
+      "creator": "test-fixture"
+    }
+  },
+  "last_node_id": 7,
+  "nodes": {
+    "4": {
+      "node_id": 4,
+      "date_commissioned": "2024-01-15T10:30:00.000000",
+      "last_interview": "2024-06-20T14:45:00.000000",
+      "interview_version": 6,
+      "available": true,
+      "is_bridge": false,
+      "attributes": {
+        "0/40/0": 1,
+        "0/40/1": "Test Device",
+        "0/40/2": 4939,
+        "0/40/3": "TestProduct",
+        "0/40/4": 12345
+      },
+      "attribute_subscriptions": []
+    },
+    "5": {
+      "node_id": 5,
+      "date_commissioned": "2024-02-20T08:15:00.000000",
+      "last_interview": "2024-06-21T09:30:00.000000",
+      "interview_version": 6,
+      "available": true,
+      "is_bridge": true,
+      "attributes": {
+        "0/40/0": 1,
+        "0/40/1": "Test Bridge",
+        "0/40/2": 4939,
+        "0/40/3": "TestBridge",
+        "0/40/4": 67890
+      },
+      "attribute_subscriptions": []
+    },
+    "23": {
+      "node_id": 23,
+      "date_commissioned": "2024-03-10T16:00:00.000000",
+      "last_interview": "2024-06-19T11:00:00.000000",
+      "interview_version": 5,
+      "available": false,
+      "is_bridge": false,
+      "attributes": {},
+      "attribute_subscriptions": []
+    }
+  }
+}

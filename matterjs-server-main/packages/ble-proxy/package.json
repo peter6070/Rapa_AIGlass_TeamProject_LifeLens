@@ -1,0 +1,47 @@
+{
+    "name": "@matter-server/ble-proxy",
+    "version": "0.0.0-git",
+    "description": "BLE proxy implementation for matter.js - proxies BLE operations over WebSocket",
+    "homepage": "https://github.com/matter-js/matterjs-server",
+    "bugs": {
+        "url": "https://github.com/matter-js/matterjs-server/issues"
+    },
+    "author": "Open Home Foundation",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/matter-js/matterjs-server.git"
+    },
+    "files": [
+        "dist/**/*",
+        "src/**/*",
+        "LICENSE",
+        "README.md"
+    ],
+    "type": "module",
+    "main": "dist/esm/index.js",
+    "publishConfig": {
+        "access": "public"
+    },
+    "scripts": {
+        "clean": "nacho-build clean",
+        "build": "nacho-build",
+        "build-clean": "nacho-build --clean",
+        "noble-ble-proxy": "nacho-run src/example/noble-ble-proxy.ts"
+    },
+    "dependencies": {
+        "@matter-server/ws-controller": "*",
+        "@matter/main": "0.17.9",
+        "ws": "^8.21.3"
+    },
+    "devDependencies": {
+        "@types/node": "^26.2.0",
+        "@types/ws": "^8.18.1"
+    },
+    "optionalDependencies": {
+        "@matter/nodejs-ble": "0.17.9",
+        "dbus-next": "npm:@jellybrick/dbus-next@^0.10.3"
+    },
+    "engines": {
+        "node": ">=22.13.0"
+    }
+}

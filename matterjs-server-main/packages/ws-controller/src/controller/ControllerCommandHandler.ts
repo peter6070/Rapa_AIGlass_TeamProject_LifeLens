@@ -1,0 +1,1826 @@
+/**
+ * @license
+ * Copyright 2025-2026 Open Home Foundation
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import type { WebRtcCallbackData } from "@matter-server/ws-client";
+import {
+    Abort,
+    AsyncObservable,
+    camelize,
+    ClientNode,
+    CommissioningClient,
+    FabricId,
+    FabricIndex,
+    IcdClient,
+    IcdMultiAdminError,
+    isObject,
+    Logger,
+    MatterAggregateError,
+    Millis,
+    Minutes,
+    NodeId,
+    Observable,
+    ObserverGroup,
+    Seconds,
+    ServerAddress,
+    SoftwareUpdateInfo,
+    SoftwareUpdateManager,
+    Time,
+    Timer,
+    DnsRecordType,
+    NetworkClient,
+} from "@matter/main";
+import { IcdManagementClient, OperationalCredentialsClient } from "@matter/main/behaviors";
+import {
+    AccessControl,
+    BasicInformation,
+    Binding,
+    BridgedDeviceBasicInformation,
+    GeneralCommissioning,
+    IcdManagement,
+    OperationalCredentials,
+    TimeSynchronization,
+} from "@matter/main/clusters";
+import { WebRtcTransportDefinitions } from "@matter/main/clusters/web-rtc-transport-definitions";
+import { WebRtcTransportProvider } from "@matter/main/clusters/web-rtc-transport-provider";
+import { ClusterRevision } from "@matter/main/model";
+import { DeviceAttestationCheck, Invoke, PeerAddress, Read, Specifier, PeerSet } from "@matter/main/protocol";
+import {
+    AttributeId,
+    ClusterId,
+    ClusterType,
+    DeviceTypeId,
+    EndpointNumber,
+    GroupId,
+    ManualPairingCodeCodec,
+    QrPairingCodeCodec,
+    SpecificationVersion,
+    Status,
+    StatusResponseError,
+    VendorId,
+} from "@matter/main/types";
+import { Endpoint } from "@matter/node";
+import { WebRtcTransportRequestorServer } from "@matter/node/behaviors/web-rtc-transport-requestor";
+import { CameraControllerDevice } from "@matter/node/devices/camera-controller";
+import { CommissioningController, NodeCommissioningOptions } from "@project-chip/matter.js";
+import type { DecodedAttributeReportValue, DecodedEventReportValue } from "@project-chip/matter.js/cluster";
+import { NodeStates, PairedNode } from "@project-chip/matter.js/device";
+import { ClusterMap, ClusterMapEntry, GlobalAttributes } from "../model/ModelMapper.js";
+import {
+    buildAttributePath,
+    convertCommandDataToMatter,
+    convertMatterToWebSocketTagBased,
+    convertWebSocketTagBasedToMatter,
+    getDateAsString,
+    splitAttributePath,
+    toBigIntAwareJson,
+} from "../server/Converters.js";
+import {
+    AttributeResponseStatus,
+    AttributesData,
+    CommissioningRequest,
+    CommissioningResponse,
+    DiscoveryRequest,
+    DiscoveryResponse,
+    InvokeRequest,
+    MatterNodeData,
+    OpenCommissioningWindowRequest,
+    OpenCommissioningWindowResponse,
+    WriteAttributeRequest,
+} from "../types/CommandHandler.js";
+import {
+    AccessControlEntry,
+    AccessControlTarget,
+    AttributeWriteResult,
+    BindingTarget,
+    IcdStateData,
+    MatterSoftwareVersion,
+    NodePingResult,
+    ServerError,
+    UpdateSource,
+} from "../types/WebSocketMessageTypes.js";
+import { formatNodeId } from "../util/formatNodeId.js";
+import { pingIp } from "../util/network.js";
+import { CustomClusterPoller } from "./CustomClusterPoller.js";
+import { NodeAttributeReader } from "./NodeProcessor.js";
+import { Nodes } from "./Nodes.js";
+import { ThreadDetailsPoller } from "./ThreadDetailsPoller.js";
+import { pushNodeTime, TimeSyncInvokers } from "./timeSyncCommands.js";
+import { SyncTrigger, TIME_FAILURE_EVENT_ID, TIME_SYNC_CLUSTER_ID, TimeSyncManager } from "./TimeSyncManager.js";
+import { attachWebRtcCallbackBridge } from "./WebRtcCallbackBridge.js";
+import {
+    isTrackableWebRtcSession,
+    resolveWebRtcSessionStreams,
+    selectWebRtcStreamFields,
+} from "./webRtcSessionStreams.js";
+
+const logger = Logger.get("ControllerCommandHandler");
+
+/** Grace period after leaving Connected before a node is declared unavailable. */
+const RECONNECT_TIMEOUT = Minutes(3);
+
+/**
+ * Determine the Matter specification version from cached attributes.
+ * Uses SpecificationVersion attribute (0/40/21) if available, otherwise
+ * estimates from DataModelRevision attribute (0/40/0).
+ *
+ * @param attributes Cached attributes for the node
+ * @returns Matter version string (e.g., "1.2.0", "1.3.0") or undefined if unknown
+ */
+function determineMatterVersion(attributes: AttributesData): string | undefined {
+    // BasicInformation cluster is 0x28 (40 decimal)
+    // SpecificationVersion is attribute 0x15 (21 decimal) = path "0/40/21"
+    // DataModelRevision is attribute 0x0 (0 decimal) = path "0/40/0"
+    const specificationVersion = attributes["0/40/21"];
+    const dataModelRevision = attributes["0/40/0"];
+
+    if (typeof specificationVersion === "number" && specificationVersion > 0) {
+        const { major, minor, patch } = SpecificationVersion.decode(specificationVersion);
+        return `${major}.${minor}.${patch}`;
+    }
+
+    // Fall back to estimating from DataModelRevision
+    if (typeof dataModelRevision === "number") {
+        if (dataModelRevision <= 16) {
+            return "<1.2.0";
+        } else if (dataModelRevision === 17) {
+            return "1.2.0";
+        }
+    }
+
+    return undefined;
+}
+
+export class ControllerCommandHandler {
+    #controller: CommissioningController;
+    #started = false;
+    #connected = false;
+    readonly #bleEnabled: boolean;
+    readonly #bleProxyEnabled: boolean;
+    readonly #otaEnabled: boolean;
+    /** Node management and attribute cache */
+    #nodes = new Nodes();
+    /** Cache of available updates keyed by nodeId */
+    #availableUpdates = new Map<NodeId, SoftwareUpdateInfo>();
+    /** Poller for custom cluster attributes (Eve energy, etc.) */
+    #customClusterPoller: CustomClusterPoller;
+    /** Manages time synchronization for nodes with the TimeSynchronization cluster */
+    #timeSyncManager?: TimeSyncManager;
+    #threadDetailsPoller?: ThreadDetailsPoller;
+    /** Per-node ObserverGroups for cleanup on decommission */
+    #nodeObservers = new Map<NodeId, ObserverGroup>();
+    /** Per-node timers that fire when Reconnecting state exceeds the timeout */
+    #reconnectTimers = new Map<NodeId, Timer>();
+    /** Per-node timers that coalesce basic-info changes into a single delayed node_updated refresh. */
+    #nodeUpdateTimers = new Map<NodeId, Timer>();
+    /**
+     * Nodes whose basic information changed within the current subscription batch. A full node_updated
+     * is deferred until the batch ends (connectionAlive) so consumers see one update per batch.
+     */
+    #basicInfoChangedInBatch = new Set<NodeId>();
+    /** Nodes with a lazy getNodeDetails populate in flight, so concurrent reads emit node_updated once. */
+    #pendingLazyPopulate = new Set<NodeId>();
+    /** Track in-flight invoke-commands for deduplication across all WebSocket connections */
+    readonly #inFlightInvokes = new Map<string, Promise<unknown>>();
+    events = {
+        started: new AsyncObservable(),
+        attributeChanged: new Observable<[nodeId: NodeId, data: DecodedAttributeReportValue<any>]>(),
+        eventChanged: new Observable<[nodeId: NodeId, data: DecodedEventReportValue<any>]>(),
+        nodeAdded: new Observable<[nodeId: NodeId]>(),
+        nodeStateChanged: new Observable<[nodeId: NodeId, state: NodeStates]>(),
+        /** Emitted when node availability changes (for sending node_updated events) */
+        nodeAvailabilityChanged: new Observable<[nodeId: NodeId, available: boolean]>(),
+        nodeStructureChanged: new Observable<[nodeId: NodeId]>(),
+        nodeDecommissioned: new Observable<[nodeId: NodeId]>(),
+        nodeEndpointAdded: new Observable<[nodeId: NodeId, endpointId: EndpointNumber]>(),
+        nodeEndpointRemoved: new Observable<[nodeId: NodeId, endpointId: EndpointNumber]>(),
+        webRtcCallback: new Observable<[WebRtcCallbackData]>(),
+    };
+    #peers?: PeerSet;
+
+    constructor(
+        controllerInstance: CommissioningController,
+        bleEnabled: boolean,
+        bleProxyEnabled: boolean,
+        otaEnabled: boolean,
+        timeSyncEnabled = false,
+        threadDiagnosticsEnabled = false,
+    ) {
+        this.#controller = controllerInstance;
+
+        this.#bleEnabled = bleEnabled;
+        this.#bleProxyEnabled = bleProxyEnabled;
+        logger.info(`BLE is ${bleEnabled ? "enabled" : "disabled"}${bleProxyEnabled ? " (proxy mode)" : ""}`);
+        this.#otaEnabled = otaEnabled;
+
+        const attributeReader: NodeAttributeReader = {
+            nodeConnected: peer => !!(this.#nodes.has(peer.nodeId) && this.#nodes.get(peer.nodeId).isConnected),
+            handleReadAttributes: (peer, paths, fabricFiltered) =>
+                this.handleReadAttributes(peer.nodeId, paths, fabricFiltered),
+        };
+
+        // Initialize custom cluster poller for Eve energy attributes etc.
+        // Reads automatically trigger change events through the normal attribute flow
+        this.#customClusterPoller = new CustomClusterPoller(attributeReader);
+
+        if (threadDiagnosticsEnabled) {
+            this.#threadDetailsPoller = new ThreadDetailsPoller(attributeReader);
+        }
+
+        if (timeSyncEnabled) {
+            logger.info("Time synchronization enabled");
+            this.#timeSyncManager = new TimeSyncManager({
+                syncTime: peer => this.#syncNodeTime(peer.nodeId),
+                nodeConnected: peer => !!(this.#nodes.has(peer.nodeId) && this.#nodes.get(peer.nodeId).isConnected),
+                commissionedNodeCount: () => this.#controller.getCommissionedNodes().length,
+            });
+        }
+    }
+
+    /**
+     * Build the canonical PeerAddress for the given node on this controller's fabric.
+     *
+     * Throws if the controller's fabric is not yet resolved. Callers must run after
+     * controller start; a silent fallback would intern PeerAddressMap entries under the
+     * wrong fabric index and leak poller registrations.
+     */
+    #peerOf(nodeId: NodeId): PeerAddress {
+        const fabric = this.#controller.fabric;
+        if (fabric === undefined) {
+            throw new Error(`Cannot resolve PeerAddress for node ${nodeId}: controller fabric is not initialized`);
+        }
+        return PeerAddress({ fabricIndex: fabric.fabricIndex, nodeId });
+    }
+
+    /**
+     * Format a NodeId as a PeerAddress string for logging.
+     * Uses the controller's fabric index when available, otherwise "?" is used.
+     */
+    formatNode(nodeId: NodeId): string {
+        const fabricIndex = this.#controller.fabric?.fabricIndex;
+        return formatNodeId(nodeId, fabricIndex);
+    }
+
+    get started() {
+        return this.#started;
+    }
+
+    get bleEnabled() {
+        return this.#bleEnabled;
+    }
+
+    get bleProxyEnabled() {
+        return this.#bleProxyEnabled;
+    }
+
+    async start() {
+        if (this.#started) {
+            return;
+        }
+        this.#started = true;
+
+        await this.#controller.start();
+        logger.notice(`Matter Controller started`);
+        this.#peers = this.#controller.node.env.get(PeerSet);
+
+        if (this.#otaEnabled) {
+            // Subscribe to OTA provider events to track available updates
+            await this.#setupOtaEventHandlers();
+        }
+
+        await this.events.started.emit();
+        await this.#setupWebRtcCallbackBridge();
+    }
+
+    /**
+     * Set up event handlers for OTA update notifications from the SoftwareUpdateManager.
+     */
+    async #setupOtaEventHandlers() {
+        if (!this.#otaEnabled) {
+            return;
+        }
+        try {
+            const otaProvider = this.#controller.otaProvider;
+            if (!otaProvider) {
+                logger.info("OTA provider not available");
+                return;
+            }
+
+            // Access the SoftwareUpdateManager behavior events dynamically
+            // Using 'any' because SoftwareUpdateManager is not directly exported from @matter/node
+            const softwareUpdateManagerEvents = await otaProvider.act(agent => agent.get(SoftwareUpdateManager).events);
+            if (softwareUpdateManagerEvents === undefined) {
+                logger.info("SoftwareUpdateManager not available");
+                return;
+            }
+
+            // Handle updateAvailable events - cache the update info
+            softwareUpdateManagerEvents.updateAvailable.on(
+                (peerAddress: PeerAddress, updateDetails: SoftwareUpdateInfo) => {
+                    logger.notice(`Update available for node ${this.formatNode(peerAddress.nodeId)}:`, updateDetails);
+                    this.#availableUpdates.set(peerAddress.nodeId, updateDetails);
+                },
+            );
+
+            // Handle updateDone events - clear the cached update info
+            softwareUpdateManagerEvents.updateDone.on((peerAddress: PeerAddress) => {
+                logger.notice(`Update done for node ${this.formatNode(peerAddress.nodeId)}`);
+                this.#availableUpdates.delete(peerAddress.nodeId);
+            });
+
+            logger.info("OTA event handlers registered");
+        } catch (error) {
+            logger.warn("Failed to setup OTA event handlers:", error);
+        }
+    }
+
+    async #setupWebRtcCallbackBridge() {
+        try {
+            await this.#cameraControllerEndpoint().act(agent => {
+                attachWebRtcCallbackBridge(agent.get(WebRtcTransportRequestorServer).events, data =>
+                    this.events.webRtcCallback.emit(data),
+                );
+            });
+            logger.info("WebRTC callback bridge wired");
+        } catch (error) {
+            logger.warn("Failed to setup WebRTC callback bridge:", error);
+        }
+    }
+
+    #cameraControllerEndpoint(): Endpoint<typeof CameraControllerDevice> {
+        return this.#controller.node.endpoints.for("camera-controller") as Endpoint<typeof CameraControllerDevice>;
+    }
+
+    /** `originatingEndpointId` is server-injected; any client-supplied value in `payload` is overwritten. */
+    async sendWebRtcProviderCommand(args: {
+        nodeId: NodeId;
+        endpointId: EndpointNumber;
+        commandName: "ProvideOffer" | "SolicitOffer";
+        payload: Record<string, unknown>;
+    }): Promise<WebRtcTransportProvider.ProvideOfferResponse | WebRtcTransportProvider.SolicitOfferResponse> {
+        const { nodeId, endpointId, commandName, payload } = args;
+
+        if (commandName !== "ProvideOffer" && commandName !== "SolicitOffer") {
+            throw ServerError.invalidArguments(
+                `Unsupported WebRTC provider command "${commandName}"; expected ProvideOffer or SolicitOffer`,
+            );
+        }
+
+        const requestorEndpoint = this.#cameraControllerEndpoint();
+        const originatingEndpointId = EndpointNumber(requestorEndpoint.number);
+        const fabricIndex = this.#controller.fabric.fabricIndex;
+
+        const node = this.#nodes.get(nodeId);
+
+        const command = commandName === "ProvideOffer" ? "provideOffer" : "solicitOffer";
+
+        // `payload` arrives using the Python Matter Server wire convention (e.g. `webRtcSessionID`,
+        // see python_client/chip/clusters/cluster_defs), which does not match matter.js's own
+        // camelCase property names (e.g. `webRtcSessionId`). Route it through the same model-based
+        // conversion used for regular invokes so field names and value types (nullables, bytes,
+        // epochs, ...) line up with what matter.js expects.
+        const providerClusterEntry = ClusterMap[WebRtcTransportProvider.id];
+        const commandModel = providerClusterEntry?.commands[command.toLowerCase()];
+        const convertedPayload =
+            providerClusterEntry !== undefined && commandModel !== undefined
+                ? (convertCommandDataToMatter(payload, commandModel, providerClusterEntry.model) as Record<
+                      string,
+                      unknown
+                  >)
+                : payload;
+
+        const fields: Record<string, unknown> = {
+            ...convertedPayload,
+            originatingEndpointId,
+        };
+
+        const clusterRevision =
+            this.#nodes.attributeCache.get(nodeId)?.[
+                `${endpointId}/${WebRtcTransportProvider.id}/${ClusterRevision.id}`
+            ];
+        selectWebRtcStreamFields(fields, clusterRevision);
+
+        const response = (await this.#invokeCommand(node.node, {
+            endpoint: endpointId,
+            cluster: WebRtcTransportProvider,
+            command,
+            fields,
+        })) as WebRtcTransportProvider.ProvideOfferResponse | WebRtcTransportProvider.SolicitOfferResponse | undefined;
+
+        if (response === undefined || typeof response.webRtcSessionId !== "number") {
+            throw ServerError.sdkStackError(
+                `${commandName} did not return a WebRTCSessionID for node ${this.formatNode(nodeId)}`,
+            );
+        }
+
+        const streamUsage = convertedPayload.streamUsage;
+        const metadataEnabled = convertedPayload.metadataEnabled === true;
+
+        const videoStreams = resolveWebRtcSessionStreams(
+            fields.videoStreams,
+            fields.videoStreamId,
+            response.videoStreamId,
+        );
+        const audioStreams = resolveWebRtcSessionStreams(
+            fields.audioStreams,
+            fields.audioStreamId,
+            response.audioStreamId,
+        );
+
+        // An untrackable session (no stream usage, or no stream — e.g. an auto-select/deferred
+        // SolicitOffer whose provider reports no stream id yet) cannot be stored in the requestor's
+        // CurrentSessions, so we could never route the peer's follow-up signaling for it. Rather than
+        // return a session id that will silently never deliver media, tear the just-created device
+        // session down and fail the command. Deferred/auto-select is thus unsupported for now; the
+        // dashboard never hits this (it always requests a concrete stream usage + id).
+        if (!isTrackableWebRtcSession(streamUsage, videoStreams, audioStreams)) {
+            logger.warn(
+                `Tearing down untrackable WebRTC session id=${response.webRtcSessionId} for node ${this.formatNode(
+                    nodeId,
+                )}: request lacks a stream usage or any video/audio stream, so signaling cannot be routed for it`,
+            );
+            try {
+                await this.#invokeCommand(node.node, {
+                    endpoint: endpointId,
+                    cluster: WebRtcTransportProvider,
+                    command: "endSession",
+                    fields: {
+                        webRtcSessionId: response.webRtcSessionId,
+                        reason: WebRtcTransportDefinitions.WebRtcEndReason.OutOfResources,
+                    },
+                });
+            } catch (err) {
+                logger.warn(
+                    `EndSession cleanup for untrackable WebRTC session id=${response.webRtcSessionId} failed: ${
+                        err instanceof Error ? err.message : String(err)
+                    }`,
+                );
+            }
+            throw ServerError.sdkStackError(
+                `${commandName} for node ${this.formatNode(nodeId)} produced a session with no stream usage or ` +
+                    `video/audio stream; deferred/auto-select streaming is not supported`,
+            );
+        }
+
+        const session: WebRtcTransportDefinitions.WebRtcSession = {
+            id: response.webRtcSessionId,
+            peerNodeId: nodeId,
+            peerEndpointId: endpointId,
+            streamUsage: streamUsage as WebRtcTransportDefinitions.WebRtcSession["streamUsage"],
+            metadataEnabled,
+            videoStreams,
+            audioStreams,
+            fabricIndex,
+        };
+
+        logger.info(
+            `upserting WebRTC session id=${session.id} peerNodeId=${nodeId} peerEndpointId=${endpointId} fabricIndex=${fabricIndex} streamUsage=${streamUsage} originatingEndpointId=${originatingEndpointId}`,
+        );
+        await requestorEndpoint.act(agent => {
+            agent.get(WebRtcTransportRequestorServer).upsertSession(session);
+        });
+
+        return response;
+    }
+
+    /**
+     * Drop a WebRTC session from the local requestor's CurrentSessions tracking. Call when the session
+     * is ended locally (e.g. the client invokes EndSession on the provider); peer-initiated ends are
+     * already removed by the requestor's own End handler. No-op if the id is not tracked.
+     */
+    async removeTrackedWebRtcSession(webRtcSessionId: number): Promise<void> {
+        await this.#cameraControllerEndpoint().act(agent => {
+            agent.get(WebRtcTransportRequestorServer).removeSession(webRtcSessionId);
+        });
+    }
+
+    /**
+     * Push UTC time (and, for TimeZone-feature nodes, time zone + DST) to a node's
+     * TimeSynchronization cluster.
+     */
+    async #syncNodeTime(nodeId: NodeId): Promise<void> {
+        const node = this.#nodes.get(nodeId).node;
+        const attributes = this.#nodes.attributeCache.get(nodeId) ?? {};
+        const invokers: TimeSyncInvokers = {
+            setUtcTime: async fields => {
+                await this.#invokeCommand(node, {
+                    endpoint: EndpointNumber(0),
+                    cluster: TimeSynchronization.Cluster,
+                    command: "setUtcTime",
+                    fields,
+                });
+            },
+            setTimeZone: async fields =>
+                (await this.#invokeCommand(node, {
+                    endpoint: EndpointNumber(0),
+                    cluster: TimeSynchronization.Cluster,
+                    command: "setTimeZone",
+                    fields,
+                })) as TimeSynchronization.SetTimeZoneResponse | undefined,
+            setDstOffset: async fields => {
+                await this.#invokeCommand(node, {
+                    endpoint: EndpointNumber(0),
+                    cluster: TimeSynchronization.Cluster,
+                    command: "setDstOffset",
+                    fields,
+                });
+            },
+        };
+        await pushNodeTime({ invokers, attributes, nowMs: Time.nowMs });
+    }
+
+    async close() {
+        for (const timer of this.#reconnectTimers.values()) {
+            timer.stop();
+        }
+        this.#reconnectTimers.clear();
+        for (const timer of this.#nodeUpdateTimers.values()) {
+            timer.stop();
+        }
+        this.#nodeUpdateTimers.clear();
+        // Observers first: a state change reaching #handleNodeStateChange re-registers the node with
+        // every processor, so stopping them first leaves the processors re-populated.
+        for (const observers of this.#nodeObservers.values()) {
+            observers.close();
+        }
+        this.#nodeObservers.clear();
+        // Each stop() awaits an in-flight read against a possibly unresponsive node; serially they
+        // stack their timeouts, and a throw from one would skip the rest of the shutdown.
+        const stopped = await Promise.allSettled([
+            this.#customClusterPoller.stop(),
+            this.#threadDetailsPoller?.stop(),
+            this.#timeSyncManager?.stop(),
+        ]);
+        for (const result of stopped) {
+            if (result.status === "rejected") {
+                logger.warn("Stopping a node processor failed:", result.reason);
+            }
+        }
+        if (!this.#started) {
+            return;
+        }
+        return this.#controller.close();
+    }
+
+    async #registerNode(nodeId: NodeId) {
+        const node = await this.#controller.getNode(nodeId);
+        const attributeCache = this.#nodes.attributeCache;
+
+        // Per-node ObserverGroup so all subscriptions are cleaned up on decommission
+        const nodeObservers = new ObserverGroup();
+        this.#nodeObservers.set(nodeId, nodeObservers);
+
+        nodeObservers.on(node.events.attributeChanged, data => {
+            attributeCache.updateAttribute(nodeId, data);
+            this.events.attributeChanged.emit(nodeId, data);
+            if (
+                (data.path.clusterId === BasicInformation.id ||
+                    data.path.clusterId === BridgedDeviceBasicInformation.id) &&
+                data.path.attributeId !== BasicInformation.attributes.nodeLabel.id
+            ) {
+                this.#basicInfoChangedInBatch.add(nodeId);
+            }
+        });
+        nodeObservers.on(node.events.connectionAlive, () => {
+            if (this.#basicInfoChangedInBatch.delete(nodeId) && !this.#nodeUpdateTimers.has(nodeId)) {
+                logger.info(
+                    `Node ${this.formatNode(nodeId)} basic information changed, sending full node_updated in 6s`,
+                );
+                // TODO remove timer based refresh when migrating to the ClientNode API for events
+                const timer = Time.getTimer(`node-update-${nodeId}`, Seconds(6), () =>
+                    this.#handleNodeStructureChange(node).catch(error =>
+                        logger.warn(`Failed to handle structure change for node ${this.formatNode(nodeId)}:`, error),
+                    ),
+                ).start();
+                this.#nodeUpdateTimers.set(nodeId, timer);
+            }
+        });
+        nodeObservers.on(node.events.eventTriggered, data => {
+            this.events.eventChanged.emit(nodeId, data);
+            // Filter timeFailure events to trigger time sync
+            if (
+                this.#timeSyncManager !== undefined &&
+                data.path.clusterId === TIME_SYNC_CLUSTER_ID &&
+                data.path.eventId === TIME_FAILURE_EVENT_ID
+            ) {
+                logger.debug(`Received timeFailure event from node ${this.formatNode(nodeId)}`);
+                this.#timeSyncManager.syncNode(this.#peerOf(nodeId), SyncTrigger.TimeFailure);
+            }
+        });
+        nodeObservers.on(node.events.stateChanged, state => {
+            this.#handleNodeStateChange(node, state).catch(error =>
+                logger.warn(`Failed to handle state change for node ${this.formatNode(nodeId)}:`, error),
+            );
+        });
+        nodeObservers.on(node.events.structureChanged, () => {
+            this.#handleNodeStructureChange(node).catch(error =>
+                logger.warn(`Failed to handle structure change for node ${this.formatNode(nodeId)}:`, error),
+            );
+        });
+        nodeObservers.on(node.events.decommissioned, () => {
+            this.#cleanupNodeAfterRemoval(nodeId);
+            this.events.nodeDecommissioned.emit(nodeId);
+        });
+        nodeObservers.on(node.events.nodeEndpointAdded, endpointId =>
+            this.#nodes.queueEndpointAdded(nodeId, endpointId),
+        );
+        nodeObservers.on(node.events.nodeEndpointRemoved, endpointId =>
+            this.events.nodeEndpointRemoved.emit(nodeId, endpointId),
+        );
+
+        this.#nodes.set(nodeId, node);
+
+        this.#nodes.seedState(nodeId, node.connectionState);
+
+        if (node.initialized) {
+            await attributeCache.add(node);
+            const attributes = attributeCache.get(nodeId);
+            if (attributes) {
+                const peer = this.#peerOf(nodeId);
+                this.#customClusterPoller.registerNode(peer, attributes);
+                this.#threadDetailsPoller?.registerNode(peer, attributes);
+                this.#timeSyncManager?.registerNode(peer, attributes);
+            }
+        }
+
+        return node;
+    }
+
+    async #handleNodeStateChange(node: PairedNode, state: NodeStates): Promise<void> {
+        const nodeId = node.nodeId;
+
+        // Arm on Connected->Reconnecting only; keep running across later
+        // non-Connected states; cancel on return to Connected.
+        let fastReconnect = false;
+        if (state === NodeStates.Connected) {
+            // A still-armed reconnect timer means we returned to Connected within the grace period.
+            // Treat it as a blip and skip the rebuild, relying on attributeChanged/structureChanged to
+            // repair any deltas — a perf tradeoff that assumes resubscription re-reports what changed.
+            const reconnectTimer = this.#reconnectTimers.get(nodeId);
+            fastReconnect = reconnectTimer !== undefined;
+            reconnectTimer?.stop();
+            this.#reconnectTimers.delete(nodeId);
+        } else if (
+            state === NodeStates.Reconnecting &&
+            !this.#reconnectTimers.has(nodeId) &&
+            this.#nodes.isAvailable(nodeId)
+        ) {
+            const timer = Time.getTimer(`reconnect-timeout-${nodeId}`, RECONNECT_TIMEOUT, () => {
+                this.#reconnectTimers.delete(nodeId);
+                if (this.#nodes.forceUnavailable(nodeId)) {
+                    logger.warn(`Node ${this.formatNode(nodeId)} offline grace period expired, marking unavailable`);
+                    this.events.nodeAvailabilityChanged.emit(nodeId, false);
+                }
+            });
+            timer.utility = true;
+            timer.start();
+            this.#reconnectTimers.set(nodeId, timer);
+        }
+
+        const debouncePending = this.#reconnectTimers.has(nodeId);
+        const result = this.#nodes.processStateChange(nodeId, state, debouncePending);
+
+        this.events.nodeStateChanged.emit(nodeId, state);
+
+        if (result.availabilityChanged) {
+            const availabilityMessage = `Node ${this.formatNode(nodeId)} availability changed to ${result.available} (state: ${NodeStates[state]})`;
+            if (result.available) {
+                logger.notice(availabilityMessage);
+            } else {
+                logger.warn(availabilityMessage);
+            }
+            this.events.nodeAvailabilityChanged.emit(nodeId, result.available);
+        }
+
+        // Populate last so the state/availability emits above are not delayed behind a multi-second
+        // rebuild. Skip the rebuild on a fast reconnect (data unchanged, repaired via its own events);
+        // still rebuild if the cache is missing.
+        if (state === NodeStates.Connected) {
+            if (!fastReconnect || !this.#nodes.attributeCache.has(nodeId)) {
+                await this.#nodes.attributeCache.update(node);
+            }
+            const attributes = this.#nodes.attributeCache.get(nodeId);
+            if (attributes) {
+                const peer = this.#peerOf(nodeId);
+                this.#customClusterPoller.registerNode(peer, attributes);
+                this.#threadDetailsPoller?.registerNode(peer, attributes);
+                this.#timeSyncManager?.registerNode(peer, attributes);
+            }
+        }
+    }
+
+    async #handleNodeStructureChange(node: PairedNode): Promise<void> {
+        const nodeId = node.nodeId;
+        this.#basicInfoChangedInBatch.delete(nodeId);
+
+        this.#nodeUpdateTimers.get(nodeId)?.stop();
+        this.#nodeUpdateTimers.delete(nodeId);
+
+        if (node.isConnected) {
+            await this.#nodes.attributeCache.update(node);
+        }
+        this.events.nodeStructureChanged.emit(nodeId);
+
+        for (const endpointId of this.#nodes.drainPendingEndpointAdds(nodeId)) {
+            this.events.nodeEndpointAdded.emit(nodeId, endpointId);
+        }
+    }
+
+    /**
+     * Initialize the controller, register all commissioned nodes (populates attribute caches),
+     * and start connecting them to the network.
+     *
+     * Guarded by #connected so it runs exactly once, even if called multiple times
+     * (e.g. when WebServer.start() registers handlers for multiple listen addresses).
+     */
+    async initializeNodes() {
+        if (this.#connected) {
+            return;
+        }
+        this.#connected = true;
+
+        await this.start();
+
+        const nodes = this.#controller.getCommissionedNodes();
+        logger.info(`Found ${nodes.length} nodes: ${nodes.map(nodeId => this.formatNode(nodeId)).join(", ")}`);
+
+        for (const nodeId of nodes) {
+            try {
+                logger.info(`Initializing node "${this.formatNode(nodeId)}" ...`);
+                await this.#registerNode(nodeId);
+            } catch (error) {
+                logger.warn(`Failed to initialize node "${this.formatNode(nodeId)}":`, error);
+            }
+        }
+
+        logger.info(`All ${nodes.length} nodes initialized, starting connections`);
+
+        // Start connecting nodes to the network (fire-and-forget, actual I/O is async).
+        for (const nodeId of this.#nodes.getIds()) {
+            try {
+                const node = this.#nodes.get(nodeId);
+
+                if (node.node.maybeStateOf(NetworkClient)?.defaultSubscription !== undefined) {
+                    // Clear former set subscription details, let matter.js handle that now
+                    await node.node.set({ network: { defaultSubscription: undefined } });
+                }
+
+                node.connect();
+            } catch (error) {
+                logger.warn(`Failed to connect node "${this.formatNode(nodeId)}":`, error);
+            }
+        }
+    }
+
+    getNodeIds() {
+        return this.#nodes.getIds();
+    }
+
+    hasNode(nodeId: NodeId): boolean {
+        return this.#nodes.has(nodeId);
+    }
+
+    /**
+     * Whether a node id is already reserved on the fabric, either by a commissioned peer or the commissioner itself.
+     * Authoritative against matter.js rather than the locally tracked node set, which can drift from the fabric.
+     */
+    isNodeIdInUse(nodeId: NodeId): boolean {
+        return nodeId === this.#controller.nodeId || this.#controller.isNodeCommissioned(nodeId);
+    }
+
+    /**
+     * Alias for decommissionNode to match NodeCommandHandler interface.
+     */
+    removeNode(nodeId: NodeId) {
+        return this.decommissionNode(nodeId);
+    }
+
+    async interviewNode(nodeId: NodeId) {
+        const node = this.#nodes.get(nodeId);
+
+        // Our nodes are kept up-to-date via attribute subscriptions, so we don't need
+        // to re-read all attributes like the Python server does. The caller is responsible
+        // for broadcasting node_updated after the interview completes.
+        logger.info(`Interview requested for node ${this.formatNode(nodeId)} - do a complete read`);
+
+        // Do a full Read of the node
+        const read = {
+            ...Read({
+                fabricFilter: true,
+                attributes: [{}],
+            }),
+            includeKnownVersions: true, // do not send DataVersionFilters, so we do a new clean read
+        };
+        for await (const _chunk of node.node.interaction.read(read));
+    }
+
+    /**
+     * Await the node's attribute cache being populated so a direct read returns a complete snapshot
+     * rather than the empty-then-node_updated sequence the lazy fallback in getNodeDetails produces.
+     */
+    async ensureNodePopulated(nodeId: NodeId): Promise<void> {
+        const node = this.#nodes.get(nodeId);
+        if (node.initialized && !this.#nodes.attributeCache.has(nodeId)) {
+            await this.#nodes.attributeCache.add(node);
+        }
+    }
+
+    /**
+     * Get full node details in WebSocket API format.
+     * @param nodeId The node ID
+     * @param lastInterviewDate Optional last interview date (tracked externally)
+     */
+    getNodeDetails(nodeId: NodeId, lastInterviewDate?: Date): MatterNodeData {
+        const node = this.#nodes.get(nodeId);
+        const attributeCache = this.#nodes.attributeCache;
+
+        let isBridge = false;
+
+        // Ensure the cache is populated if node is initialized but cache doesn't exist yet.
+        // Populate runs asynchronously, so this call returns an empty snapshot; emit node_updated once
+        // it completes so the requester receives the populated data. The #pendingLazyPopulate guard
+        // registers the emit only once per populate, so concurrent reads don't fan out duplicate
+        // node_updated broadcasts. has() in the callback avoids a loop for an uninitialized node whose
+        // populate never fills the cache.
+        if (!attributeCache.has(nodeId) && !this.#pendingLazyPopulate.has(nodeId)) {
+            this.#pendingLazyPopulate.add(nodeId);
+            attributeCache
+                .add(node)
+                .then(() => {
+                    if (attributeCache.has(nodeId)) {
+                        this.events.nodeStructureChanged.emit(nodeId);
+                    }
+                })
+                .catch(error => logger.warn(`Failed to populate cache for node ${this.formatNode(nodeId)}:`, error))
+                .finally(() => this.#pendingLazyPopulate.delete(nodeId));
+        }
+
+        // Get cached attributes (empty object if node not yet initialized)
+        const attributes = attributeCache.get(nodeId) ?? {};
+
+        // Bridge detection: Check endpoint 1's Descriptor cluster (29) DeviceTypeList attribute (0)
+        // for device type 14 (Aggregator), matching Python Matter Server behavior
+        const endpoint1DeviceTypes = attributes["1/29/0"];
+        if (Array.isArray(endpoint1DeviceTypes)) {
+            isBridge = endpoint1DeviceTypes.some(entry => entry["0"] === 14);
+        }
+
+        return {
+            node_id: node.nodeId,
+            date_commissioned: getDateAsString(new Date(node.state.commissioning.commissionedAt ?? Date.now())),
+            last_interview: getDateAsString(lastInterviewDate ?? new Date()),
+            interview_version: 6,
+            available: this.#nodes.isAvailable(nodeId),
+            is_bridge: isBridge,
+            attributes,
+            attribute_subscriptions: [],
+            matter_version: determineMatterVersion(attributes),
+        };
+    }
+
+    /**
+     * Read multiple attributes from a node by path strings.
+     * Supports wildcards in paths. Batches up to 9 paths per read call.
+     */
+    async handleReadAttributes(
+        nodeId: NodeId,
+        attributePaths: string[],
+        fabricFiltered = false,
+    ): Promise<AttributesData> {
+        const result: AttributesData = {};
+        const node = this.#nodes.get(nodeId);
+        const batchSize = 9;
+        const parsedPaths = attributePaths.map(path => splitAttributePath(path));
+
+        for (let i = 0; i < parsedPaths.length; i += batchSize) {
+            const batch = parsedPaths.slice(i, i + batchSize);
+            const readRequest = {
+                ...Read({
+                    fabricFilter: fabricFiltered,
+                    attributes: batch.map(({ endpointId, clusterId, attributeId }) => ({
+                        endpointId: endpointId !== undefined ? EndpointNumber(endpointId) : undefined,
+                        clusterId: clusterId !== undefined ? ClusterId(clusterId) : undefined,
+                        attributeId: attributeId !== undefined ? AttributeId(attributeId) : undefined,
+                    })),
+                }),
+                includeKnownVersions: true,
+            };
+
+            for await (const chunk of node.node.interaction.read(readRequest)) {
+                for await (const entry of chunk) {
+                    if (entry.kind === "attr-value") {
+                        const { pathStr, value: wsValue } = this.#convertAttributeToWebSocket(
+                            {
+                                endpointId: EndpointNumber(entry.path.endpointId),
+                                clusterId: ClusterId(entry.path.clusterId),
+                                attributeId: entry.path.attributeId,
+                            },
+                            entry.value,
+                        );
+                        result[pathStr] = wsValue;
+                    } else if (entry.kind === "attr-status") {
+                        const pathStr = buildAttributePath(
+                            entry.path.endpointId,
+                            entry.path.clusterId,
+                            entry.path.attributeId,
+                        );
+                        logger.warn(`Failed to read attribute ${pathStr}: status=${entry.status}`);
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Convert attribute data to WebSocket tag-based format.
+     */
+    #convertAttributeToWebSocket(
+        path: { endpointId: EndpointNumber; clusterId: ClusterId; attributeId: number },
+        value: unknown,
+        clusterData?: ClusterMapEntry,
+    ) {
+        const { endpointId, clusterId, attributeId } = path;
+        if (!clusterData) {
+            clusterData = ClusterMap[clusterId];
+        }
+        return {
+            pathStr: buildAttributePath(endpointId, clusterId, attributeId),
+            value: convertMatterToWebSocketTagBased(
+                value,
+                clusterData?.attributes[attributeId] ?? GlobalAttributes[attributeId],
+                clusterData?.model,
+            ),
+        };
+    }
+
+    /**
+     * Write a single attribute on a remote node. Uses `setStateOf(string, ...)` (not `set({...})`)
+     * because peer cluster behaviors are dynamically registered and aren't on the agent's cached property getters.
+     */
+    async #writeAttribute(
+        nodeId: NodeId,
+        endpointId: EndpointNumber,
+        clusterId: ClusterId,
+        attributeName: string,
+        value: unknown,
+    ): Promise<{ status: number; clusterStatus?: number }> {
+        const node = this.#nodes.get(nodeId);
+        const clusterEntry = ClusterMap[clusterId];
+        if (!clusterEntry) {
+            throw ServerError.invalidArguments(`Cluster Id "${clusterId}" unknown`);
+        }
+        const clusterProperty = clusterEntry.model.propertyName;
+
+        try {
+            await node.node.endpoints.for(endpointId).setStateOf(clusterProperty, { [attributeName]: value });
+            return { status: 0 };
+        } catch (error) {
+            if (error instanceof MatterAggregateError) {
+                const first = error.errors.find((e): e is StatusResponseError => e instanceof StatusResponseError);
+                if (first !== undefined) {
+                    const dropped = error.errors.filter(e => e !== first);
+                    if (dropped.length > 0) {
+                        logger.info(
+                            `Write aggregate: reporting first error, dropping ${dropped.length} additional`,
+                            dropped,
+                        );
+                    }
+                    return { status: first.code, clusterStatus: first.clusterCode };
+                }
+                throw error;
+            }
+            StatusResponseError.accept(error);
+            return { status: error.code, clusterStatus: error.clusterCode };
+        }
+    }
+
+    /** Set the fabric label. matter.js requires a non-empty label of 1-32 chars; callers must normalize first. */
+    async setFabricLabel(label: string) {
+        await this.#controller.updateFabricLabel(label);
+    }
+
+    /** Current fabric label as known to matter.js, or undefined if the controller/fabric is not yet started. */
+    getFabricLabel(): string | undefined {
+        // matter.js `fabric` getter throws until the controller has finished starting; degrade to undefined
+        // so callers fall back to the configured label instead of surfacing an error.
+        try {
+            return this.#controller.fabric?.label;
+        } catch {
+            return undefined;
+        }
+    }
+
+    async handleWriteAttribute(data: WriteAttributeRequest): Promise<AttributeResponseStatus> {
+        const { nodeId, endpointId, clusterId, attributeId } = data;
+        let { value } = data;
+
+        const clusterEntry = ClusterMap[clusterId];
+        const attributeModel = clusterEntry?.attributes[attributeId];
+        if (!clusterEntry || !attributeModel) {
+            throw ServerError.invalidArguments(`Attribute ${attributeId} on cluster ${clusterId} unknown`);
+        }
+
+        value = convertWebSocketTagBasedToMatter(value, attributeModel, clusterEntry.model);
+
+        const attributeName = attributeModel.propertyName;
+        logger.info(`Writing attribute ${clusterId}.${attributeName} (${clusterId}.${attributeId}) with value`, value);
+        const { status, clusterStatus } = await this.#writeAttribute(
+            nodeId,
+            endpointId,
+            clusterId,
+            attributeModel.propertyName,
+            value,
+        );
+        return { attributeId, clusterId, endpointId, status, clusterStatus };
+    }
+
+    async #invokeCommand<const C extends Specifier.ClusterLike>(
+        node: ClientNode,
+        request: Invoke.ConcreteCommandRequest<C>,
+        options: Omit<Invoke.Definition, "commands"> = {},
+    ) {
+        const invoke = Invoke({
+            commands: [request],
+            ...options,
+        });
+        for await (const data of node.interaction.invoke(invoke)) {
+            for (const entry of data) {
+                // We send only one command, so we only get one response back
+                switch (entry.kind) {
+                    case "cmd-status":
+                        if (entry.status !== Status.Success) {
+                            throw StatusResponseError.create(entry.status, undefined, entry.clusterStatus);
+                        }
+                        return;
+
+                    case "cmd-response":
+                        return entry.data;
+                }
+            }
+        }
+    }
+
+    async handleInvoke(data: InvokeRequest): Promise<unknown> {
+        const {
+            nodeId,
+            endpointId,
+            clusterId,
+            timedInteractionTimeoutMs: timedRequestTimeoutMs,
+            interactionTimeoutMs,
+        } = data;
+        let { data: commandData } = data;
+
+        const clusterEntry = ClusterMap[clusterId];
+        if (!clusterEntry) {
+            throw ServerError.invalidArguments(`Cluster Id "${clusterId}" unknown`);
+        }
+        const clusterName = clusterEntry.model.propertyName;
+        const commandName = camelize(data.commandName);
+        const commands = (
+            this.#nodes.get(nodeId).node.endpoints.for(endpointId).commands as Record<string, Record<string, unknown>>
+        )[clusterName];
+        if (!commands[commandName]) {
+            throw ServerError.invalidArguments(`Command "${commandName}" does not exist on cluster "${clusterName}"`);
+        }
+
+        if (isObject(commandData)) {
+            if (Object.keys(commandData).length === 0) {
+                commandData = undefined;
+            } else {
+                const model = clusterEntry.commands[commandName.toLowerCase()];
+                if (model) {
+                    commandData = convertCommandDataToMatter(commandData, model, clusterEntry.model);
+                }
+            }
+        }
+
+        // Build dedup key from validated/converted fields
+        const serializedData = commandData !== undefined ? toBigIntAwareJson(commandData as object) : "";
+        const dedupKey = `${nodeId}:${endpointId}:${clusterId}:${commandName}:${serializedData}`;
+
+        // Check for in-flight duplicate
+        const existing = this.#inFlightInvokes.get(dedupKey);
+        if (existing !== undefined) {
+            logger.warn(
+                `Duplicate command detected for ${this.formatNode(nodeId)}/${endpointId}/${clusterName}/${commandName} - coalescing with in-flight request`,
+            );
+            return existing;
+        }
+
+        // Resolve cluster namespace with command definitions for typed invoke
+        const cluster = ClusterType(clusterEntry.model) as Specifier.ClusterLike;
+
+        // Execute and track the command
+        const invokePromise = this.#invokeCommand(
+            this.#nodes.get(nodeId).node,
+            {
+                endpoint: endpointId,
+                cluster,
+                command: commandName,
+                fields: commandData,
+            },
+            {
+                timeout: timedRequestTimeoutMs !== undefined ? Millis(timedRequestTimeoutMs) : undefined,
+                expectedProcessingTime: interactionTimeoutMs !== undefined ? Millis(interactionTimeoutMs) : undefined,
+            },
+        );
+
+        // Store the in-flight invoke immediately so concurrent requests can see it
+        this.#inFlightInvokes.set(dedupKey, invokePromise);
+
+        // Ensure cleanup of the in-flight entry once the invoke completes
+        return invokePromise.finally(() => {
+            this.#inFlightInvokes.delete(dedupKey);
+        });
+    }
+
+    #determineCommissionOptions(data: CommissioningRequest): NodeCommissioningOptions {
+        let passcode: number | undefined = undefined;
+        let shortDiscriminator: number | undefined = undefined;
+        let longDiscriminator: number | undefined = undefined;
+        let productId: number | undefined = undefined;
+        let vendorId: VendorId | undefined = undefined;
+        let knownAddress: ServerAddress | undefined = undefined;
+
+        if ("manualCode" in data && data.manualCode.length > 0) {
+            const pairingCodeCodec = ManualPairingCodeCodec.decode(data.manualCode);
+            shortDiscriminator = pairingCodeCodec.shortDiscriminator;
+            longDiscriminator = undefined;
+            passcode = pairingCodeCodec.passcode;
+        } else if ("qrCode" in data && data.qrCode.length > 0) {
+            const pairingCodeCodec = QrPairingCodeCodec.decode(data.qrCode);
+            // TODO handle the case where multiple devices are included
+            longDiscriminator = pairingCodeCodec[0].discriminator;
+            shortDiscriminator = undefined;
+            passcode = pairingCodeCodec[0].passcode;
+        } else if ("passcode" in data) {
+            passcode = data.passcode;
+            // Check for discriminator-based discovery
+            if ("shortDiscriminator" in data) {
+                shortDiscriminator = data.shortDiscriminator;
+            } else if ("longDiscriminator" in data) {
+                longDiscriminator = data.longDiscriminator;
+            } else if ("vendorId" in data && "productId" in data) {
+                vendorId = VendorId(data.vendorId);
+                productId = data.productId;
+            }
+            // If none of the above, discovers any commissionable device
+        } else {
+            throw ServerError.invalidArguments("No pairing code provided");
+        }
+
+        if (data.knownAddress !== undefined) {
+            const { ip, port } = data.knownAddress;
+            knownAddress = {
+                type: "udp",
+                ip,
+                port,
+            };
+        }
+
+        if (passcode == undefined) {
+            throw ServerError.invalidArguments("No passcode provided");
+        }
+
+        const { onNetworkOnly, wifiCredentials: wifiNetwork, threadCredentials: threadNetwork } = data;
+        return {
+            commissioning: {
+                nodeId: data.nodeId,
+                regulatoryLocation: GeneralCommissioning.RegulatoryLocationType.IndoorOutdoor,
+                regulatoryCountryCode: "XX",
+                wifiNetwork,
+                threadNetwork,
+                onAttestationFailure: findings => {
+                    let testCertReason: string | undefined;
+                    let hardError = false;
+                    for (const f of findings) {
+                        if (f.type === DeviceAttestationCheck.TrustedAsTestCertificate) {
+                            testCertReason =
+                                'This device uses a test/development certificate. To commission it, enable the "Test DCL" option in the settings — only do this if you trust the vendor.';
+                        } else if (f.level === "error") {
+                            hardError = true;
+                        }
+                        logger.info(`Attestation finding (${f.level}):`, f.type, f.message);
+                    }
+                    if (testCertReason !== undefined) {
+                        logger.notice(`Attestation rejected: ${testCertReason}`);
+                        return testCertReason;
+                    }
+                    logger.info(`Attestation ${hardError ? "rejected" : "accepted"}`);
+                    return !hardError;
+                },
+            },
+            discovery: {
+                knownAddress,
+                identifierData:
+                    longDiscriminator !== undefined
+                        ? { longDiscriminator }
+                        : shortDiscriminator !== undefined
+                          ? { shortDiscriminator }
+                          : vendorId !== undefined
+                            ? { vendorId, productId }
+                            : {},
+                discoveryCapabilities: {
+                    ble: this.bleEnabled && !onNetworkOnly,
+                    onIpNetwork: true,
+                },
+            },
+            passcode,
+        };
+    }
+
+    async commissionNode(data: CommissioningRequest): Promise<CommissioningResponse> {
+        let nodeId: NodeId;
+        try {
+            nodeId = await this.#controller.commissionNode(this.#determineCommissionOptions(data), {
+                connectNodeAfterCommissioning: true,
+            });
+        } catch (error) {
+            // Preserve the original error message with context
+            const originalMessage = error instanceof Error ? error.message : String(error);
+            throw ServerError.nodeCommissionFailed(
+                `Commission failed: ${originalMessage}`,
+                error instanceof Error ? error : undefined,
+            );
+        }
+
+        await this.#registerNode(nodeId);
+
+        this.events.nodeAdded.emit(nodeId);
+        return { nodeId };
+    }
+
+    getCommissionerNodeId() {
+        return this.#controller.nodeId;
+    }
+
+    async getCommissionerFabricData(): Promise<{
+        fabricId: FabricId;
+        compressedFabricId: bigint;
+        fabricIndex: number;
+    }> {
+        const { fabricId, globalId, fabricIndex } = this.#controller.fabric;
+        return {
+            fabricId,
+            compressedFabricId: globalId,
+            fabricIndex,
+        };
+    }
+
+    /** Discover commissionable devices */
+    async handleDiscovery({ findBy }: DiscoveryRequest): Promise<DiscoveryResponse> {
+        const result = await this.#controller.discoverCommissionableDevices(
+            findBy ?? {},
+            { onIpNetwork: true },
+            undefined,
+            Seconds(3), // Just check for 3 sec
+        );
+        logger.info("Discovered result", result);
+        // Chip is not removing old discoveries when being stopped, so we still have old and new devices in the result
+        // but the expectation is that it was reset and only new devices are in the result
+        const latestDiscovery = result[result.length - 1];
+        if (latestDiscovery === undefined) {
+            return [];
+        }
+        return [latestDiscovery].map(({ DT, DN, CM, D, RI, PH, PI, T, VP, deviceIdentifier, addresses, SII, SAI }) => {
+            const supportsTcpClient = T?.tcpClient ?? false;
+            const supportsTcpServer = T?.tcpServer ?? false;
+            const vendorId = VP === undefined ? -1 : VP.includes("+") ? parseInt(VP.split("+")[0]) : parseInt(VP);
+            const productId = VP === undefined ? -1 : VP.includes("+") ? parseInt(VP.split("+")[1]) : -1;
+            const firstAddress = addresses[0];
+            const port = firstAddress && ServerAddress.isIp(firstAddress) ? firstAddress.port : 0;
+            const numIPs = addresses.length;
+            return {
+                commissioningMode: CM,
+                deviceName: DN ?? "",
+                deviceType: DT ?? 0,
+                hostName: "000000000000", // Right now we do not return real hostname, only used internally
+                instanceName: deviceIdentifier,
+                longDiscriminator: D,
+                numIPs,
+                pairingHint: PH ?? -1,
+                pairingInstruction: PI ?? "",
+                port,
+                productId,
+                rotatingId: RI ?? "",
+                rotatingIdLen: RI?.length ?? 0,
+                shortDiscriminator: (D >> 8) & 0x0f,
+                vendorId,
+                supportsTcpServer,
+                supportsTcpClient,
+                addresses: addresses.filter(ServerAddress.isIp).map(({ ip }) => ip),
+                mrpSessionIdleInterval: SII,
+                mrpSessionActiveInterval: SAI,
+            };
+        });
+    }
+
+    async getNodeIpAddresses(nodeId: NodeId, preferCache = true) {
+        const addresses = new Set<string>();
+        const peer = this.#peers?.for(this.#controller.fabric.addressOf(nodeId));
+        if (peer) {
+            for (const address of peer.service.addresses) {
+                addresses.add(address.ip);
+            }
+        }
+        if (!preferCache || !addresses.size) {
+            // Try mDNS discovery first (like Python matter server does)
+            for (const address of await this.#discoverNodeAddressesViaMdns(nodeId)) {
+                addresses.add(address);
+            }
+        }
+        if (peer) {
+            const sessionIp = peer.newestSession()?.channel.networkAddress?.ip;
+            if (sessionIp) {
+                addresses.add(sessionIp);
+            }
+        }
+
+        // Fall back to commissioning addresses from the node state if mDNS fails
+        const node = this.#nodes.get(nodeId);
+        const commissioningAddresses = node.node.maybeStateOf(CommissioningClient)?.addresses;
+        if (commissioningAddresses !== undefined && commissioningAddresses.length > 0) {
+            const fallbackAddresses = commissioningAddresses.filter(ServerAddress.isIp).map(addr => addr.ip);
+            for (const address of fallbackAddresses) {
+                addresses.add(address);
+            }
+        }
+
+        return [...addresses.values()];
+    }
+
+    /**
+     * Discover node IP addresses via mDNS (like Python matter server).
+     * Uses 3-second timeout matching Python implementation.
+     */
+    async #discoverNodeAddressesViaMdns(nodeId: NodeId): Promise<string[]> {
+        try {
+            if (this.#peers === undefined) {
+                logger.debug(`Node ${this.formatNode(nodeId)}: No PeerSet available, Controller started?`);
+                return [];
+            }
+
+            const peer = this.#peers.for(this.#controller.fabric.addressOf(nodeId));
+
+            const abort = new Abort({ timeout: Seconds(3) });
+            const names = peer.service.names;
+            await names.solicitor.discover({
+                abort,
+                name: peer.service.name,
+                recordTypes: [DnsRecordType.SRV],
+            });
+
+            const addresses = new Array<string>();
+            for (const address of peer.service.addresses) {
+                addresses.push(address.ip);
+            }
+
+            return addresses;
+        } catch (error) {
+            logger.info(`Node ${this.formatNode(nodeId)}: mDNS discovery failed`, error);
+            return [];
+        }
+    }
+
+    /**
+     * Ping a node on all its known IP addresses.
+     * @param nodeId The node ID to ping
+     * @param attempts Number of ping attempts per IP (default: 1)
+     * @returns A record of IP addresses to ping success status
+     */
+    async pingNode(nodeId: NodeId, attempts = 1): Promise<NodePingResult> {
+        const node = this.#nodes.get(nodeId);
+
+        const result: NodePingResult = {};
+
+        // Get all IP addresses for the node (fresh lookup, not cached)
+        const ipAddresses = await this.getNodeIpAddresses(nodeId, false);
+
+        if (ipAddresses.length === 0) {
+            logger.info(`No IP addresses found for node ${this.formatNode(nodeId)}`);
+            return result;
+        }
+
+        logger.info(`Pinging node ${this.formatNode(nodeId)} on ${ipAddresses.length} addresses:`, ipAddresses);
+
+        // Ping all addresses in parallel
+        const pingPromises = ipAddresses.map(async ip => {
+            const cleanIp = ip.includes("%") ? ip.split("%")[0] : ip;
+            logger.debug(`Pinging ${cleanIp}`);
+            const success = await pingIp(ip, 10, attempts);
+            result[ip] = success;
+            logger.debug(`Ping result for ${cleanIp}: ${success}`);
+        });
+
+        await Promise.all(pingPromises);
+
+        // If the node is connected, treat the connection as valid
+        if (node.isConnected) {
+            // Find any successful ping or mark the connection as reachable
+            const anySuccess = Object.values(result).some(v => v);
+            if (!anySuccess && ipAddresses.length > 0) {
+                // Node is connected, but no pings succeeded - this can happen
+                // with Thread devices or certain network configurations
+                logger.info(`Node ${this.formatNode(nodeId)} is connected but no pings succeeded`);
+            }
+        }
+
+        return result;
+    }
+
+    async decommissionNode(nodeId: NodeId) {
+        const node = this.#nodes.has(nodeId) ? this.#nodes.get(nodeId) : undefined;
+        if (node === undefined) {
+            throw ServerError.nodeNotExists(nodeId);
+        }
+        await this.#controller.removeNode(nodeId, !!node?.isConnected);
+        this.#cleanupNodeAfterRemoval(nodeId);
+    }
+
+    /**
+     * Drop all references to a removed node so subsequent reads don't reach a
+     * destroyed PairedNode. Idempotent — both the `decommissioned` listener
+     * (external fabric leave) and `decommissionNode` invoke it, and the
+     * listener may have run first.
+     */
+    #cleanupNodeAfterRemoval(nodeId: NodeId) {
+        this.#reconnectTimers.get(nodeId)?.stop();
+        this.#reconnectTimers.delete(nodeId);
+        this.#nodeUpdateTimers.get(nodeId)?.stop();
+        this.#nodeUpdateTimers.delete(nodeId);
+        this.#nodeObservers.get(nodeId)?.close();
+        this.#nodeObservers.delete(nodeId);
+        this.#basicInfoChangedInBatch.delete(nodeId);
+        this.#pendingLazyPopulate.delete(nodeId);
+        this.#nodes.delete(nodeId);
+        const peer = this.#peerOf(nodeId);
+        this.#customClusterPoller.unregisterNode(peer);
+        this.#threadDetailsPoller?.unregisterNode(peer);
+        this.#timeSyncManager?.unregisterNode(peer);
+        this.#availableUpdates.delete(nodeId);
+    }
+
+    async openCommissioningWindow(data: OpenCommissioningWindowRequest): Promise<OpenCommissioningWindowResponse> {
+        const { nodeId, timeout } = data;
+        const node = this.#nodes.get(nodeId);
+        const { manualPairingCode, qrPairingCode } = await node.openEnhancedCommissioningWindow(timeout);
+        return { manualCode: manualPairingCode, qrCode: qrPairingCode };
+    }
+
+    async getFabrics(nodeId: NodeId) {
+        const node = this.#nodes.get(nodeId);
+
+        const read = {
+            ...Read(
+                {
+                    fabricFilter: false,
+                },
+                Read.Attribute({
+                    endpoint: EndpointNumber(0),
+                    cluster: OperationalCredentials,
+                    attributes: "fabrics",
+                }),
+            ),
+            includeKnownVersions: true, // we want to read from device
+        };
+
+        for await (const chunk of node.node.interaction.read(read)) {
+            for await (const attr of chunk) {
+                if (attr.kind === "attr-value" && Array.isArray(attr.value)) {
+                    // We only expect one array response
+                    return attr.value.map(({ fabricId, fabricIndex, vendorId, label }) => ({
+                        fabricId,
+                        vendorId,
+                        fabricIndex,
+                        label,
+                    }));
+                }
+                logger.warn("Unexpected response from fabrics read", attr);
+            }
+        }
+
+        throw ServerError.sdkStackError("No or invalid response received while querying fabrics");
+    }
+
+    removeFabric(nodeId: NodeId, fabricIndex: FabricIndex) {
+        return this.#nodes.get(nodeId).node.commandsOf(OperationalCredentialsClient).removeFabric({ fabricIndex });
+    }
+
+    /**
+     * Register this controller as an ICD Check-In client on the peer.
+     * @throws {ServerError} with code IcdMultiAdmin if the peer has other-vendor administrators and
+     *   `options.allowMultiAdmin` is not set.
+     */
+    async registerIcd(
+        nodeId: NodeId,
+        options: { allowMultiAdmin?: boolean; ignoredVendors?: number[] },
+    ): Promise<void> {
+        const node = this.#nodes.get(nodeId);
+        try {
+            await node.node.act(agent =>
+                agent.get(IcdClient).register({
+                    allowMultiAdmin: options.allowMultiAdmin,
+                    ignoredVendors: options.ignoredVendors?.map(vendorId => VendorId(vendorId)),
+                }),
+            );
+        } catch (error) {
+            IcdMultiAdminError.accept(error);
+            throw ServerError.icdMultiAdmin(error.adminVendorIds.map(vendorId => Number(vendorId)));
+        }
+    }
+
+    /**
+     * Drop this controller's ICD Check-In registration.
+     * `force` skips the peer round-trip (for an unreachable peer) and only clears local state.
+     */
+    async unregisterIcd(nodeId: NodeId, force: boolean): Promise<void> {
+        const node = this.#nodes.get(nodeId);
+        await node.node.act(agent => (force ? agent.get(IcdClient).forget() : agent.get(IcdClient).unregister()));
+    }
+
+    /**
+     * Drop the local ICD registration and reconnect; a LIT peer re-registers automatically once subscribed.
+     */
+    async resyncIcd(nodeId: NodeId): Promise<void> {
+        const node = this.#nodes.get(nodeId);
+        await node.node.act(agent => agent.get(IcdClient).forget());
+        node.triggerReconnect();
+    }
+
+    async getIcdState(nodeId: NodeId): Promise<IcdStateData> {
+        const node = this.#nodes.get(nodeId);
+        const icdManagementState = node.node.endpoints.for(EndpointNumber(0)).maybeStateOf(IcdManagementClient);
+        if (icdManagementState === undefined) {
+            return {
+                supported: false,
+                lit_supported: false,
+                registered: false,
+                operating_mode: null,
+                awake: null,
+                available: null,
+                next_expected_checkin: null,
+            };
+        }
+
+        return node.node.act(agent => {
+            const icd = agent.get(IcdClient);
+            return {
+                supported: true,
+                lit_supported: icd.peerSupportsLit,
+                registered: icd.isRegistered,
+                operating_mode: icdManagementState.operatingMode === IcdManagement.OperatingMode.Lit ? "LIT" : "SIT",
+                // upstream d.ts types the awake getter as `any`; pin to boolean for the wire
+                awake: icd.awake === true,
+                available: icd.state.available,
+                next_expected_checkin: icd.nextExpectedCheckin !== undefined ? Number(icd.nextExpectedCheckin) : null,
+            };
+        });
+    }
+
+    /**
+     * Fabric index assigned to this controller on the peer.
+     * Some peers reject the NO_FABRIC (0) sentinel inside fabric-scoped list entries
+     * even though the spec allows server-side auto-fill, so we send the resolved index.
+     */
+    #currentFabricIndex(nodeId: NodeId): FabricIndex {
+        const state = this.#nodes
+            .get(nodeId)
+            .node.endpoints.for(EndpointNumber(0))
+            .maybeStateOf(OperationalCredentialsClient);
+        return state?.currentFabricIndex ?? FabricIndex.NO_FABRIC;
+    }
+
+    /**
+     * Set Access Control List entries on a node.
+     * Writes to the ACL attribute on the AccessControl cluster (endpoint 0).
+     */
+    async setAclEntry(nodeId: NodeId, entries: AccessControlEntry[]): Promise<AttributeWriteResult[] | null> {
+        const fabricIndex = this.#currentFabricIndex(nodeId);
+        const aclEntries: AccessControl.AccessControlEntry[] = entries.map(entry => ({
+            privilege: entry.privilege,
+            authMode: entry.auth_mode,
+            subjects: entry.subjects?.map(s => NodeId(BigInt(s))) ?? null,
+            targets:
+                entry.targets?.map((t: AccessControlTarget) => ({
+                    cluster: t.cluster !== null ? ClusterId(t.cluster) : null,
+                    endpoint: t.endpoint !== null ? EndpointNumber(t.endpoint) : null,
+                    deviceType: t.device_type !== null ? DeviceTypeId(t.device_type) : null,
+                })) ?? null,
+            fabricIndex,
+        }));
+
+        // A node always has access to itself, so an ACL entry naming the node's own id as a subject
+        // (a "self-ACL") is meaningless. Strip such subjects (and drop entries left with none) rather
+        // than write them to the device, but still report success to the caller.
+        const nodeKey = nodeId.toString();
+        let selfRemoved = false;
+        const filteredEntries = aclEntries
+            .map(entry => {
+                if (!entry.subjects) return entry;
+                const subjects = entry.subjects.filter(s => s.toString() !== nodeKey);
+                if (subjects.length === entry.subjects.length) return entry;
+                selfRemoved = true;
+                return subjects.length > 0 ? { ...entry, subjects } : undefined;
+            })
+            .filter((entry): entry is AccessControl.AccessControlEntry => entry !== undefined);
+        if (selfRemoved) {
+            logger.warn(
+                `ACL for node ${nodeId} named the node's own id as a subject (self-ACL); a node always has access to itself, so those subjects are not written to the device. Reporting success.`,
+            );
+        }
+
+        logger.info("Setting ACL entries", filteredEntries);
+
+        const { status } = await this.#writeAttribute(
+            nodeId,
+            EndpointNumber(0),
+            AccessControl.id,
+            "acl",
+            filteredEntries,
+        );
+        return [
+            {
+                path: { endpoint_id: 0, cluster_id: AccessControl.id, attribute_id: 0 },
+                status,
+            },
+        ];
+    }
+
+    /**
+     * Set bindings on a specific endpoint of a node.
+     * Writes to the Binding attribute on the Binding cluster.
+     */
+    async setNodeBinding(
+        nodeId: NodeId,
+        endpointId: EndpointNumber,
+        bindings: BindingTarget[],
+    ): Promise<AttributeWriteResult[] | null> {
+        const fabricIndex = this.#currentFabricIndex(nodeId);
+        const bindingEntries: Binding.Target[] = bindings.map(binding => ({
+            node: binding.node !== null ? NodeId(binding.node) : undefined,
+            group: binding.group !== null ? GroupId(binding.group) : undefined,
+            endpoint: binding.endpoint !== null ? EndpointNumber(binding.endpoint) : undefined,
+            cluster: binding.cluster !== null ? ClusterId(binding.cluster) : undefined,
+            fabricIndex,
+        }));
+
+        logger.info("Setting bindings on endpoint", endpointId, bindingEntries);
+
+        const { status } = await this.#writeAttribute(nodeId, endpointId, Binding.id, "binding", bindingEntries);
+        return [
+            {
+                path: { endpoint_id: endpointId, cluster_id: Binding.id, attribute_id: 0 },
+                status,
+            },
+        ];
+    }
+
+    /**
+     * Check if a software update is available for a node.
+     * First checks the cached updates from OTA events, then queries the DCL if not found.
+     */
+    async checkNodeUpdate(nodeId: NodeId): Promise<MatterSoftwareVersion | null> {
+        if (!this.#otaEnabled) {
+            throw ServerError.updateCheckError("OTA is disabled");
+        }
+        // First check if we have a cached update from the updateAvailable event
+        const cachedUpdate = this.#availableUpdates.get(nodeId);
+        if (cachedUpdate) {
+            return this.#convertToMatterSoftwareVersion(cachedUpdate);
+        }
+
+        // No cached update, query the OTA provider
+        const node = this.#nodes.get(nodeId);
+
+        try {
+            const otaProvider = this.#controller.otaProvider;
+            if (!otaProvider) {
+                logger.info("OTA provider not available");
+                return null;
+            }
+
+            // Query OTA provider for updates using dynamic behavior access
+            const updatesAvailable = await otaProvider.act(agent =>
+                agent.get(SoftwareUpdateManager).queryUpdates({
+                    peerToCheck: node.node,
+                    includeStoredUpdates: true,
+                }),
+            );
+
+            // Find update for this specific node
+            const peerAddress = this.#controller.fabric.addressOf(nodeId);
+            const nodeUpdate = updatesAvailable.find(({ peerAddress: updateAddress }) =>
+                PeerAddress.is(peerAddress, updateAddress),
+            );
+
+            if (nodeUpdate) {
+                const { info } = nodeUpdate;
+                this.#availableUpdates.set(nodeId, info);
+                return this.#convertToMatterSoftwareVersion(info);
+            }
+
+            return null;
+        } catch (error) {
+            logger.warn(`Failed to check for updates for node ${this.formatNode(nodeId)}:`, error);
+            return null;
+        }
+    }
+
+    /**
+     * Trigger a software update for a node.
+     * @param nodeId The node to update
+     * @param softwareVersion The target software version to update to
+     */
+    async updateNode(nodeId: NodeId, softwareVersion: number): Promise<MatterSoftwareVersion | null> {
+        if (!this.#otaEnabled) {
+            throw ServerError.updateError("OTA is disabled");
+        }
+        if (!this.#nodes.has(nodeId)) {
+            throw ServerError.nodeNotExists(nodeId);
+        }
+        if (!this.#nodes.isAvailable(nodeId)) {
+            throw ServerError.updateError(`Node ${this.formatNode(nodeId)} is not connected. Retry later`);
+        }
+
+        // Check if node is already updating by checking the OTA Requestor UpdateState attribute
+        // Attribute path: 0/42/2 (endpoint 0, OtaSoftwareUpdateRequestor cluster, UpdateState attribute)
+        // UpdateState 1 = Idle, anything else means update in progress
+        const cachedAttributes = this.#nodes.attributeCache.get(nodeId);
+        const updateState = cachedAttributes?.["0/42/2"];
+        if (updateState !== undefined && updateState !== 1) {
+            throw ServerError.updateError(
+                `Node ${this.formatNode(nodeId)} is already in the process of updating (state: ${updateState})`,
+            );
+        }
+
+        const otaProvider = this.#controller.otaProvider;
+        if (!otaProvider) {
+            throw ServerError.updateError("OTA provider not available");
+        }
+
+        let updateInfo = this.#availableUpdates.get(nodeId);
+        if (!updateInfo) {
+            const result = await this.checkNodeUpdate(nodeId);
+            if (!result) {
+                throw ServerError.updateError("No update available for this node");
+            }
+            updateInfo = this.#availableUpdates.get(nodeId);
+            if (!updateInfo) {
+                throw ServerError.updateError("Failed to get update info");
+            }
+        }
+
+        logger.info(`Starting update for node ${this.formatNode(nodeId)} to version ${softwareVersion}`);
+
+        await otaProvider.act(agent =>
+            agent
+                .get(SoftwareUpdateManager)
+                .forceUpdate(
+                    this.#controller.fabric.addressOf(nodeId),
+                    updateInfo.vendorId,
+                    updateInfo.productId,
+                    softwareVersion,
+                ),
+        );
+
+        return this.#convertToMatterSoftwareVersion(updateInfo);
+    }
+
+    /**
+     * Drop cached update info for a vendor/product, so a newly stored image is seen by the next
+     * `check_node_update` instead of the answer cached before it existed.
+     */
+    invalidateAvailableUpdates(vendorId: number, productId: number) {
+        for (const [nodeId, update] of this.#availableUpdates) {
+            if (update.vendorId === vendorId && update.productId === productId) {
+                this.#availableUpdates.delete(nodeId);
+            }
+        }
+    }
+
+    /**
+     * Convert SoftwareUpdateInfo to MatterSoftwareVersion format for WebSocket API.
+     */
+    #convertToMatterSoftwareVersion(updateInfo: SoftwareUpdateInfo): MatterSoftwareVersion {
+        const { vendorId, productId, softwareVersion, softwareVersionString, releaseNotesUrl, source } = updateInfo;
+        return {
+            vid: vendorId,
+            pid: productId,
+            software_version: softwareVersion,
+            software_version_string: softwareVersionString,
+            min_applicable_software_version: 0, // Not available from SoftwareUpdateInfo
+            max_applicable_software_version: softwareVersion - 1,
+            release_notes_url: releaseNotesUrl,
+            update_source:
+                source === "dcl-prod"
+                    ? UpdateSource.MAIN_NET_DCL
+                    : source === "dcl-test"
+                      ? UpdateSource.TEST_NET_DCL
+                      : UpdateSource.LOCAL,
+        };
+    }
+}

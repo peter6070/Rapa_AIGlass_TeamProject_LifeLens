@@ -1,0 +1,142 @@
+/**
+ * @license
+ * Copyright 2025-2026 Open Home Foundation
+ * SPDX-License-Identifier: Apache-2.0
+ */
+import { AttributeId, ClusterId, Duration, NodeId } from "@matter/main";
+import { CommissionableDeviceIdentifiers } from "@matter/main/protocol";
+import { EndpointNumber, Status } from "@matter/main/types";
+import { ControllerCommissioningFlowOptions } from "@matter/protocol";
+
+export type AttributeResponseStatus = {
+    clusterId: number;
+    attributeId: number;
+    endpointId: number;
+    status?: Status;
+    clusterStatus?: number;
+};
+
+export type WriteAttributeRequest = {
+    nodeId: NodeId;
+    endpointId: EndpointNumber;
+    clusterId: ClusterId;
+    attributeId: AttributeId;
+    value: unknown;
+};
+
+export type InvokeRequest = {
+    nodeId: NodeId;
+    endpointId: EndpointNumber;
+    clusterId: ClusterId;
+    commandName: string;
+    data: unknown;
+    timedInteractionTimeoutMs?: Duration;
+    interactionTimeoutMs?: Duration;
+};
+
+export type CommissioningRequest = {
+    nodeId?: NodeId;
+    knownAddress?: { ip: string; port: number };
+    onNetworkOnly?: boolean;
+    wifiCredentials?: ControllerCommissioningFlowOptions["wifiNetwork"];
+    threadCredentials?: ControllerCommissioningFlowOptions["threadNetwork"];
+} & (
+    | { qrCode: string }
+    | { manualCode: string }
+    | { passcode: number; vendorId: number; productId: number }
+    | { passcode: number; shortDiscriminator: number }
+    | { passcode: number; longDiscriminator: number }
+    | { passcode: number } // Discover any commissionable device
+);
+
+export type CommissioningResponse = {
+    nodeId: NodeId;
+};
+
+export type DiscoveryRequest = {
+    findBy?: CommissionableDeviceIdentifiers;
+};
+
+export type DiscoveryResponse = {
+    commissioningMode: number;
+    deviceName: string;
+    deviceType: number;
+    hostName: string;
+    instanceName: string;
+    longDiscriminator: number;
+    numIPs: number;
+    pairingHint: number;
+    pairingInstruction: string;
+    port: number;
+    productId: number;
+    rotatingId: string;
+    rotatingIdLen: number;
+    shortDiscriminator: number;
+    supportsTcpClient: boolean;
+    supportsTcpServer: boolean;
+    vendorId: number;
+    addresses?: string[];
+    mrpSessionIdleInterval?: number;
+    mrpSessionActiveInterval?: number;
+}[];
+
+export type OpenCommissioningWindowRequest = {
+    nodeId: NodeId;
+    timeout?: number;
+};
+
+export type OpenCommissioningWindowResponse = {
+    manualCode: string;
+    qrCode: string;
+};
+
+import type { AttributesData, MatterNodeData } from "@matter-server/ws-client";
+
+export type { AttributesData, MatterNodeData };
+
+/**
+ * Interface for node command handlers.
+ * Both real nodes (ControllerCommandHandler) and test nodes (TestNodeCommandHandler) implement this.
+ */
+export interface NodeCommandHandler {
+    /**
+     * Check if this handler manages the given node ID.
+     */
+    hasNode(nodeId: NodeId): boolean;
+
+    /**
+     * Get full node details in WebSocket API format.
+     */
+    getNodeDetails(nodeId: NodeId): Promise<MatterNodeData>;
+
+    /**
+     * Read multiple attributes from a node by path strings.
+     * Handles wildcards in paths (e.g., asterisk/29/asterisk for all descriptor attributes).
+     */
+    handleReadAttributes(nodeId: NodeId, attributePaths: string[], fabricFiltered?: boolean): Promise<AttributesData>;
+
+    /**
+     * Write an attribute to a node.
+     */
+    handleWriteAttribute(data: WriteAttributeRequest): Promise<AttributeResponseStatus>;
+
+    /**
+     * Invoke a command on a node.
+     */
+    handleInvoke(data: InvokeRequest): Promise<unknown>;
+
+    /**
+     * Get IP addresses for a node.
+     */
+    getNodeIpAddresses(nodeId: NodeId, preferCache?: boolean): Promise<string[]>;
+
+    /**
+     * Ping a node.
+     */
+    pingNode(nodeId: NodeId, attempts?: number): Promise<Record<string, boolean>>;
+
+    /**
+     * Remove/decommission a node.
+     */
+    removeNode(nodeId: NodeId): Promise<void>;
+}

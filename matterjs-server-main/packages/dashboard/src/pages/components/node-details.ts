@@ -1,0 +1,534 @@
+/**
+ * @license
+ * Copyright 2025-2026 Open Home Foundation
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import "@material/web/button/filled-button";
+import "@material/web/button/outlined-button";
+import "@material/web/button/text-button";
+import "@material/web/divider/divider";
+import "@material/web/iconbutton/icon-button";
+import "@material/web/list/list";
+import "@material/web/list/list-item";
+import { consume } from "@lit/context";
+import { MatterClient, MatterNode, MatterSoftwareVersion, UpdateSource } from "@matter-server/ws-client";
+import {
+    mdiCamera,
+    mdiChatProcessing,
+    mdiMicrophone,
+    mdiPencil,
+    mdiShareVariant,
+    mdiTrashCan,
+    mdiUpdate,
+    mdiUpload,
+    mdiVideo,
+} from "@mdi/js";
+import { LitElement, css, html, nothing } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { clientContext, tickContext } from "../../client/client-context.js";
+import { DeviceType } from "../../client/models/descriptions.js";
+import { showAlertDialog, showPromptDialog } from "../../components/dialog-box/show-dialog-box.js";
+import { showNodeLabelDialog } from "../../components/dialogs/node-label-dialog/show-node-label-dialog.js";
+import { handleAsync, handleAsyncEvent } from "../../util/async-handler.js";
+import "../../components/ha-svg-icon";
+import "../camera-overlay.js";
+import { supportsAudioOnlyLiveView, supportsCameraOverlay, supportsLiveView } from "../../util/camera.js";
+import { getDeviceIcon } from "../../util/device-icons.js";
+import { getEndpointDeviceTypes } from "../../util/endpoints.js";
+import { ICD_CLUSTER_ID, icdBadge } from "../../util/icd.js";
+import { formatManualPairingCode, renderPairingQrCodeDataUri } from "../../util/pairing-code.js";
+import { bindingContext } from "./context.js";
+
+const OTA_UPLOAD_MIN_SCHEMA = 13;
+
+/** Map updateState values to user-friendly labels */
+const UPDATE_STATE_LABELS: Record<number, string> = {
+    1: "Idle",
+    2: "Querying",
+    3: "Waiting (Querying)",
+    4: "Downloading",
+    5: "Applying",
+    6: "Waiting (Applying)",
+    7: "Rolling back",
+    8: "Waiting for consent",
+};
+
+function getUpdateStateLabel(state: number, progress?: number): string {
+    const label = UPDATE_STATE_LABELS[state] ?? `Unknown (${state})`;
+    // Show progress only for downloading state
+    if (state === 4 && progress !== undefined) {
+        return `${label} (${progress}%)`;
+    }
+    return label;
+}
+
+function getNodeDeviceTypes(node: MatterNode): DeviceType[] {
+    const uniqueEndpoints = new Set(Object.keys(node.attributes).map(key => Number(key.split("/")[0])));
+    const allDeviceTypes: Set<DeviceType> = new Set();
+    uniqueEndpoints.forEach(endpointId => {
+        getEndpointDeviceTypes(node, endpointId).forEach(deviceType => {
+            allDeviceTypes.add(deviceType);
+        });
+    });
+    return Array.from(allDeviceTypes);
+}
+
+@customElement("node-details")
+export class NodeDetails extends LitElement {
+    @consume({ context: clientContext })
+    public client!: MatterClient;
+
+    @consume({ context: tickContext, subscribe: true })
+    protected _tick = 0;
+
+    @property() public node?: MatterNode;
+
+    @state()
+    private _updateInitiated: boolean = false;
+
+    @state()
+    private _otaUploadInProgress: boolean = false;
+
+    private get _otaUploadSupported(): boolean {
+        return (this.client?.serverInfo?.schema_version ?? 0) >= OTA_UPLOAD_MIN_SCHEMA;
+    }
+
+    @consume({ context: bindingContext })
+    endpoint!: number;
+
+    protected override render() {
+        if (!this.node) return html``;
+
+        const isCamera = supportsCameraOverlay(this.node, this.endpoint);
+        const isLiveViewCamera = supportsLiveView(this.node, this.endpoint);
+        // Audio-only live view (e.g. Audio Doorbell, Intercom) gets its own label/icon rather
+        // than "Live View", since no video is actually streamed.
+        const isAudioOnly = supportsAudioOnlyLiveView(this.node, this.endpoint);
+        const badge = icdBadge(this.node.attributes, this.node.available);
+
+        return html`
+            <md-list>
+                <md-list-item>
+                    <ha-svg-icon slot="start" class="device-icon" .path=${getDeviceIcon(this.node)}></ha-svg-icon>
+                    <div slot="headline" class="node-label-row">
+                        <b>${this.node.nodeLabel || "Node Info"}</b>
+                        ${
+                            this.node.available
+                                ? html`
+                                      <md-icon-button
+                                          @click=${() => this._editNodeLabel()}
+                                          aria-label="Edit node label"
+                                          title="Edit node label"
+                                      >
+                                          <ha-svg-icon .path=${mdiPencil}></ha-svg-icon>
+                                      </md-icon-button>
+                                  `
+                                : nothing
+                        }
+                        ${this.node.available ? nothing : html` <span class="status">OFFLINE</span>`}
+                        ${
+                            badge
+                                ? html`<a
+                                      class="icd-badge icd-${badge.state}"
+                                      href="#node/${this.node.node_id}/0/${ICD_CLUSTER_ID}"
+                                      title=${badge.hint}
+                                      >ICD</a
+                                  >`
+                                : nothing
+                        }
+                    </div>
+                </md-list-item>
+                <md-list-item>
+                    <div slot="supporting-text"><span class="left">VendorName: </span>${this.node.vendorName}</div>
+                    <div slot="supporting-text"><span class="left">ProductName: </span>${this.node.productName}</div>
+                    <div slot="supporting-text">
+                        <span class="left">Commissioned: </span>${this.node.date_commissioned}
+                    </div>
+                    <div slot="supporting-text">
+                        <span class="left">Last interviewed: </span>${this.node.last_interview}
+                    </div>
+                    <div slot="supporting-text"><span class="left">Is bridge: </span>${this.node.is_bridge}</div>
+                    <div slot="supporting-text"><span class="left">Serialnumber: </span>${this.node.serialNumber}</div>
+                    ${
+                        this.node.matter_version
+                            ? html`<div slot="supporting-text">
+                                  <span class="left">Matter version: </span>${this.node.matter_version}
+                              </div>`
+                            : nothing
+                    }
+                    ${
+                        this.node.is_bridge
+                            ? ""
+                            : html` <div slot="supporting-text">
+                                  <span class="left">All device types: </span>${getNodeDeviceTypes(this.node)
+                                      .map(deviceType => {
+                                          return deviceType.label;
+                                      })
+                                      .join(" / ")}
+                              </div>`
+                    }
+                </md-list-item>
+                <md-list-item>
+                    <div class="btn-row">
+                        <md-outlined-button @click=${handleAsync(() => this._reinterview())}
+                            >Interview<ha-svg-icon slot="icon" .path=${mdiChatProcessing}></ha-svg-icon
+                        ></md-outlined-button>
+                        ${
+                            this._updateInitiated
+                                ? html` <md-outlined-button disabled
+                                      >Checking for updates<ha-svg-icon slot="icon" .path=${mdiUpdate}></ha-svg-icon
+                                  ></md-outlined-button>`
+                                : (this.node.updateState ?? 0) > 1
+                                  ? html` <md-outlined-button disabled
+                                        >${getUpdateStateLabel(
+                                            this.node.updateState!,
+                                            this.node.updateStateProgress,
+                                        )}<ha-svg-icon slot="icon" .path=${mdiUpdate}></ha-svg-icon
+                                    ></md-outlined-button>`
+                                  : html`<md-outlined-button @click=${handleAsync(() => this._searchUpdate())}
+                                        >Update<ha-svg-icon slot="icon" .path=${mdiUpdate}></ha-svg-icon
+                                    ></md-outlined-button>`
+                        }
+                        ${
+                            this._otaUploadSupported
+                                ? html`<md-outlined-button
+                                      @click=${handleAsync(() => this._uploadOtaFile())}
+                                      ?disabled=${this._otaUploadInProgress}
+                                  >
+                                      ${this._otaUploadInProgress ? "Uploading…" : "Upload Firmware"}
+                                      <ha-svg-icon slot="icon" .path=${mdiUpload}></ha-svg-icon>
+                                  </md-outlined-button>`
+                                : nothing
+                        }
+                        ${
+                            isCamera
+                                ? html`
+                                      <md-outlined-button
+                                          @click=${() => this._openCameraOverlay()}
+                                          ?disabled=${!this.node.available}
+                                      >
+                                          ${isAudioOnly ? "Listen" : isLiveViewCamera ? "Live View" : "Snapshot"}
+                                          <ha-svg-icon
+                                              slot="icon"
+                                              .path=${isAudioOnly ? mdiMicrophone : isLiveViewCamera ? mdiVideo : mdiCamera}
+                                          ></ha-svg-icon>
+                                      </md-outlined-button>
+                                  `
+                                : nothing
+                        }
+                        <md-outlined-button @click=${handleAsync(() => this._openCommissioningWindow())}
+                            >Share<ha-svg-icon slot="icon" .path=${mdiShareVariant}></ha-svg-icon
+                        ></md-outlined-button>
+                        <md-outlined-button @click=${handleAsync(() => this._remove())}
+                            >Remove<ha-svg-icon slot="icon" .path=${mdiTrashCan}></ha-svg-icon
+                        ></md-outlined-button>
+                    </div>
+                </md-list-item>
+            </md-list>
+            ${
+                this._otaUploadSupported
+                    ? html`<input
+                          @change=${handleAsyncEvent((event: Event) => this._onOtaFileSelected(event))}
+                          type="file"
+                          id="otaFileElem"
+                          accept=".ota"
+                          style="display:none"
+                      />`
+                    : nothing
+            }
+        `;
+    }
+
+    private _editNodeLabel() {
+        showNodeLabelDialog(this.client, this.node!);
+    }
+
+    private async _reinterview() {
+        if (
+            !(await showPromptDialog({
+                title: "Reinterview",
+                text: "Are you sure you want to reinterview this node?",
+                confirmText: "Reinterview",
+            }))
+        ) {
+            return;
+        }
+        try {
+            await this.client.interviewNode(this.node!.node_id);
+            showAlertDialog({
+                title: "Reinterview node",
+                text: "Success!",
+            });
+        } catch (err: any) {
+            showAlertDialog({
+                title: "Failed to reinterview node",
+                text: err.message,
+            });
+        }
+    }
+
+    private async _remove() {
+        if (
+            !(await showPromptDialog({
+                title: "Remove",
+                text: "Are you sure you want to remove this node?",
+                confirmText: "Remove",
+            }))
+        ) {
+            return;
+        }
+        try {
+            await this.client.removeNode(this.node!.node_id);
+            // make sure to navigate back to the root if node details was opened
+            location.replace("#");
+        } catch (err: any) {
+            showAlertDialog({
+                title: "Failed to remove node",
+                text: err.message,
+            });
+        }
+    }
+
+    private _openCameraOverlay(): void {
+        const overlay = document.createElement("camera-overlay");
+        overlay.nodeId = this.node!.node_id;
+        overlay.endpointId = this.endpoint;
+        const root = document.querySelector("matter-dashboard-app");
+        if (root) {
+            root.renderRoot.appendChild(overlay);
+        } else {
+            document.body.appendChild(overlay);
+        }
+    }
+
+    /** "1.5 (1234)" from SoftwareVersionString (0/40/10) + SoftwareVersion (0/40/9); manufacturers mix these up, so show both. */
+    private _formatSoftwareVersion(): string {
+        const versionString = this.node?.attributes["0/40/10"];
+        const versionNumber = this.node?.attributes["0/40/9"];
+        const str = typeof versionString === "string" && versionString !== "" ? versionString : "unknown";
+        return typeof versionNumber === "number" ? `${str} (${versionNumber})` : str;
+    }
+
+    private async _searchUpdate() {
+        const nodeUpdate = await this.client.checkNodeUpdate(this.node!.node_id);
+        if (!nodeUpdate) {
+            showAlertDialog({
+                title: "No update available",
+                text: "No update available for this node",
+            });
+            return;
+        }
+        const isUnverifiedSource = nodeUpdate.update_source !== UpdateSource.MAIN_NET_DCL;
+        if (
+            !(await showPromptDialog({
+                title: "Firmware update available",
+                text: html`Found a firmware update for this node on <b>${nodeUpdate.update_source}</b>.
+                    ${
+                        isUnverifiedSource
+                            ? html`
+                                  <p
+                                      style="
+                                          background: var(--md-sys-color-error, #b3261e);
+                                          color: var(--md-sys-color-on-error, #fff);
+                                          padding: 8px 12px;
+                                          border-radius: 4px;
+                                          font-weight: bold;
+                                      "
+                                  >
+                                      Warning: This update was found on an unverified source. Updates from test-net or
+                                      local sources have not been certified and may contain untested firmware that could
+                                      result in non-functional devices. Applying these updates is entirely at your own
+                                      risk.
+                                  </p>
+                              `
+                            : nothing
+                    }
+                    <p>
+                        Current version: <b>${this._formatSoftwareVersion()}</b><br />
+                        Do you want to update this node to version
+                        <b>${nodeUpdate.software_version_string} (${nodeUpdate.software_version})</b>?
+                    </p>
+                    <p>
+                        Note that updating firmware is at your own risk and may cause the device to malfunction or needs
+                        additional handling such as power cycling it and/or recommissioning it. Use with care.
+                    </p>
+                    ${nodeUpdate.firmware_information ? html`<p>${nodeUpdate.firmware_information}</p>` : nothing}`,
+                confirmText: "Start Update",
+            }))
+        ) {
+            return;
+        }
+        try {
+            this._updateInitiated = true;
+            await this.client.updateNode(this.node!.node_id, nodeUpdate.software_version);
+        } catch (err: any) {
+            showAlertDialog({
+                title: "Failed to update node",
+                text: err.message,
+            });
+        } finally {
+            this._updateInitiated = false;
+        }
+    }
+
+    private async _uploadOtaFile() {
+        if (
+            !(await showPromptDialog({
+                title: "Upload OTA firmware file",
+                text: "Select a local .ota firmware image to store on the server. It will only apply to devices whose vendor and product ID match the image.",
+                confirmText: "Select file",
+            }))
+        ) {
+            return;
+        }
+        const fileElem = this.shadowRoot!.getElementById("otaFileElem") as HTMLInputElement;
+        fileElem.click();
+    }
+
+    private async _onOtaFileSelected(event: Event) {
+        const fileElem = event.target as HTMLInputElement;
+        const selectedFile = fileElem.files?.[0];
+        if (selectedFile === undefined) {
+            return;
+        }
+        let info: MatterSoftwareVersion;
+        try {
+            this._otaUploadInProgress = true;
+            info = await this.client.uploadOtaFile(selectedFile);
+        } catch (err: any) {
+            showAlertDialog({
+                title: "Failed to upload firmware",
+                text: err.message,
+            });
+            return;
+        } finally {
+            this._otaUploadInProgress = false;
+            fileElem.value = "";
+        }
+
+        // The image is stored by now: a failure below belongs to the update flow, not the upload.
+        const nodeVendorId = this.node?.attributes["0/40/2"];
+        const nodeProductId = this.node?.attributes["0/40/4"];
+        if (nodeVendorId === info.vid && nodeProductId === info.pid) {
+            await this._searchUpdate();
+        } else {
+            showAlertDialog({
+                title: "Firmware stored",
+                text: `Stored firmware for vendor 0x${info.vid.toString(16)} / product 0x${info.pid.toString(16)}, which does not match this device. It remains available on the server for a matching device.`,
+            });
+        }
+    }
+
+    private async _openCommissioningWindow() {
+        if (
+            !(await showPromptDialog({
+                title: "Share device",
+                text: "Do you want to share this device with another Matter controller (open commissioning window)?",
+                confirmText: "Share",
+            }))
+        ) {
+            return;
+        }
+        try {
+            const shareCode = await this.client.openCommissioningWindow(this.node!.node_id);
+            const manualCode = formatManualPairingCode(shareCode.setup_manual_code);
+            const qrDataUri = renderPairingQrCodeDataUri(shareCode.setup_qr_code);
+            showAlertDialog({
+                title: "Share device",
+                text: html`
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
+                        <img src=${qrDataUri} alt="Commissioning QR code" style="width:200px;height:200px;" />
+                        <div style="text-align:center;">
+                            <div style="font-size:0.8rem;color:var(--md-sys-color-on-surface-variant);">Setup code</div>
+                            <div style="font-size:1.4rem;font-family:monospace;letter-spacing:0.05em;">
+                                ${manualCode}
+                            </div>
+                        </div>
+                    </div>
+                `,
+            });
+        } catch (err: any) {
+            showAlertDialog({
+                title: "Failed to open commissioning window on node",
+                text: err.message,
+            });
+        }
+    }
+
+    static override styles = css`
+        .node-label-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .node-label-row md-icon-button {
+            width: 24px;
+            height: 24px;
+            --md-icon-button-state-layer-width: 32px;
+            --md-icon-button-state-layer-height: 32px;
+        }
+
+        .device-icon {
+            --icon-primary-color: var(--md-sys-color-on-surface-variant, #666);
+        }
+
+        .btn-row {
+            --md-outlined-button-container-shape: 0px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn-row md-outlined-button {
+            max-width: 100%;
+        }
+
+        .left {
+            min-width: 120px;
+            display: inline-block;
+        }
+
+        @media (min-width: 600px) {
+            .left {
+                min-width: 150px;
+            }
+        }
+
+        .whitespace {
+            height: 15px;
+        }
+
+        .status {
+            color: var(--danger-color);
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+
+        .icd-badge {
+            margin-left: 4px;
+            padding: 0 4px;
+            border: 1px solid;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8em;
+            text-decoration: none;
+        }
+
+        .icd-badge.icd-offline {
+            color: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+
+        .icd-badge.icd-lit {
+            color: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .icd-badge.icd-sit {
+            color: var(--text-color);
+            border-color: var(--text-color);
+        }
+    `;
+}

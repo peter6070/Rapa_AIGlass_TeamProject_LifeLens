@@ -1,0 +1,52 @@
+{
+    "name": "@matter-server/custom-clusters",
+    "version": "0.0.0-git",
+    "description": "Custom cluster definitions for matter.js based projects",
+    "homepage": "https://github.com/matter-js/matterjs-server",
+    "bugs": {
+        "url": "https://github.com/matter-js/matterjs-server/issues"
+    },
+    "author": "Open Home Foundation",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/matter-js/matterjs-server.git"
+    },
+    "files": [
+        "dist/**/*",
+        "src/**/*",
+        "LICENSE",
+        "README.md"
+    ],
+    "type": "module",
+    "main": "dist/esm/register.js",
+    "exports": {
+        ".": {
+            "dev-types": {
+                "types": "./src/register.ts"
+            },
+            "import": {
+                "types": "./dist/esm/register.d.ts",
+                "default": "./dist/esm/register.js"
+            }
+        }
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "scripts": {
+        "clean": "nacho-build clean",
+        "build": "nacho-build",
+        "build-clean": "nacho-build --clean",
+        "test": "matter-test --force-exit"
+    },
+    "dependencies": {
+        "@matter/main": "0.17.9"
+    },
+    "devDependencies": {
+        "@matter/testing": "0.17.9",
+        "@types/node": "^26.2.0"
+    },
+    "engines": {
+        "node": ">=22.13.0"
+    }
+}

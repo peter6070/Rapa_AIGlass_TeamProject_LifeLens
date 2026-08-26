@@ -1,0 +1,11 @@
+{"ts":1786669198457,"ops":[{"op":"upd","key":"values","values":{"fabricLabel":"HomeAssistant"}}]}
+{"ts":1786669198459,"ops":[{"op":"upd","key":"values","values":{"nextNodeId":1}}]}
+{"ts":1786669198460,"ops":[{"op":"upd","key":"values","values":{"wifiSsid":"{\"__object__\":\"Undefined\"}"}}]}
+{"ts":1786669198461,"ops":[{"op":"upd","key":"values","values":{"wifiCredentials":"{\"__object__\":\"Undefined\"}"}}]}
+{"ts":1786669198462,"ops":[{"op":"upd","key":"values","values":{"threadDataset":"{\"__object__\":\"Undefined\"}"}}]}
+{"ts":1786669307775,"ops":[{"op":"upd","key":"values","values":{"additionalWifiCredentials":[{"id":"matter","ssid":"rapa_2.4G","credentials":"rapa1015"}]}}]}
+{"ts":1786669352687,"ops":[{"op":"upd","key":"values","values":{"nextNodeId":2}}]}
+{"ts":1786669407349,"ops":[{"op":"upd","key":"values","values":{"wifiSsid":"rapa_2.4G"}}]}
+{"ts":1786669407353,"ops":[{"op":"upd","key":"values","values":{"wifiCredentials":"rapa1015"}}]}
+{"ts":1786669414974,"ops":[{"op":"upd","key":"values","values":{"nextNodeId":3}}]}
+{"ts":1786669506781,"ops":[{"op":"upd","key":"values","values":{"nextNodeId":4}}]}

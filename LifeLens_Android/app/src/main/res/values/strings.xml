@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" project="cameraaccess">
+
+    <!-- App -->
+    <string name="app_name" description="Launcher label / app name">LifeLens</string>
+
+    <!-- App chrome -->
+    <string name="scaffold_error_icon_description" description="Content description for the error snackbar icon">카메라 접근 오류</string>
+    <string name="debug_menu_description" description="Content description for the debug menu button">디버그 메뉴</string>
+
+    <!-- Home Screen -->
+    <string name="register_button_title" description="Connect App">글래스 연결하기</string>
+    <string name="home_redirect_message" description="Redirect message">Meta AI 앱으로 이동해 연결을 승인합니다.</string>
+    <string name="home_tip_session_title" description="Tip title about starting a session">세션 시작</string>
+    <string name="home_tip_session" description="Tip about starting a session">글래스를 연결해 시작하세요.</string>
+    <string name="home_tip_preview_title" description="Tip title about preview">미리보기 시작</string>
+    <string name="home_tip_preview" description="Tip about preview">글래스 카메라 영상을 실시간으로 확인합니다.</string>
+    <string name="home_tip_capture_title" description="Tip title about capture">촬영</string>
+    <string name="home_tip_capture" description="Tip about capture">사진을 찍고 소리와 함께 영상을 녹화합니다.</string>
+    <string name="error_activity_unavailable" description="Error shown when registration is tapped but no activity is available">지금 열 수 없습니다. 다시 시도하세요.</string>
+
+    <!-- Camera Screen -->
+    <string name="camera_access_icon_description" description="Camera Access icon description">카메라 접근 아이콘</string>
+    <string name="live_preview" description="Live preview content description">실시간 미리보기</string>
+    <string name="waiting_for_active_device" description="Waiting for active device message">활성 글래스를 기다리는 중</string>
+    <string name="status_session" description="Session status chip label">세션</string>
+    <string name="status_stream" description="Stream status chip label">스트림</string>
+    <string name="unregister_button_title" description="Disconnect App">연결 해제</string>
+
+    <!-- Placeholder states -->
+    <string name="placeholder_put_on_glasses" description="Placeholder when no active device">글래스를 착용하세요</string>
+    <string name="placeholder_ready_title" description="Placeholder when ready to start a session">준비 완료</string>
+    <string name="placeholder_ready_subtitle" description="Placeholder subtitle when ready">세션을 시작해 글래스에 연결하세요.</string>
+    <string name="placeholder_session_started_title" description="Placeholder when session is started">세션 시작됨</string>
+    <string name="placeholder_session_started_subtitle" description="Placeholder subtitle when session is started">미리보기를 시작해 글래스 카메라 영상을 확인하세요.</string>
+    <string name="paused_title" description="Badge shown over the frozen preview when the glasses pause the stream">일시 정지됨</string>
+    <string name="paused_subtitle" description="Instruction telling the user how to resume a paused stream">글래스를 탭해 다시 시작하세요.</string>
+
+    <!-- Capture controls -->
+    <string name="preview_label" description="Preview toggle label">미리보기</string>
+    <string name="start_preview" description="Start preview content description">미리보기 시작</string>
+    <string name="stop_preview" description="Stop preview content description">미리보기 중지</string>
+    <string name="show_preview" description="Show preview content description">카메라 화면 표시</string>
+    <string name="hide_preview" description="Hide preview content description">카메라 화면 숨기기</string>
+    <string name="record_label" description="Record button label">녹화</string>
+    <string name="record_video" description="Record video content description">영상 녹화</string>
+    <string name="stop_recording" description="Stop recording content description">녹화 중지</string>
+    <string name="capture_photo" description="Capture photo content description">사진 촬영</string>
+    <string name="mic_on" description="Microphone on content description">마이크 끄기</string>
+    <string name="mic_off" description="Microphone off content description">마이크 켜기</string>
+    <string name="start_session_button" description="Start session button">세션 시작</string>
+    <string name="end_session_button" description="End session button">세션 종료</string>
+
+    <!-- Update required -->
+    <string name="update_firmware_button_title" description="Open firmware update">펌웨어 업데이트</string>
+    <string name="update_required_title" description="Update required warning title">업데이트 필요</string>
+    <string name="update_required_subtitle" description="Update required placeholder subtitle">카메라를 시작하려면 업데이트를 적용하세요.</string>
+    <string name="update_required_firmware_message" description="Firmware update required warning">카메라를 시작하려면 글래스 펌웨어 업데이트가 필요합니다.</string>
+
+    <!-- Camera permission redirect -->
+    <string name="camera_permission_redirect_title" description="Camera permission redirect title">카메라 접근 허용</string>
+    <string name="camera_permission_redirect_message" description="Camera permission redirect message">글래스 카메라 영상을 보려면 Meta AI 앱에서 권한을 허용한 뒤 이 앱으로 돌아오세요.</string>
+    <string name="camera_permission_continue" description="Camera permission continue button">계속</string>
+    <string name="camera_permission_cancel" description="Camera permission cancel button">취소</string>
+
+    <!-- Capture Preview -->
+    <string name="captured_photo" description="Captured photo content description">촬영한 사진</string>
+    <string name="share" description="Share">공유</string>
+    <string name="close_preview" description="Close preview content description">닫기</string>
+
+    <!-- Camera errors -->
+    <string name="error_start_session_first" description="Error shown when previewing before a session is started">미리보기 전에 세션을 시작하세요.</string>
+    <string name="error_camera_permission_denied" description="Error shown when camera permission is denied">카메라 권한이 거부되었습니다.</string>
+    <string name="error_photo_capture_failed" description="Error shown when a photo capture fails">사진을 촬영하지 못했습니다. 다시 시도하세요.</string>
+    <string name="error_recording_too_short" description="Error shown when a recording stops before any video is captured">녹화하지 못했습니다. 조금 더 길게 녹화한 뒤 다시 시도하세요.</string>
+    <string name="error_recording_save_failed" description="Error shown when a recording cannot be finalized">녹화 영상을 저장하지 못했습니다. 다시 시도하세요.</string>
+
+    <!-- Wearables errors -->
+    <string name="error_device_update_required" description="Error shown when a connected device needs a firmware update"><xliff:g id="device_name">%1$s</xliff:g> 기기를 업데이트해야 이 앱을 사용할 수 있습니다.</string>
+    <string name="error_permissions_required" description="Error shown when required Android permissions are denied">블루투스와 인터넷 권한을 허용하세요.</string>
+
+    <!-- Streaming notification -->
+    <string name="notification_channel_name" description="Streaming notification channel name">LifeLens 백그라운드 세션</string>
+    <string name="notification_channel_description" description="Streaming notification channel description">글래스 카메라와 STT 세션 진행 알림</string>
+    <string name="notification_title" description="Streaming notification title">LifeLens 세션 실행 중</string>
+    <string name="notification_body" description="Streaming notification body">글래스 카메라와 STT를 백그라운드에서 유지합니다.</string>
+
+</resources>

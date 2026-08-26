@@ -1,0 +1,353 @@
+# Running Matter.js Server in Docker
+
+For testing/evaluation purposes or as a guideline for application developers that want to run the Matter.js Server, we provide an [official Docker container image](https://github.com/matter-js/matterjs-server/pkgs/container/matterjs-server). Make sure that the underlying operating system on which you intend to run the Docker container matches the [requirements needed for Matter and Thread](os_requirements.md).
+
+> [!NOTE]
+> **Attention Home Assistant users:** The Docker image is provided as-is and without official support (due to all the complex requirements to the underlying host/OS). Use it at your own risk if you know what you're doing.
+
+> [!NOTE]
+> **Attention Python server docker users:** This Matter server is designed as a drop-in replacement for the Python Matter Server, and supports the same WebSocket API. The only difference is that the new container runs unprivileged by default and so needs a [permission-change of the data dir](#permission-issues)! Content-wise just use the same data directory and command-line arguments. The first start will include a data migration.
+
+We strongly recommend using Home Assistant OS along with the official Matter Server add-on to use Matter with Home Assistant. The Matter integration automatically installs the Matter Server as an add-on. Please refer to the [Home Assistant documentation](https://www.home-assistant.io/integrations/matter/).
+
+Home Assistant OS has been tested and tuned to be used with Matter and Thread, which makes this combination the best tested and largely worry-free environment.
+
+If you still prefer a self-managed container installation, you might experience communication issues with Matter devices, especially Thread-based devices. This is mostly because the container installation uses host networking, and relies on the networking managed by your operating system.
+
+## Available Docker image Tags
+
+| Tag      | Description                                      |
+| -------- | ------------------------------------------------ |
+| `stable` | Latest stable release                            |
+| `latest` | Same as `stable`                                 |
+| `dev`    | Latest development/nightly (pre-release) version |
+| `X.Y.Z`  | Specific version (e.g., `1.0.0`)                 |
+| `X.Y`    | Latest patch of minor version (e.g., `1.0`)      |
+| `X`      | Latest version of major release (e.g., `1`)      |
+
+## Running using Docker Compose
+
+A Docker Compose file is provided in the repository at [docker/matterjs-server/docker-compose.yml](../docker/matterjs-server/docker-compose.yml):
+
+To use it:
+
+```bash
+# Navigate to the docker compose directory or copy the file
+cd docker/matterjs-server
+
+# Start the server
+docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Stop the server
+docker compose down
+```
+
+## Running the Matter.js Server using a container image
+
+With the following command you can run the Matter.js Server in a container using Docker. The Matter network data (fabric information) are stored in a newly created directory `data` in the current directory. Adjust the command to choose another location instead.
+
+```bash
+mkdir data
+docker run -d \
+  --name matterjs-server \
+  --restart=unless-stopped \
+  -v $(pwd)/data:/data \
+  --network=host \
+  ghcr.io/matter-js/matterjs-server:stable
+```
+
+> [!NOTE]
+> The container uses environment variables for configuration by default (`STORAGE_PATH=/data`). You can override any setting using environment variables or CLI arguments.
+
+> [!WARNING]
+> **Security:** The server binds to all network interfaces by default. You are responsible for
+> securing access according to your requirements and use-case — for example by setting
+> `LISTEN_ADDRESS=127.0.0.1` to restrict the WebSocket port to localhost, setting
+> `PRIMARY_INTERFACE=eth0` to control which interface Matter uses, or placing a firewall or
+> authenticating reverse proxy in front of the server.
+
+### Command Line Options
+
+You can also pass CLI arguments directly (these override environment variables):
+
+```bash
+docker run -d \
+  --name matterjs-server \
+  --restart=unless-stopped \
+  -v $(pwd)/data:/data \
+  --network=host \
+  ghcr.io/matter-js/matterjs-server:stable \
+  --storage-path /data \
+  --primary-interface eth0
+```
+
+Common options:
+
+- `--storage-path <path>`: Path to store Matter fabric data (default: `/data`)
+- `--port <port>`: WebSocket server port (default: `5580`)
+- `--primary-interface <interface>`: Primary network interface for mDNS and Matter communication
+
+For all available options, see the [CLI documentation](cli.md).
+
+### Environment Variables
+
+All CLI options can be configured via environment variables, making it easy to configure the server without passing command-line arguments.
+
+| Variable              | Description                                                                 | Default          | Values / Notes                                                                                                      |
+| --------------------- | --------------------------------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `STORAGE_PATH`        | Path to store Matter fabric data                                            | `/data`          | Any valid path                                                                                                      |
+| `PORT`                | WebSocket server port                                                       | `5580`           | Any valid port number                                                                                               |
+| `LISTEN_ADDRESS`      | IP address(es) to bind WebSocket server                                     | (all interfaces) | Set a specific IP address to bind to a single address. Using `ifname` expands to all IPs on that interface (v4/v6). |
+| `LOG_LEVEL`           | Server logging verbosity                                                    | `info`           | `critical`, `error`, `warning`, `info`, `debug`, `verbose`                                                          |
+| `LOG_FILE`            | Log file path (must include filename, not just dir)                         | (none)           | e.g. `/data/logs/matter-server.log`                                                                                 |
+| `PRIMARY_INTERFACE`   | Primary network interface for mDNS                                          | (auto-detect)    | e.g., `eth0`, `en0`                                                                                                 |
+| `ENABLE_TEST_NET_DCL` | Enable test-net DCL certificates/OTA updates additionally to Production DCL | `false`          | `true`/`false`, `1`/`0`, `yes`/`no`, `on`/`off`                                                                     |
+| `DISABLE_DCL_SEED`    | Disable bundled offline DCL seed; network DCL only                          | `false`          | `true`/`false`, `1`/`0`, `yes`/`no`, `on`/`off`                                                                     |
+| `BLUETOOTH_ADAPTER`   | Bluetooth adapter HCI ID                                                    | (none)           | e.g., `0` for `hci0`, but see [this workaround](#device-discovery-via-host-ble)                                     |
+| `BLE_PROXY`           | Expose `/ble` WebSocket endpoint for a remote BLE proxy client              | `false`          | `true`/`false`. Mutually exclusive with `BLUETOOTH_ADAPTER` — `BLE_PROXY` wins with a warning.                      |
+| `DISABLE_OTA`         | Disable OTA update functionality                                            | `false`          | `true`/`false`, `1`/`0`, `yes`/`no`, `on`/`off`                                                                     |
+| `OTA_PROVIDER_DIR`    | Directory for OTA Provider files                                            | (none)           | Any valid directory path                                                                                            |
+| `DISABLE_DASHBOARD`   | Disable the web dashboard                                                   | `false`          | `true`/`false`, `1`/`0`, `yes`/`no`, `on`/`off`                                                                     |
+| `PRODUCTION_MODE`     | Force dashboard production mode (reverse proxy)                             | `false`          | `true`/`false`, `1`/`0`, `yes`/`no`, `on`/`off`                                                                     |
+| `VENDOR_ID`           | Vendor ID for the Fabric                                                    | `0xfff1`         | Any valid vendor ID                                                                                                 |
+| `FABRIC_ID`           | Fabric ID for the Fabric                                                    | `1`              | Any valid fabric ID                                                                                                 |
+| `ENABLE_TIME_SYNC`    | Automatic time sync for supported devices                                   | `false`          | `true`/`false`, `1`/`0`, `yes`/`no`, `on`/`off`                                                                     |
+| `TZ`                  | Container/Node.js timezone (affects host time zone detection for time sync; not a matter-server option) | (none)           | Any valid IANA timezone, e.g. `Europe/Berlin`                                                                            |
+
+> [!NOTE]
+> `LOG_FILE` must be a full file path including the filename, not a directory. The log is rotated
+> every 24 hours, and on each startup: backups are shifted (`.6`→`.7`, …, `.1`→`.2`, current→`.1`),
+> keeping up to seven daily backup files (≈ 7 days of history). No further cleanup is performed.
+
+> [!NOTE]
+> The `LISTEN_ADDRESS` environment variable only supports a single address. Use the CLI `--listen-address` option (repeatable) to bind to multiple addresses.
+> The value can either be an ip address or the network interface name (i.e. `192.168.1.10` or `eth0`)
+>
+> When `LISTEN_ADDRESS` is an interface name the built-in container health
+> check cannot resolve it and will mark the container unhealthy — see
+> [Health Check](#health-check) for the workaround.
+
+### Node.js Memory Limit
+
+The container runs Node.js without an explicit heap limit. V8 is deliberately lazy
+about garbage collection: when RAM is plentiful it defers major GC and lets the heap
+grow, because collecting early costs CPU for no benefit. A slow climb that **plateaus**
+is therefore normal and healthy — not a leak. **As long as the host has free RAM, you
+do not need to do anything.**
+
+Only consider a limit when the **host** is actually approaching its memory ceiling. In
+that case V8's default old-space size (~2 GB) can let the process grow until the kernel
+OOM-kills it. Setting the standard `NODE_OPTIONS` variable makes V8 GC earlier and more
+often, holding the footprint lower:
+
+```bash
+docker run -d \
+  --name matterjs-server \
+  --restart=unless-stopped \
+  -v $(pwd)/data:/data \
+  --network=host \
+  -e NODE_OPTIONS="--max-old-space-size=512" \
+  ghcr.io/matter-js/matterjs-server:stable
+```
+
+> [!NOTE]
+> `--max-old-space-size` caps **only** the V8 old-space heap (in MB), not total process
+> memory (RSS). Native allocations — BLE buffers, source maps, external memory — live
+> outside it. Size it to roughly **75–80 % of the container memory limit** to leave
+> headroom for non-heap usage.
+
+> [!IMPORTANT]
+> Measure before you tune, and only tune under real pressure. Actual memory use scales
+> with the number of commissioned nodes, so there is no universal "right" value. Run the
+> server with your real fabric for a while and watch usage — e.g. `docker stats
+> matterjs-server` alongside total host memory. If the line keeps climbing without ever
+> plateauing and the host nears its ceiling, lower the limit **stepwise** (e.g. 1024 →
+> 768 → 512), checking after each step: a lower, stable footprint is good; rising CPU /
+> constant GC churn or restart loops mean it is too tight — back off.
+
+> [!NOTE]
+> A heap limit only reclaims **unreachable** memory. If the climb never plateaus and
+> continues across restarts, that is a genuine leak — a limit will not fix it, it just
+> converts a slow climb into periodic OOM-kill + restart. Capture a heap snapshot at low
+> and high usage and report it instead.
+
+### Advanced matter.js Configuration
+
+For advanced matter.js library configuration via `MATTER_*` environment variables (e.g.
+`MATTER_DCL_PRODUCTIONURL` for a self-hosted DCL node), see
+[Advanced matter.js Configuration](cli.md#advanced-matterjs-configuration) in the CLI docs.
+
+Example with environment variables:
+
+```bash
+docker run -d \
+  --name matterjs-server \
+  --restart=unless-stopped \
+  -v $(pwd)/data:/data \
+  --network=host \
+  -e LOG_LEVEL=debug \
+  -e PRIMARY_INTERFACE=eth0 \
+  ghcr.io/matter-js/matterjs-server:stable
+```
+
+## Building the Docker Image Locally
+
+If you want to build the Docker image yourself:
+
+```bash
+cd docker/matterjs-server
+
+# Build with a specific version from npm
+docker build \
+  --build-arg MATTERJS_SERVER_VERSION=1.0.0 \
+  -t matterjs-server:local \
+  .
+
+# Run the locally built image
+docker run -d \
+  --name matterjs-server \
+  --restart=unless-stopped \
+  -v $(pwd)/data:/data \
+  --network=host \
+  matterjs-server:local
+```
+
+## Building for Development
+
+For development, use `Dockerfile.dev` which builds from the local source code instead of npm:
+
+```bash
+# From the repository root
+docker build \
+  -f docker/matterjs-server/Dockerfile.dev \
+  -t matterjs-server:dev \
+  .
+
+# Run the development image
+docker run -d \
+  --name matterjs-server-dev \
+  --restart=unless-stopped \
+  -v $(pwd)/data:/data \
+  --network=host \
+  matterjs-server:dev
+```
+
+This builds the entire monorepo from source, which is useful for:
+
+- Testing local changes in a container environment
+- Debugging container-specific issues
+- Verifying the build process works in a clean environment
+
+## Accessing the Server
+
+Once running, the Matter.js Server exposes:
+
+- **WebSocket API**: `ws://localhost:5580/ws` - Python Matter Server compatible API
+- **Web Dashboard**: `http://localhost:5580/` - Browser-based management interface
+
+## Health Check
+
+The container includes a built-in health check that verifies the server is responding. You can check the container health status with:
+
+```bash
+docker inspect --format='{{.State.Health.Status}}' matterjs-server
+```
+
+The health check honours `LISTEN_ADDRESS` and `PORT`: it uses the first
+address from `LISTEN_ADDRESS` (or `localhost` when unset) and the configured
+port. IPv6 literals are bracketed automatically.
+
+> [!NOTE]
+> **Limitation:** The health check cannot resolve interface names. If you set
+> `LISTEN_ADDRESS=eth0` (or another interface name), the server binds to the
+> resolved IPs but the health check still receives `eth0` and fails to
+> connect. To keep the health check working in that case, either set
+> `LISTEN_ADDRESS` to an explicit IP literal, or use the CLI form with the
+> repeatable `--listen-address` flag and include a literal IP that resolves
+> from inside the container (e.g. `--listen-address eth0 --listen-address 127.0.0.1`).
+
+## Troubleshooting
+
+### mDNS/Device Discovery Issues
+
+If devices are not being discovered, ensure:
+
+1. Host networking is enabled (`--network=host`)
+2. mDNS is working on the host system
+3. The correct network interface is specified with `--primary-interface` if needed
+
+### Permission Issues
+
+If you encounter permission issues with the data volume:
+
+```bash
+# Ensure the data directory and its contents are writable and owned by the correct user
+chown -R 1000:1000 data
+chmod -R u+rwX,go+rX data
+```
+
+### Viewing Logs
+
+```bash
+# Docker
+docker logs -f matterjs-server
+
+# Docker Compose
+docker compose logs -f
+```
+
+### Device discovery via host BLE
+
+For security reasons, by default the matter.js server is run as an unprivileged user in Docker. The Bluetooth backend ([noble](https://github.com/matter-js/matter.js/tree/main/packages/nodejs-ble)) talks to the host adapter in one of two ways, selectable via the `NOBLE_BINDINGS` environment variable:
+
+#### D-Bus / BlueZ backend (recommended)
+
+Set `NOBLE_BINDINGS=dbus` (in addition to selecting the adapter) to make noble talk to the host's BlueZ daemon over D-Bus instead of opening a raw HCI socket. This keeps the container unprivileged: the only host resource it needs is the system D-Bus socket, mounted read-only.
+
+```bash
+docker run -d \
+  --name matterjs-server \
+  --restart=unless-stopped \
+  -v $(pwd)/data:/data \
+  -v /run/dbus:/run/dbus:ro \
+  --network=host \
+  -e NOBLE_BINDINGS=dbus \
+  -e BLUETOOTH_ADAPTER=0 \
+  ghcr.io/matter-js/matterjs-server:stable
+```
+
+The `dbus-next` package required by this backend ships as an optional dependency of the server image, so no extra install step is required. Host requirements: BlueZ running on the host (`bluetoothd`) and the adapter powered (`bluetoothctl power on`). Select a specific adapter with `BLUETOOTH_ADAPTER` if more than one is present.
+
+> [!NOTE]
+> The `dbus-next` library authenticates to the system D-Bus using the peer process UID (Unix socket credentials). In a rootless container this can fail because the UID inside the user namespace does not match the UID seen by the host D-Bus daemon.
+> Make sure the container's UID 1000 (the default user in this image) is mapped to the UID of the host user running the container. With Podman this can be done with `--userns=keep-id:uid=1000,gid=1000`. You also need to set the ownership of the `data` directory and the files underneath to the host user running the container.
+
+#### Raw HCI socket backend
+
+The default (`NOBLE_BINDINGS=hci`) opens the HCI socket directly, which requires elevated privileges the unprivileged container user does not have. If you must use it, this workaround grants the access:
+
+1. Stop the docker container
+2. Use `chown -R 0:0 /path-to-data-volume`
+3. Run docker with the root user `docker run --user=0:0 …` (for compose: `user: 0:0`)
+
+However, be aware this workaround effectively disables container isolation. For this reason, the D-Bus backend above (or other means of device commissioning such as the Home Assistant app) are preferred.
+
+### Battery devices (Sleepy End Devices) drop subscriptions every 15–30 min
+
+This is almost always caused by a stateful firewall somewhere on the path — the host, VM hypervisor, container host, **or the Thread Border Router (e.g. OTBR) host** — expiring its UDP conntrack entry between device report cycles. See [OS Requirements → Stateful firewalls](os_requirements.md#stateful-firewalls-host-vm-hypervisor) for the check and the fix.
+
+### Pinging device fails
+
+When pinging a Matter device (e.g. via the Home Assistant UI) the matter.js server uses the system `ping` or `ping6` command to send an ICMP echo request to the device and listen for its response.
+
+To allow this, modern Linux distributions use a sysctl `net.ipv4.ping_group_range` with a value of `0 2147483647`, meaning all user groups may send echo requests and responses (but _not_ any other ICMP packet, see below).
+
+If your host still has the old value of `1 0` (no pings allowed for anyone), it is recommended to either
+
+- update the value to include group id 1000, or to
+- grant the kernel capability `CAP_NET_RAW` instead: `docker run --cap-add NET_RAW` (for compose: `cap_add: NET_RAW`)
+
+Note that the latter is a broader permission: it could be exploited to craft malicious network packets of any form.

@@ -1,0 +1,55 @@
+{
+    "name": "@matter-server/ws-client",
+    "version": "0.0.0-git",
+    "description": "WebSocket client library for Matter server",
+    "homepage": "https://github.com/matter-js/matterjs-server",
+    "bugs": {
+        "url": "https://github.com/matter-js/matterjs-server/issues"
+    },
+    "license": "Apache-2.0",
+    "author": "Open Home Foundation",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/matter-js/matterjs-server.git"
+    },
+    "files": [
+        "dist/**/*",
+        "src/**/*",
+        "LICENSE",
+        "README.md"
+    ],
+    "type": "module",
+    "main": "dist/esm/index.js",
+    "exports": {
+        ".": {
+            "dev-types": {
+                "types": "./src/index.ts"
+            },
+            "import": {
+                "types": "./dist/esm/index.d.ts",
+                "default": "./dist/esm/index.js"
+            }
+        }
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "scripts": {
+        "clean": "nacho-build clean",
+        "build": "nacho-build",
+        "build-clean": "nacho-build --clean",
+        "test": "matter-test --force-exit"
+    },
+    "dependencies": {
+        "@matter/thread-br-client": "0.17.9"
+    },
+    "devDependencies": {
+        "@matter/testing": "0.17.9",
+        "@types/node": "^26.2.0",
+        "@types/ws": "^8.18.1",
+        "ws": "^8.21.3"
+    },
+    "engines": {
+        "node": ">=22.13.0"
+    }
+}

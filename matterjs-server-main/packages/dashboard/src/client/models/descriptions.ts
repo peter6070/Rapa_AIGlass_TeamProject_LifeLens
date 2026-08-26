@@ -1,0 +1,20379 @@
+/*
+ * Descriptions for SDK Objects.
+ * This file is auto-generated, DO NOT edit.
+ */
+
+export interface DeviceType {
+    id: number;
+    label: string;
+}
+
+export interface ClusterAttributeDescription {
+    id: number;
+    cluster_id: number;
+    label: string;
+    type: string;
+    writable: boolean;
+}
+
+export interface ClusterCommandDescription {
+    id: number;
+    cluster_id: number;
+    name: string;
+    label: string;
+}
+
+export interface ClusterFeatureDescription {
+    bit: number;
+    code: string;
+    label: string;
+}
+
+export interface ClusterDescription {
+    id: number;
+    label: string;
+    attributes: { [attribute_id: string]: ClusterAttributeDescription };
+    commands: { [command_id: string]: ClusterCommandDescription };
+    features: { [bit: string]: ClusterFeatureDescription };
+}
+
+export interface SemanticTagDescription {
+    id: number;
+    label: string;
+}
+
+export interface SemanticTagNamespaceDescription {
+    id: number;
+    label: string;
+    tags: { [tag_id: string]: SemanticTagDescription };
+}
+
+export const device_types: Record<number, DeviceType> = {
+    "10": {
+        "id": 10,
+        "label": "Door Lock"
+    },
+    "11": {
+        "id": 11,
+        "label": "Door Lock Controller"
+    },
+    "14": {
+        "id": 14,
+        "label": "Aggregator"
+    },
+    "15": {
+        "id": 15,
+        "label": "Generic Switch"
+    },
+    "17": {
+        "id": 17,
+        "label": "Power Source"
+    },
+    "18": {
+        "id": 18,
+        "label": "Ota Requestor"
+    },
+    "19": {
+        "id": 19,
+        "label": "Bridged Node"
+    },
+    "20": {
+        "id": 20,
+        "label": "Ota Provider"
+    },
+    "21": {
+        "id": 21,
+        "label": "Contact Sensor"
+    },
+    "22": {
+        "id": 22,
+        "label": "Root Node"
+    },
+    "23": {
+        "id": 23,
+        "label": "Solar Power"
+    },
+    "24": {
+        "id": 24,
+        "label": "Battery Storage"
+    },
+    "25": {
+        "id": 25,
+        "label": "Secondary Network Interface"
+    },
+    "34": {
+        "id": 34,
+        "label": "Speaker"
+    },
+    "35": {
+        "id": 35,
+        "label": "Casting Video Player"
+    },
+    "36": {
+        "id": 36,
+        "label": "Content App"
+    },
+    "39": {
+        "id": 39,
+        "label": "Mode Select"
+    },
+    "40": {
+        "id": 40,
+        "label": "Basic Video Player"
+    },
+    "41": {
+        "id": 41,
+        "label": "Casting Video Client"
+    },
+    "42": {
+        "id": 42,
+        "label": "Video Remote Control"
+    },
+    "43": {
+        "id": 43,
+        "label": "Fan"
+    },
+    "44": {
+        "id": 44,
+        "label": "Air Quality Sensor"
+    },
+    "45": {
+        "id": 45,
+        "label": "Air Purifier"
+    },
+    "64": {
+        "id": 64,
+        "label": "Irrigation System"
+    },
+    "65": {
+        "id": 65,
+        "label": "Water Freeze Detector"
+    },
+    "66": {
+        "id": 66,
+        "label": "Water Valve"
+    },
+    "67": {
+        "id": 67,
+        "label": "Water Leak Detector"
+    },
+    "68": {
+        "id": 68,
+        "label": "Rain Sensor"
+    },
+    "69": {
+        "id": 69,
+        "label": "Soil Sensor"
+    },
+    "112": {
+        "id": 112,
+        "label": "Refrigerator"
+    },
+    "113": {
+        "id": 113,
+        "label": "Temperature Controlled Cabinet"
+    },
+    "114": {
+        "id": 114,
+        "label": "Room Air Conditioner"
+    },
+    "115": {
+        "id": 115,
+        "label": "Laundry Washer"
+    },
+    "116": {
+        "id": 116,
+        "label": "Robotic Vacuum Cleaner"
+    },
+    "117": {
+        "id": 117,
+        "label": "Dishwasher"
+    },
+    "118": {
+        "id": 118,
+        "label": "Smoke Co Alarm"
+    },
+    "119": {
+        "id": 119,
+        "label": "Cook Surface"
+    },
+    "120": {
+        "id": 120,
+        "label": "Cooktop"
+    },
+    "121": {
+        "id": 121,
+        "label": "Microwave Oven"
+    },
+    "122": {
+        "id": 122,
+        "label": "Extractor Hood"
+    },
+    "123": {
+        "id": 123,
+        "label": "Oven"
+    },
+    "124": {
+        "id": 124,
+        "label": "Laundry Dryer"
+    },
+    "144": {
+        "id": 144,
+        "label": "Network Infrastructure Manager"
+    },
+    "145": {
+        "id": 145,
+        "label": "Thread Border Router"
+    },
+    "256": {
+        "id": 256,
+        "label": "On Off Light"
+    },
+    "257": {
+        "id": 257,
+        "label": "Dimmable Light"
+    },
+    "259": {
+        "id": 259,
+        "label": "On Off Light Switch"
+    },
+    "260": {
+        "id": 260,
+        "label": "Dimmer Switch"
+    },
+    "261": {
+        "id": 261,
+        "label": "Color Dimmer Switch"
+    },
+    "262": {
+        "id": 262,
+        "label": "Light Sensor"
+    },
+    "263": {
+        "id": 263,
+        "label": "Occupancy Sensor"
+    },
+    "266": {
+        "id": 266,
+        "label": "On Off Plug In Unit"
+    },
+    "267": {
+        "id": 267,
+        "label": "Dimmable Plug In Unit"
+    },
+    "268": {
+        "id": 268,
+        "label": "Color Temperature Light"
+    },
+    "269": {
+        "id": 269,
+        "label": "Extended Color Light"
+    },
+    "271": {
+        "id": 271,
+        "label": "Mounted On Off Control"
+    },
+    "272": {
+        "id": 272,
+        "label": "Mounted Dimmable Load Control"
+    },
+    "304": {
+        "id": 304,
+        "label": "Joint Fabric Administrator"
+    },
+    "320": {
+        "id": 320,
+        "label": "Intercom"
+    },
+    "321": {
+        "id": 321,
+        "label": "Audio Doorbell"
+    },
+    "322": {
+        "id": 322,
+        "label": "Camera"
+    },
+    "323": {
+        "id": 323,
+        "label": "Video Doorbell"
+    },
+    "324": {
+        "id": 324,
+        "label": "Floodlight Camera"
+    },
+    "325": {
+        "id": 325,
+        "label": "Snapshot Camera"
+    },
+    "326": {
+        "id": 326,
+        "label": "Chime"
+    },
+    "327": {
+        "id": 327,
+        "label": "Camera Controller"
+    },
+    "328": {
+        "id": 328,
+        "label": "Doorbell"
+    },
+    "514": {
+        "id": 514,
+        "label": "Window Covering"
+    },
+    "515": {
+        "id": 515,
+        "label": "Window Covering Controller"
+    },
+    "560": {
+        "id": 560,
+        "label": "Closure"
+    },
+    "561": {
+        "id": 561,
+        "label": "Closure Panel"
+    },
+    "574": {
+        "id": 574,
+        "label": "Closure Controller"
+    },
+    "769": {
+        "id": 769,
+        "label": "Thermostat"
+    },
+    "770": {
+        "id": 770,
+        "label": "Temperature Sensor"
+    },
+    "771": {
+        "id": 771,
+        "label": "Pump"
+    },
+    "772": {
+        "id": 772,
+        "label": "Pump Controller"
+    },
+    "773": {
+        "id": 773,
+        "label": "Pressure Sensor"
+    },
+    "774": {
+        "id": 774,
+        "label": "Flow Sensor"
+    },
+    "775": {
+        "id": 775,
+        "label": "Humidity Sensor"
+    },
+    "777": {
+        "id": 777,
+        "label": "Heat Pump"
+    },
+    "778": {
+        "id": 778,
+        "label": "Thermostat Controller"
+    },
+    "1292": {
+        "id": 1292,
+        "label": "Energy Evse"
+    },
+    "1293": {
+        "id": 1293,
+        "label": "Device Energy Management"
+    },
+    "1295": {
+        "id": 1295,
+        "label": "Water Heater"
+    },
+    "1296": {
+        "id": 1296,
+        "label": "Electrical Sensor"
+    },
+    "1297": {
+        "id": 1297,
+        "label": "Electrical Utility Meter"
+    },
+    "1298": {
+        "id": 1298,
+        "label": "Meter Reference Point"
+    },
+    "1299": {
+        "id": 1299,
+        "label": "Electrical Energy Tariff"
+    },
+    "1300": {
+        "id": 1300,
+        "label": "Electrical Meter"
+    },
+    "2112": {
+        "id": 2112,
+        "label": "Control Bridge"
+    },
+    "2128": {
+        "id": 2128,
+        "label": "On Off Sensor"
+    }
+};
+
+export const clusters: Record<number, ClusterDescription> = {
+    "3": {
+        "id": 3,
+        "label": "Identify",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 3,
+                "label": "IdentifyTime",
+                "type": "uint16",
+                "writable": true
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 3,
+                "label": "IdentifyType",
+                "type": "IdentifyTypeEnum",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 3,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 3,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 3,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 3,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 3,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 3,
+                "name": "Identify",
+                "label": "Identify"
+            },
+            "64": {
+                "id": 64,
+                "cluster_id": 3,
+                "name": "TriggerEffect",
+                "label": "Trigger Effect"
+            }
+        },
+        "features": {}
+    },
+    "4": {
+        "id": 4,
+        "label": "Groups",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 4,
+                "label": "NameSupport",
+                "type": "NameSupportBitmap",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 4,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 4,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 4,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 4,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 4,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 4,
+                "name": "AddGroup",
+                "label": "Add Group"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 4,
+                "name": "ViewGroup",
+                "label": "View Group"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 4,
+                "name": "GetGroupMembership",
+                "label": "Get Group Membership"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 4,
+                "name": "RemoveGroup",
+                "label": "Remove Group"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 4,
+                "name": "RemoveAllGroups",
+                "label": "Remove All Groups"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 4,
+                "name": "AddGroupIfIdentifying",
+                "label": "Add Group If Identifying"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "GN",
+                "label": "Group Names"
+            }
+        }
+    },
+    "6": {
+        "id": 6,
+        "label": "OnOff",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 6,
+                "label": "OnOff",
+                "type": "bool",
+                "writable": false
+            },
+            "16384": {
+                "id": 16384,
+                "cluster_id": 6,
+                "label": "GlobalSceneControl",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "16385": {
+                "id": 16385,
+                "cluster_id": 6,
+                "label": "OnTime",
+                "type": "Optional[uint16]",
+                "writable": true
+            },
+            "16386": {
+                "id": 16386,
+                "cluster_id": 6,
+                "label": "OffWaitTime",
+                "type": "Optional[uint16]",
+                "writable": true
+            },
+            "16387": {
+                "id": 16387,
+                "cluster_id": 6,
+                "label": "StartUpOnOff",
+                "type": "Optional[Nullable[StartUpOnOffEnum]]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 6,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 6,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 6,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 6,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 6,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 6,
+                "name": "Off",
+                "label": "Off"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 6,
+                "name": "On",
+                "label": "On"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 6,
+                "name": "Toggle",
+                "label": "Toggle"
+            },
+            "64": {
+                "id": 64,
+                "cluster_id": 6,
+                "name": "OffWithEffect",
+                "label": "Off With Effect"
+            },
+            "65": {
+                "id": 65,
+                "cluster_id": 6,
+                "name": "OnWithRecallGlobalScene",
+                "label": "On With Recall Global Scene"
+            },
+            "66": {
+                "id": 66,
+                "cluster_id": 6,
+                "name": "OnWithTimedOff",
+                "label": "On With Timed Off"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "LT",
+                "label": "Lighting"
+            },
+            "1": {
+                "bit": 1,
+                "code": "DF",
+                "label": "Dead Front Behavior"
+            },
+            "2": {
+                "bit": 2,
+                "code": "OFFONLY",
+                "label": "Off Only"
+            }
+        }
+    },
+    "8": {
+        "id": 8,
+        "label": "LevelControl",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 8,
+                "label": "CurrentLevel",
+                "type": "Nullable[uint8]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 8,
+                "label": "RemainingTime",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 8,
+                "label": "MinLevel",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 8,
+                "label": "MaxLevel",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 8,
+                "label": "CurrentFrequency",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 8,
+                "label": "MinFrequency",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 8,
+                "label": "MaxFrequency",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "15": {
+                "id": 15,
+                "cluster_id": 8,
+                "label": "Options",
+                "type": "OptionsBitmap",
+                "writable": true
+            },
+            "16": {
+                "id": 16,
+                "cluster_id": 8,
+                "label": "OnOffTransitionTime",
+                "type": "Optional[uint16]",
+                "writable": true
+            },
+            "17": {
+                "id": 17,
+                "cluster_id": 8,
+                "label": "OnLevel",
+                "type": "Nullable[uint8]",
+                "writable": true
+            },
+            "18": {
+                "id": 18,
+                "cluster_id": 8,
+                "label": "OnTransitionTime",
+                "type": "Optional[Nullable[uint16]]",
+                "writable": true
+            },
+            "19": {
+                "id": 19,
+                "cluster_id": 8,
+                "label": "OffTransitionTime",
+                "type": "Optional[Nullable[uint16]]",
+                "writable": true
+            },
+            "20": {
+                "id": 20,
+                "cluster_id": 8,
+                "label": "DefaultMoveRate",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": true
+            },
+            "16384": {
+                "id": 16384,
+                "cluster_id": 8,
+                "label": "StartUpCurrentLevel",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 8,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 8,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 8,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 8,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 8,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 8,
+                "name": "MoveToLevel",
+                "label": "Move To Level"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 8,
+                "name": "Move",
+                "label": "Move"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 8,
+                "name": "Step",
+                "label": "Step"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 8,
+                "name": "Stop",
+                "label": "Stop"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 8,
+                "name": "MoveToLevelWithOnOff",
+                "label": "Move To Level With On Off"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 8,
+                "name": "MoveWithOnOff",
+                "label": "Move With On Off"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 8,
+                "name": "StepWithOnOff",
+                "label": "Step With On Off"
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 8,
+                "name": "StopWithOnOff",
+                "label": "Stop With On Off"
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 8,
+                "name": "MoveToClosestFrequency",
+                "label": "Move To Closest Frequency"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "OO",
+                "label": "On Off"
+            },
+            "1": {
+                "bit": 1,
+                "code": "LT",
+                "label": "Lighting"
+            },
+            "2": {
+                "bit": 2,
+                "code": "FQ",
+                "label": "Frequency"
+            }
+        }
+    },
+    "29": {
+        "id": 29,
+        "label": "Descriptor",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 29,
+                "label": "DeviceTypeList",
+                "type": "List[DeviceTypeStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 29,
+                "label": "ServerList",
+                "type": "List[cluster-id]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 29,
+                "label": "ClientList",
+                "type": "List[cluster-id]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 29,
+                "label": "PartsList",
+                "type": "List[endpoint-no]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 29,
+                "label": "TagList",
+                "type": "List[semtag]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 29,
+                "label": "EndpointUniqueId",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 29,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 29,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 29,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 29,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 29,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "TAGLIST",
+                "label": "Tag List"
+            }
+        }
+    },
+    "30": {
+        "id": 30,
+        "label": "Binding",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 30,
+                "label": "Binding",
+                "type": "List[TargetStruct]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 30,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 30,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 30,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 30,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 30,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "31": {
+        "id": 31,
+        "label": "AccessControl",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 31,
+                "label": "Acl",
+                "type": "List[AccessControlEntryStruct]",
+                "writable": true
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 31,
+                "label": "Extension",
+                "type": "List[AccessControlExtensionStruct]",
+                "writable": true
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 31,
+                "label": "SubjectsPerAccessControlEntry",
+                "type": "uint16",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 31,
+                "label": "TargetsPerAccessControlEntry",
+                "type": "uint16",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 31,
+                "label": "AccessControlEntriesPerFabric",
+                "type": "uint16",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 31,
+                "label": "CommissioningArl",
+                "type": "List[CommissioningAccessRestrictionEntryStruct]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 31,
+                "label": "Arl",
+                "type": "List[AccessRestrictionEntryStruct]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 31,
+                "label": "AuxiliaryAcl",
+                "type": "List[AccessControlEntryStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 31,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 31,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 31,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 31,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 31,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 31,
+                "name": "ReviewFabricRestrictions",
+                "label": "Review Fabric Restrictions"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "EXTS",
+                "label": "Extension"
+            },
+            "1": {
+                "bit": 1,
+                "code": "MNGD",
+                "label": "Managed Device"
+            },
+            "2": {
+                "bit": 2,
+                "code": "AUX",
+                "label": "Auxiliary"
+            }
+        }
+    },
+    "37": {
+        "id": 37,
+        "label": "Actions",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 37,
+                "label": "ActionList",
+                "type": "List[ActionStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 37,
+                "label": "EndpointLists",
+                "type": "List[EndpointListStruct]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 37,
+                "label": "SetupUrl",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 37,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 37,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 37,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 37,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 37,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 37,
+                "name": "InstantAction",
+                "label": "Instant Action"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 37,
+                "name": "InstantActionWithTransition",
+                "label": "Instant Action With Transition"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 37,
+                "name": "StartAction",
+                "label": "Start Action"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 37,
+                "name": "StartActionWithDuration",
+                "label": "Start Action With Duration"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 37,
+                "name": "StopAction",
+                "label": "Stop Action"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 37,
+                "name": "PauseAction",
+                "label": "Pause Action"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 37,
+                "name": "PauseActionWithDuration",
+                "label": "Pause Action With Duration"
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 37,
+                "name": "ResumeAction",
+                "label": "Resume Action"
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 37,
+                "name": "EnableAction",
+                "label": "Enable Action"
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 37,
+                "name": "EnableActionWithDuration",
+                "label": "Enable Action With Duration"
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 37,
+                "name": "DisableAction",
+                "label": "Disable Action"
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 37,
+                "name": "DisableActionWithDuration",
+                "label": "Disable Action With Duration"
+            }
+        },
+        "features": {}
+    },
+    "40": {
+        "id": 40,
+        "label": "BasicInformation",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 40,
+                "label": "DataModelRevision",
+                "type": "uint16",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 40,
+                "label": "VendorName",
+                "type": "string",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 40,
+                "label": "VendorId",
+                "type": "vendor-id",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 40,
+                "label": "ProductName",
+                "type": "string",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 40,
+                "label": "ProductId",
+                "type": "uint16",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 40,
+                "label": "NodeLabel",
+                "type": "string",
+                "writable": true
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 40,
+                "label": "Location",
+                "type": "string",
+                "writable": true
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 40,
+                "label": "HardwareVersion",
+                "type": "uint16",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 40,
+                "label": "HardwareVersionString",
+                "type": "string",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 40,
+                "label": "SoftwareVersion",
+                "type": "uint32",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 40,
+                "label": "SoftwareVersionString",
+                "type": "string",
+                "writable": false
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 40,
+                "label": "ManufacturingDate",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 40,
+                "label": "PartNumber",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "13": {
+                "id": 13,
+                "cluster_id": 40,
+                "label": "ProductUrl",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "14": {
+                "id": 14,
+                "cluster_id": 40,
+                "label": "ProductLabel",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "15": {
+                "id": 15,
+                "cluster_id": 40,
+                "label": "SerialNumber",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "16": {
+                "id": 16,
+                "cluster_id": 40,
+                "label": "LocalConfigDisabled",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "17": {
+                "id": 17,
+                "cluster_id": 40,
+                "label": "Reachable",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "18": {
+                "id": 18,
+                "cluster_id": 40,
+                "label": "UniqueId",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "19": {
+                "id": 19,
+                "cluster_id": 40,
+                "label": "CapabilityMinima",
+                "type": "CapabilityMinimaStruct",
+                "writable": false
+            },
+            "20": {
+                "id": 20,
+                "cluster_id": 40,
+                "label": "ProductAppearance",
+                "type": "Optional[ProductAppearanceStruct]",
+                "writable": false
+            },
+            "21": {
+                "id": 21,
+                "cluster_id": 40,
+                "label": "SpecificationVersion",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "22": {
+                "id": 22,
+                "cluster_id": 40,
+                "label": "MaxPathsPerInvoke",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "24": {
+                "id": 24,
+                "cluster_id": 40,
+                "label": "ConfigurationVersion",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 40,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 40,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 40,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 40,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 40,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "41": {
+        "id": 41,
+        "label": "OtaSoftwareUpdateProvider",
+        "attributes": {
+            "65528": {
+                "id": 65528,
+                "cluster_id": 41,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 41,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 41,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 41,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 41,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 41,
+                "name": "QueryImage",
+                "label": "Query Image"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 41,
+                "name": "ApplyUpdateRequest",
+                "label": "Apply Update Request"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 41,
+                "name": "NotifyUpdateApplied",
+                "label": "Notify Update Applied"
+            }
+        },
+        "features": {}
+    },
+    "42": {
+        "id": 42,
+        "label": "OtaSoftwareUpdateRequestor",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 42,
+                "label": "DefaultOtaProviders",
+                "type": "List[ProviderLocation]",
+                "writable": true
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 42,
+                "label": "UpdatePossible",
+                "type": "bool",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 42,
+                "label": "UpdateState",
+                "type": "UpdateStateEnum",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 42,
+                "label": "UpdateStateProgress",
+                "type": "Nullable[uint8]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 42,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 42,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 42,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 42,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 42,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 42,
+                "name": "AnnounceOtaProvider",
+                "label": "Announce Ota Provider"
+            }
+        },
+        "features": {}
+    },
+    "43": {
+        "id": 43,
+        "label": "LocalizationConfiguration",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 43,
+                "label": "ActiveLocale",
+                "type": "string",
+                "writable": true
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 43,
+                "label": "SupportedLocales",
+                "type": "List[string]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 43,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 43,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 43,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 43,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 43,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "44": {
+        "id": 44,
+        "label": "TimeFormatLocalization",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 44,
+                "label": "HourFormat",
+                "type": "HourFormatEnum",
+                "writable": true
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 44,
+                "label": "ActiveCalendarType",
+                "type": "Optional[CalendarTypeEnum]",
+                "writable": true
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 44,
+                "label": "SupportedCalendarTypes",
+                "type": "List[CalendarTypeEnum]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 44,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 44,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 44,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 44,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 44,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "CALFMT",
+                "label": "Calendar Format"
+            }
+        }
+    },
+    "45": {
+        "id": 45,
+        "label": "UnitLocalization",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 45,
+                "label": "TemperatureUnit",
+                "type": "Optional[TempUnitEnum]",
+                "writable": true
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 45,
+                "label": "SupportedTemperatureUnits",
+                "type": "List[TempUnitEnum]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 45,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 45,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 45,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 45,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 45,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "TEMP",
+                "label": "Temperature Unit"
+            }
+        }
+    },
+    "46": {
+        "id": 46,
+        "label": "PowerSourceConfiguration",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 46,
+                "label": "Sources",
+                "type": "List[endpoint-no]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 46,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 46,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 46,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 46,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 46,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "47": {
+        "id": 47,
+        "label": "PowerSource",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 47,
+                "label": "Status",
+                "type": "PowerSourceStatusEnum",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 47,
+                "label": "Order",
+                "type": "uint8",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 47,
+                "label": "Description",
+                "type": "string",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 47,
+                "label": "WiredAssessedInputVoltage",
+                "type": "Optional[Nullable[uint32]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 47,
+                "label": "WiredAssessedInputFrequency",
+                "type": "Optional[Nullable[uint16]]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 47,
+                "label": "WiredCurrentType",
+                "type": "Optional[WiredCurrentTypeEnum]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 47,
+                "label": "WiredAssessedCurrent",
+                "type": "Optional[Nullable[uint32]]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 47,
+                "label": "WiredNominalVoltage",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 47,
+                "label": "WiredMaximumCurrent",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 47,
+                "label": "WiredPresent",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 47,
+                "label": "ActiveWiredFaults",
+                "type": "List[WiredFaultEnum]",
+                "writable": false
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 47,
+                "label": "BatVoltage",
+                "type": "Optional[Nullable[uint32]]",
+                "writable": false
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 47,
+                "label": "BatPercentRemaining",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": false
+            },
+            "13": {
+                "id": 13,
+                "cluster_id": 47,
+                "label": "BatTimeRemaining",
+                "type": "Optional[Nullable[uint32]]",
+                "writable": false
+            },
+            "14": {
+                "id": 14,
+                "cluster_id": 47,
+                "label": "BatChargeLevel",
+                "type": "Optional[BatChargeLevelEnum]",
+                "writable": false
+            },
+            "15": {
+                "id": 15,
+                "cluster_id": 47,
+                "label": "BatReplacementNeeded",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "16": {
+                "id": 16,
+                "cluster_id": 47,
+                "label": "BatReplaceability",
+                "type": "Optional[BatReplaceabilityEnum]",
+                "writable": false
+            },
+            "17": {
+                "id": 17,
+                "cluster_id": 47,
+                "label": "BatPresent",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "18": {
+                "id": 18,
+                "cluster_id": 47,
+                "label": "ActiveBatFaults",
+                "type": "List[BatFaultEnum]",
+                "writable": false
+            },
+            "19": {
+                "id": 19,
+                "cluster_id": 47,
+                "label": "BatReplacementDescription",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "20": {
+                "id": 20,
+                "cluster_id": 47,
+                "label": "BatCommonDesignation",
+                "type": "Optional[BatCommonDesignationEnum]",
+                "writable": false
+            },
+            "21": {
+                "id": 21,
+                "cluster_id": 47,
+                "label": "BatAnsiDesignation",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "22": {
+                "id": 22,
+                "cluster_id": 47,
+                "label": "BatIecDesignation",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "23": {
+                "id": 23,
+                "cluster_id": 47,
+                "label": "BatApprovedChemistry",
+                "type": "Optional[BatApprovedChemistryEnum]",
+                "writable": false
+            },
+            "24": {
+                "id": 24,
+                "cluster_id": 47,
+                "label": "BatCapacity",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "25": {
+                "id": 25,
+                "cluster_id": 47,
+                "label": "BatQuantity",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "26": {
+                "id": 26,
+                "cluster_id": 47,
+                "label": "BatChargeState",
+                "type": "Optional[BatChargeStateEnum]",
+                "writable": false
+            },
+            "27": {
+                "id": 27,
+                "cluster_id": 47,
+                "label": "BatTimeToFullCharge",
+                "type": "Optional[Nullable[uint32]]",
+                "writable": false
+            },
+            "28": {
+                "id": 28,
+                "cluster_id": 47,
+                "label": "BatFunctionalWhileCharging",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "29": {
+                "id": 29,
+                "cluster_id": 47,
+                "label": "BatChargingCurrent",
+                "type": "Optional[Nullable[uint32]]",
+                "writable": false
+            },
+            "30": {
+                "id": 30,
+                "cluster_id": 47,
+                "label": "ActiveBatChargeFaults",
+                "type": "List[BatChargeFaultEnum]",
+                "writable": false
+            },
+            "31": {
+                "id": 31,
+                "cluster_id": 47,
+                "label": "EndpointList",
+                "type": "List[endpoint-no]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 47,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 47,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 47,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 47,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 47,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "WIRED",
+                "label": "Wired"
+            },
+            "1": {
+                "bit": 1,
+                "code": "BAT",
+                "label": "Battery"
+            },
+            "2": {
+                "bit": 2,
+                "code": "RECHG",
+                "label": "Rechargeable"
+            },
+            "3": {
+                "bit": 3,
+                "code": "REPLC",
+                "label": "Replaceable"
+            }
+        }
+    },
+    "48": {
+        "id": 48,
+        "label": "GeneralCommissioning",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 48,
+                "label": "Breadcrumb",
+                "type": "uint64",
+                "writable": true
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 48,
+                "label": "BasicCommissioningInfo",
+                "type": "BasicCommissioningInfo",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 48,
+                "label": "RegulatoryConfig",
+                "type": "RegulatoryLocationTypeEnum",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 48,
+                "label": "LocationCapability",
+                "type": "RegulatoryLocationTypeEnum",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 48,
+                "label": "SupportsConcurrentConnection",
+                "type": "bool",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 48,
+                "label": "TcAcceptedVersion",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 48,
+                "label": "TcMinRequiredVersion",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 48,
+                "label": "TcAcknowledgements",
+                "type": "Optional[map16]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 48,
+                "label": "TcAcknowledgementsRequired",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 48,
+                "label": "TcUpdateDeadline",
+                "type": "Optional[Nullable[uint32]]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 48,
+                "label": "RecoveryIdentifier",
+                "type": "Optional[bytes]",
+                "writable": false
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 48,
+                "label": "NetworkRecoveryReason",
+                "type": "Optional[Nullable[NetworkRecoveryReasonEnum]]",
+                "writable": false
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 48,
+                "label": "IsCommissioningWithoutPower",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 48,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 48,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 48,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 48,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 48,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 48,
+                "name": "ArmFailSafe",
+                "label": "Arm Fail Safe"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 48,
+                "name": "SetRegulatoryConfig",
+                "label": "Set Regulatory Config"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 48,
+                "name": "CommissioningComplete",
+                "label": "Commissioning Complete"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 48,
+                "name": "SetTcAcknowledgements",
+                "label": "Set Tc Acknowledgements"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "TC",
+                "label": "Terms And Conditions"
+            },
+            "1": {
+                "bit": 1,
+                "code": "NR",
+                "label": "Network Recovery"
+            }
+        }
+    },
+    "49": {
+        "id": 49,
+        "label": "NetworkCommissioning",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 49,
+                "label": "MaxNetworks",
+                "type": "uint8",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 49,
+                "label": "Networks",
+                "type": "List[NetworkInfoStruct]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 49,
+                "label": "ScanMaxTimeSeconds",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 49,
+                "label": "ConnectMaxTimeSeconds",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 49,
+                "label": "InterfaceEnabled",
+                "type": "bool",
+                "writable": true
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 49,
+                "label": "LastNetworkingStatus",
+                "type": "Nullable[NetworkCommissioningStatusEnum]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 49,
+                "label": "LastNetworkId",
+                "type": "Nullable[bytes]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 49,
+                "label": "LastConnectErrorValue",
+                "type": "Nullable[int32]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 49,
+                "label": "SupportedWiFiBands",
+                "type": "List[WiFiBandEnum]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 49,
+                "label": "SupportedThreadFeatures",
+                "type": "Optional[ThreadCapabilitiesBitmap]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 49,
+                "label": "ThreadVersion",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 49,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 49,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 49,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 49,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 49,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 49,
+                "name": "ScanNetworks",
+                "label": "Scan Networks"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 49,
+                "name": "AddOrUpdateWiFiNetwork",
+                "label": "Add Or Update Wi Fi Network"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 49,
+                "name": "AddOrUpdateThreadNetwork",
+                "label": "Add Or Update Thread Network"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 49,
+                "name": "RemoveNetwork",
+                "label": "Remove Network"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 49,
+                "name": "ConnectNetwork",
+                "label": "Connect Network"
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 49,
+                "name": "ReorderNetwork",
+                "label": "Reorder Network"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "WI",
+                "label": "Wi Fi Network Interface"
+            },
+            "1": {
+                "bit": 1,
+                "code": "TH",
+                "label": "Thread Network Interface"
+            },
+            "2": {
+                "bit": 2,
+                "code": "ET",
+                "label": "Ethernet Network Interface"
+            }
+        }
+    },
+    "50": {
+        "id": 50,
+        "label": "DiagnosticLogs",
+        "attributes": {
+            "65528": {
+                "id": 65528,
+                "cluster_id": 50,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 50,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 50,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 50,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 50,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 50,
+                "name": "RetrieveLogsRequest",
+                "label": "Retrieve Logs Request"
+            }
+        },
+        "features": {}
+    },
+    "51": {
+        "id": 51,
+        "label": "GeneralDiagnostics",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 51,
+                "label": "NetworkInterfaces",
+                "type": "List[NetworkInterface]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 51,
+                "label": "RebootCount",
+                "type": "uint16",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 51,
+                "label": "UpTime",
+                "type": "uint64",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 51,
+                "label": "TotalOperationalHours",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 51,
+                "label": "BootReason",
+                "type": "Optional[BootReasonEnum]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 51,
+                "label": "ActiveHardwareFaults",
+                "type": "List[HardwareFaultEnum]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 51,
+                "label": "ActiveRadioFaults",
+                "type": "List[RadioFaultEnum]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 51,
+                "label": "ActiveNetworkFaults",
+                "type": "List[NetworkFaultEnum]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 51,
+                "label": "TestEventTriggersEnabled",
+                "type": "bool",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 51,
+                "label": "DoNotUse",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 51,
+                "label": "DeviceLoadStatus",
+                "type": "Optional[DeviceLoadStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 51,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 51,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 51,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 51,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 51,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 51,
+                "name": "TestEventTrigger",
+                "label": "Test Event Trigger"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 51,
+                "name": "TimeSnapshot",
+                "label": "Time Snapshot"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 51,
+                "name": "PayloadTestRequest",
+                "label": "Payload Test Request"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "DMTEST",
+                "label": "Data Model Test"
+            }
+        }
+    },
+    "52": {
+        "id": 52,
+        "label": "SoftwareDiagnostics",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 52,
+                "label": "ThreadMetrics",
+                "type": "List[ThreadMetricsStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 52,
+                "label": "CurrentHeapFree",
+                "type": "Optional[uint64]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 52,
+                "label": "CurrentHeapUsed",
+                "type": "Optional[uint64]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 52,
+                "label": "CurrentHeapHighWatermark",
+                "type": "Optional[uint64]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 52,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 52,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 52,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 52,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 52,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 52,
+                "name": "ResetWatermarks",
+                "label": "Reset Watermarks"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "WTRMRK",
+                "label": "Watermarks"
+            }
+        }
+    },
+    "53": {
+        "id": 53,
+        "label": "ThreadNetworkDiagnostics",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 53,
+                "label": "Channel",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 53,
+                "label": "RoutingRole",
+                "type": "Nullable[RoutingRoleEnum]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 53,
+                "label": "NetworkName",
+                "type": "Nullable[string]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 53,
+                "label": "PanId",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 53,
+                "label": "ExtendedPanId",
+                "type": "Nullable[uint64]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 53,
+                "label": "MeshLocalPrefix",
+                "type": "Nullable[bytes]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 53,
+                "label": "OverrunCount",
+                "type": "Optional[uint64]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 53,
+                "label": "NeighborTable",
+                "type": "List[NeighborTableStruct]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 53,
+                "label": "RouteTable",
+                "type": "List[RouteTableStruct]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 53,
+                "label": "PartitionId",
+                "type": "Nullable[uint32]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 53,
+                "label": "Weighting",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 53,
+                "label": "DataVersion",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 53,
+                "label": "StableDataVersion",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "13": {
+                "id": 13,
+                "cluster_id": 53,
+                "label": "LeaderRouterId",
+                "type": "Nullable[uint8]",
+                "writable": false
+            },
+            "14": {
+                "id": 14,
+                "cluster_id": 53,
+                "label": "DetachedRoleCount",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "15": {
+                "id": 15,
+                "cluster_id": 53,
+                "label": "ChildRoleCount",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "16": {
+                "id": 16,
+                "cluster_id": 53,
+                "label": "RouterRoleCount",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "17": {
+                "id": 17,
+                "cluster_id": 53,
+                "label": "LeaderRoleCount",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "18": {
+                "id": 18,
+                "cluster_id": 53,
+                "label": "AttachAttemptCount",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "19": {
+                "id": 19,
+                "cluster_id": 53,
+                "label": "PartitionIdChangeCount",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "20": {
+                "id": 20,
+                "cluster_id": 53,
+                "label": "BetterPartitionAttachAttemptCount",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "21": {
+                "id": 21,
+                "cluster_id": 53,
+                "label": "ParentChangeCount",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "22": {
+                "id": 22,
+                "cluster_id": 53,
+                "label": "TxTotalCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "23": {
+                "id": 23,
+                "cluster_id": 53,
+                "label": "TxUnicastCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "24": {
+                "id": 24,
+                "cluster_id": 53,
+                "label": "TxBroadcastCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "25": {
+                "id": 25,
+                "cluster_id": 53,
+                "label": "TxAckRequestedCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "26": {
+                "id": 26,
+                "cluster_id": 53,
+                "label": "TxAckedCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "27": {
+                "id": 27,
+                "cluster_id": 53,
+                "label": "TxNoAckRequestedCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "28": {
+                "id": 28,
+                "cluster_id": 53,
+                "label": "TxDataCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "29": {
+                "id": 29,
+                "cluster_id": 53,
+                "label": "TxDataPollCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "30": {
+                "id": 30,
+                "cluster_id": 53,
+                "label": "TxBeaconCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "31": {
+                "id": 31,
+                "cluster_id": 53,
+                "label": "TxBeaconRequestCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "32": {
+                "id": 32,
+                "cluster_id": 53,
+                "label": "TxOtherCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "33": {
+                "id": 33,
+                "cluster_id": 53,
+                "label": "TxRetryCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "34": {
+                "id": 34,
+                "cluster_id": 53,
+                "label": "TxDirectMaxRetryExpiryCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "35": {
+                "id": 35,
+                "cluster_id": 53,
+                "label": "TxIndirectMaxRetryExpiryCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "36": {
+                "id": 36,
+                "cluster_id": 53,
+                "label": "TxErrCcaCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "37": {
+                "id": 37,
+                "cluster_id": 53,
+                "label": "TxErrAbortCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "38": {
+                "id": 38,
+                "cluster_id": 53,
+                "label": "TxErrBusyChannelCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "39": {
+                "id": 39,
+                "cluster_id": 53,
+                "label": "RxTotalCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "40": {
+                "id": 40,
+                "cluster_id": 53,
+                "label": "RxUnicastCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "41": {
+                "id": 41,
+                "cluster_id": 53,
+                "label": "RxBroadcastCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "42": {
+                "id": 42,
+                "cluster_id": 53,
+                "label": "RxDataCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "43": {
+                "id": 43,
+                "cluster_id": 53,
+                "label": "RxDataPollCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "44": {
+                "id": 44,
+                "cluster_id": 53,
+                "label": "RxBeaconCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "45": {
+                "id": 45,
+                "cluster_id": 53,
+                "label": "RxBeaconRequestCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "46": {
+                "id": 46,
+                "cluster_id": 53,
+                "label": "RxOtherCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "47": {
+                "id": 47,
+                "cluster_id": 53,
+                "label": "RxAddressFilteredCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "48": {
+                "id": 48,
+                "cluster_id": 53,
+                "label": "RxDestAddrFilteredCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "49": {
+                "id": 49,
+                "cluster_id": 53,
+                "label": "RxDuplicatedCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "50": {
+                "id": 50,
+                "cluster_id": 53,
+                "label": "RxErrNoFrameCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "51": {
+                "id": 51,
+                "cluster_id": 53,
+                "label": "RxErrUnknownNeighborCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "52": {
+                "id": 52,
+                "cluster_id": 53,
+                "label": "RxErrInvalidSrcAddrCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "53": {
+                "id": 53,
+                "cluster_id": 53,
+                "label": "RxErrSecCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "54": {
+                "id": 54,
+                "cluster_id": 53,
+                "label": "RxErrFcsCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "55": {
+                "id": 55,
+                "cluster_id": 53,
+                "label": "RxErrOtherCount",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "56": {
+                "id": 56,
+                "cluster_id": 53,
+                "label": "ActiveTimestamp",
+                "type": "Optional[Nullable[uint64]]",
+                "writable": false
+            },
+            "57": {
+                "id": 57,
+                "cluster_id": 53,
+                "label": "PendingTimestamp",
+                "type": "Optional[Nullable[uint64]]",
+                "writable": false
+            },
+            "58": {
+                "id": 58,
+                "cluster_id": 53,
+                "label": "Delay",
+                "type": "Optional[Nullable[uint32]]",
+                "writable": false
+            },
+            "59": {
+                "id": 59,
+                "cluster_id": 53,
+                "label": "SecurityPolicy",
+                "type": "Nullable[SecurityPolicy]",
+                "writable": false
+            },
+            "60": {
+                "id": 60,
+                "cluster_id": 53,
+                "label": "ChannelPage0Mask",
+                "type": "Nullable[bytes]",
+                "writable": false
+            },
+            "61": {
+                "id": 61,
+                "cluster_id": 53,
+                "label": "OperationalDatasetComponents",
+                "type": "Nullable[OperationalDatasetComponents]",
+                "writable": false
+            },
+            "62": {
+                "id": 62,
+                "cluster_id": 53,
+                "label": "ActiveNetworkFaultsList",
+                "type": "List[NetworkFaultEnum]",
+                "writable": false
+            },
+            "63": {
+                "id": 63,
+                "cluster_id": 53,
+                "label": "ExtAddress",
+                "type": "Optional[Nullable[uint64]]",
+                "writable": false
+            },
+            "64": {
+                "id": 64,
+                "cluster_id": 53,
+                "label": "Rloc16",
+                "type": "Optional[Nullable[uint16]]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 53,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 53,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 53,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 53,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 53,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 53,
+                "name": "ResetCounts",
+                "label": "Reset Counts"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "PKTCNT",
+                "label": "Packet Counts"
+            },
+            "1": {
+                "bit": 1,
+                "code": "ERRCNT",
+                "label": "Error Counts"
+            },
+            "2": {
+                "bit": 2,
+                "code": "MLECNT",
+                "label": "Mle Counts"
+            },
+            "3": {
+                "bit": 3,
+                "code": "MACCNT",
+                "label": "Mac Counts"
+            }
+        }
+    },
+    "54": {
+        "id": 54,
+        "label": "WiFiNetworkDiagnostics",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 54,
+                "label": "Bssid",
+                "type": "Nullable[bytes]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 54,
+                "label": "SecurityType",
+                "type": "Nullable[SecurityTypeEnum]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 54,
+                "label": "WiFiVersion",
+                "type": "Nullable[WiFiVersionEnum]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 54,
+                "label": "ChannelNumber",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 54,
+                "label": "Rssi",
+                "type": "Nullable[int8]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 54,
+                "label": "BeaconLostCount",
+                "type": "Optional[Nullable[uint32]]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 54,
+                "label": "BeaconRxCount",
+                "type": "Optional[Nullable[uint32]]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 54,
+                "label": "PacketMulticastRxCount",
+                "type": "Optional[Nullable[uint32]]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 54,
+                "label": "PacketMulticastTxCount",
+                "type": "Optional[Nullable[uint32]]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 54,
+                "label": "PacketUnicastRxCount",
+                "type": "Optional[Nullable[uint32]]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 54,
+                "label": "PacketUnicastTxCount",
+                "type": "Optional[Nullable[uint32]]",
+                "writable": false
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 54,
+                "label": "CurrentMaxRate",
+                "type": "Optional[Nullable[uint64]]",
+                "writable": false
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 54,
+                "label": "OverrunCount",
+                "type": "Optional[Nullable[uint64]]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 54,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 54,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 54,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 54,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 54,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 54,
+                "name": "ResetCounts",
+                "label": "Reset Counts"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "PKTCNT",
+                "label": "Packet Counts"
+            },
+            "1": {
+                "bit": 1,
+                "code": "ERRCNT",
+                "label": "Error Counts"
+            }
+        }
+    },
+    "55": {
+        "id": 55,
+        "label": "EthernetNetworkDiagnostics",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 55,
+                "label": "PhyRate",
+                "type": "Optional[Nullable[PHYRateEnum]]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 55,
+                "label": "FullDuplex",
+                "type": "Optional[Nullable[bool]]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 55,
+                "label": "PacketRxCount",
+                "type": "Optional[uint64]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 55,
+                "label": "PacketTxCount",
+                "type": "Optional[uint64]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 55,
+                "label": "TxErrCount",
+                "type": "Optional[uint64]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 55,
+                "label": "CollisionCount",
+                "type": "Optional[uint64]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 55,
+                "label": "OverrunCount",
+                "type": "Optional[uint64]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 55,
+                "label": "CarrierDetect",
+                "type": "Optional[Nullable[bool]]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 55,
+                "label": "TimeSinceReset",
+                "type": "Optional[uint64]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 55,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 55,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 55,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 55,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 55,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 55,
+                "name": "ResetCounts",
+                "label": "Reset Counts"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "PKTCNT",
+                "label": "Packet Counts"
+            },
+            "1": {
+                "bit": 1,
+                "code": "ERRCNT",
+                "label": "Error Counts"
+            }
+        }
+    },
+    "56": {
+        "id": 56,
+        "label": "TimeSynchronization",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 56,
+                "label": "UtcTime",
+                "type": "Nullable[epoch-us]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 56,
+                "label": "Granularity",
+                "type": "GranularityEnum",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 56,
+                "label": "TimeSource",
+                "type": "Optional[TimeSourceEnum]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 56,
+                "label": "TrustedTimeSource",
+                "type": "Optional[Nullable[TrustedTimeSourceStruct]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 56,
+                "label": "DefaultNtp",
+                "type": "Optional[Nullable[string]]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 56,
+                "label": "TimeZone",
+                "type": "List[TimeZoneStruct]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 56,
+                "label": "DstOffset",
+                "type": "List[DSTOffsetStruct]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 56,
+                "label": "LocalTime",
+                "type": "Optional[Nullable[epoch-us]]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 56,
+                "label": "TimeZoneDatabase",
+                "type": "Optional[TimeZoneDatabaseEnum]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 56,
+                "label": "NtpServerAvailable",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 56,
+                "label": "TimeZoneListMaxSize",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 56,
+                "label": "DstOffsetListMaxSize",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 56,
+                "label": "SupportsDnsResolve",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 56,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 56,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 56,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 56,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 56,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 56,
+                "name": "SetUtcTime",
+                "label": "Set Utc Time"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 56,
+                "name": "SetTrustedTimeSource",
+                "label": "Set Trusted Time Source"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 56,
+                "name": "SetTimeZone",
+                "label": "Set Time Zone"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 56,
+                "name": "SetDstOffset",
+                "label": "Set Dst Offset"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 56,
+                "name": "SetDefaultNtp",
+                "label": "Set Default Ntp"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "TZ",
+                "label": "Time Zone"
+            },
+            "1": {
+                "bit": 1,
+                "code": "NTPC",
+                "label": "Ntp Client"
+            },
+            "2": {
+                "bit": 2,
+                "code": "NTPS",
+                "label": "Ntp Server"
+            },
+            "3": {
+                "bit": 3,
+                "code": "TSC",
+                "label": "Time Sync Client"
+            }
+        }
+    },
+    "57": {
+        "id": 57,
+        "label": "BridgedDeviceBasicInformation",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 57,
+                "label": "DataModelRevision",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 57,
+                "label": "VendorName",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 57,
+                "label": "VendorId",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 57,
+                "label": "ProductName",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 57,
+                "label": "ProductId",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 57,
+                "label": "NodeLabel",
+                "type": "Optional[string]",
+                "writable": true
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 57,
+                "label": "Location",
+                "type": "Optional[string]",
+                "writable": true
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 57,
+                "label": "HardwareVersion",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 57,
+                "label": "HardwareVersionString",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 57,
+                "label": "SoftwareVersion",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 57,
+                "label": "SoftwareVersionString",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 57,
+                "label": "ManufacturingDate",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 57,
+                "label": "PartNumber",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "13": {
+                "id": 13,
+                "cluster_id": 57,
+                "label": "ProductUrl",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "14": {
+                "id": 14,
+                "cluster_id": 57,
+                "label": "ProductLabel",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "15": {
+                "id": 15,
+                "cluster_id": 57,
+                "label": "SerialNumber",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "16": {
+                "id": 16,
+                "cluster_id": 57,
+                "label": "LocalConfigDisabled",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "17": {
+                "id": 17,
+                "cluster_id": 57,
+                "label": "Reachable",
+                "type": "bool",
+                "writable": false
+            },
+            "18": {
+                "id": 18,
+                "cluster_id": 57,
+                "label": "UniqueId",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "19": {
+                "id": 19,
+                "cluster_id": 57,
+                "label": "CapabilityMinima",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "20": {
+                "id": 20,
+                "cluster_id": 57,
+                "label": "ProductAppearance",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "21": {
+                "id": 21,
+                "cluster_id": 57,
+                "label": "SpecificationVersion",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "22": {
+                "id": 22,
+                "cluster_id": 57,
+                "label": "MaxPathsPerInvoke",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "24": {
+                "id": 24,
+                "cluster_id": 57,
+                "label": "ConfigurationVersion",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 57,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 57,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 57,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 57,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 57,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "128": {
+                "id": 128,
+                "cluster_id": 57,
+                "name": "KeepActive",
+                "label": "Keep Active"
+            }
+        },
+        "features": {
+            "20": {
+                "bit": 20,
+                "code": "BIS",
+                "label": "Bridged Icd Support"
+            }
+        }
+    },
+    "59": {
+        "id": 59,
+        "label": "Switch",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 59,
+                "label": "NumberOfPositions",
+                "type": "uint8",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 59,
+                "label": "CurrentPosition",
+                "type": "uint8",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 59,
+                "label": "MultiPressMax",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 59,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 59,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 59,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 59,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 59,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "LS",
+                "label": "Latching Switch"
+            },
+            "1": {
+                "bit": 1,
+                "code": "MS",
+                "label": "Momentary Switch"
+            },
+            "2": {
+                "bit": 2,
+                "code": "MSR",
+                "label": "Momentary Switch Release"
+            },
+            "3": {
+                "bit": 3,
+                "code": "MSL",
+                "label": "Momentary Switch Long Press"
+            },
+            "4": {
+                "bit": 4,
+                "code": "MSM",
+                "label": "Momentary Switch Multi Press"
+            },
+            "5": {
+                "bit": 5,
+                "code": "AS",
+                "label": "Action Switch"
+            }
+        }
+    },
+    "60": {
+        "id": 60,
+        "label": "AdministratorCommissioning",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 60,
+                "label": "WindowStatus",
+                "type": "CommissioningWindowStatusEnum",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 60,
+                "label": "AdminFabricIndex",
+                "type": "Nullable[fabric-idx]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 60,
+                "label": "AdminVendorId",
+                "type": "Nullable[vendor-id]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 60,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 60,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 60,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 60,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 60,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 60,
+                "name": "OpenCommissioningWindow",
+                "label": "Open Commissioning Window"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 60,
+                "name": "OpenBasicCommissioningWindow",
+                "label": "Open Basic Commissioning Window"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 60,
+                "name": "RevokeCommissioning",
+                "label": "Revoke Commissioning"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "BC",
+                "label": "Basic"
+            }
+        }
+    },
+    "62": {
+        "id": 62,
+        "label": "OperationalCredentials",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 62,
+                "label": "Nocs",
+                "type": "List[NOCStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 62,
+                "label": "Fabrics",
+                "type": "List[FabricDescriptorStruct]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 62,
+                "label": "SupportedFabrics",
+                "type": "uint8",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 62,
+                "label": "CommissionedFabrics",
+                "type": "uint8",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 62,
+                "label": "TrustedRootCertificates",
+                "type": "List[octstr]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 62,
+                "label": "CurrentFabricIndex",
+                "type": "fabric-idx",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 62,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 62,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 62,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 62,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 62,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 62,
+                "name": "AttestationRequest",
+                "label": "Attestation Request"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 62,
+                "name": "CertificateChainRequest",
+                "label": "Certificate Chain Request"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 62,
+                "name": "CsrRequest",
+                "label": "Csr Request"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 62,
+                "name": "AddNoc",
+                "label": "Add Noc"
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 62,
+                "name": "UpdateNoc",
+                "label": "Update Noc"
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 62,
+                "name": "UpdateFabricLabel",
+                "label": "Update Fabric Label"
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 62,
+                "name": "RemoveFabric",
+                "label": "Remove Fabric"
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 62,
+                "name": "AddTrustedRootCertificate",
+                "label": "Add Trusted Root Certificate"
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 62,
+                "name": "SetVidVerificationStatement",
+                "label": "Set Vid Verification Statement"
+            },
+            "13": {
+                "id": 13,
+                "cluster_id": 62,
+                "name": "SignVidVerificationRequest",
+                "label": "Sign Vid Verification Request"
+            }
+        },
+        "features": {}
+    },
+    "63": {
+        "id": 63,
+        "label": "GroupKeyManagement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 63,
+                "label": "GroupKeyMap",
+                "type": "List[GroupKeyMapStruct]",
+                "writable": true
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 63,
+                "label": "GroupTable",
+                "type": "List[GroupInfoMapStruct]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 63,
+                "label": "MaxGroupsPerFabric",
+                "type": "uint16",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 63,
+                "label": "MaxGroupKeysPerFabric",
+                "type": "uint16",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 63,
+                "label": "GroupcastAdoption",
+                "type": "List[GroupcastAdoptionStruct]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 63,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 63,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 63,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 63,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 63,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 63,
+                "name": "KeySetWrite",
+                "label": "Key Set Write"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 63,
+                "name": "KeySetRead",
+                "label": "Key Set Read"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 63,
+                "name": "KeySetRemove",
+                "label": "Key Set Remove"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 63,
+                "name": "KeySetReadAllIndices",
+                "label": "Key Set Read All Indices"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "CS",
+                "label": "Cache And Sync"
+            },
+            "1": {
+                "bit": 1,
+                "code": "GCAST",
+                "label": "Groupcast"
+            }
+        }
+    },
+    "64": {
+        "id": 64,
+        "label": "FixedLabel",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 64,
+                "label": "LabelList",
+                "type": "List[LabelStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 64,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 64,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 64,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 64,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 64,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "65": {
+        "id": 65,
+        "label": "UserLabel",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 65,
+                "label": "LabelList",
+                "type": "List[LabelStruct]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 65,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 65,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 65,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 65,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 65,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "69": {
+        "id": 69,
+        "label": "BooleanState",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 69,
+                "label": "StateValue",
+                "type": "bool",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 69,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 69,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 69,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 69,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 69,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "CHGEVENT",
+                "label": "Change Event"
+            }
+        }
+    },
+    "70": {
+        "id": 70,
+        "label": "IcdManagement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 70,
+                "label": "IdleModeDuration",
+                "type": "uint32",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 70,
+                "label": "ActiveModeDuration",
+                "type": "uint32",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 70,
+                "label": "ActiveModeThreshold",
+                "type": "uint16",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 70,
+                "label": "RegisteredClients",
+                "type": "List[MonitoringRegistrationStruct]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 70,
+                "label": "IcdCounter",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 70,
+                "label": "ClientsSupportedPerFabric",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 70,
+                "label": "UserActiveModeTriggerHint",
+                "type": "Optional[UserActiveModeTriggerBitmap]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 70,
+                "label": "UserActiveModeTriggerInstruction",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 70,
+                "label": "OperatingMode",
+                "type": "Optional[OperatingModeEnum]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 70,
+                "label": "MaximumCheckInBackoff",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 70,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 70,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 70,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 70,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 70,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 70,
+                "name": "RegisterClient",
+                "label": "Register Client"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 70,
+                "name": "UnregisterClient",
+                "label": "Unregister Client"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 70,
+                "name": "StayActiveRequest",
+                "label": "Stay Active Request"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "CIP",
+                "label": "Check In Protocol Support"
+            },
+            "1": {
+                "bit": 1,
+                "code": "UAT",
+                "label": "User Active Mode Trigger"
+            },
+            "2": {
+                "bit": 2,
+                "code": "LITS",
+                "label": "Long Idle Time Support"
+            },
+            "3": {
+                "bit": 3,
+                "code": "DSLS",
+                "label": "Dynamic Sit Lit Support"
+            }
+        }
+    },
+    "72": {
+        "id": 72,
+        "label": "OvenCavityOperationalState",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 72,
+                "label": "PhaseList",
+                "type": "List[string]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 72,
+                "label": "CurrentPhase",
+                "type": "Nullable[uint8]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 72,
+                "label": "CountdownTime",
+                "type": "Optional[Nullable[elapsed-s]]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 72,
+                "label": "OperationalStateList",
+                "type": "List[OperationalStateStruct]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 72,
+                "label": "OperationalState",
+                "type": "OperationalStateEnum",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 72,
+                "label": "OperationalError",
+                "type": "ErrorStateStruct",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 72,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 72,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 72,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 72,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 72,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 72,
+                "name": "Pause",
+                "label": "Pause"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 72,
+                "name": "Stop",
+                "label": "Stop"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 72,
+                "name": "Start",
+                "label": "Start"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 72,
+                "name": "Resume",
+                "label": "Resume"
+            }
+        },
+        "features": {}
+    },
+    "73": {
+        "id": 73,
+        "label": "OvenMode",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 73,
+                "label": "SupportedModes",
+                "type": "unknown",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 73,
+                "label": "CurrentMode",
+                "type": "unknown",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 73,
+                "label": "StartUpMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 73,
+                "label": "OnMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 73,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 73,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 73,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 73,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 73,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 73,
+                "name": "ChangeToMode",
+                "label": "Change To Mode"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "DEPONOFF",
+                "label": "On Off"
+            }
+        }
+    },
+    "74": {
+        "id": 74,
+        "label": "LaundryDryerControls",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 74,
+                "label": "SupportedDrynessLevels",
+                "type": "List[DrynessLevelEnum]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 74,
+                "label": "SelectedDrynessLevel",
+                "type": "Nullable[DrynessLevelEnum]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 74,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 74,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 74,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 74,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 74,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "80": {
+        "id": 80,
+        "label": "ModeSelect",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 80,
+                "label": "Description",
+                "type": "string",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 80,
+                "label": "StandardNamespace",
+                "type": "Nullable[namespace]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 80,
+                "label": "SupportedModes",
+                "type": "List[ModeOptionStruct]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 80,
+                "label": "CurrentMode",
+                "type": "uint8",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 80,
+                "label": "StartUpMode",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": true
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 80,
+                "label": "OnMode",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 80,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 80,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 80,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 80,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 80,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 80,
+                "name": "ChangeToMode",
+                "label": "Change To Mode"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "DEPONOFF",
+                "label": "On Off"
+            }
+        }
+    },
+    "81": {
+        "id": 81,
+        "label": "LaundryWasherMode",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 81,
+                "label": "SupportedModes",
+                "type": "unknown",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 81,
+                "label": "CurrentMode",
+                "type": "unknown",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 81,
+                "label": "StartUpMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 81,
+                "label": "OnMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 81,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 81,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 81,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 81,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 81,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 81,
+                "name": "ChangeToMode",
+                "label": "Change To Mode"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "DEPONOFF",
+                "label": "On Off"
+            }
+        }
+    },
+    "82": {
+        "id": 82,
+        "label": "RefrigeratorAndTemperatureControlledCabinetMode",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 82,
+                "label": "SupportedModes",
+                "type": "unknown",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 82,
+                "label": "CurrentMode",
+                "type": "unknown",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 82,
+                "label": "StartUpMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 82,
+                "label": "OnMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 82,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 82,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 82,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 82,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 82,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 82,
+                "name": "ChangeToMode",
+                "label": "Change To Mode"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "DEPONOFF",
+                "label": "On Off"
+            }
+        }
+    },
+    "83": {
+        "id": 83,
+        "label": "LaundryWasherControls",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 83,
+                "label": "SpinSpeeds",
+                "type": "List[string]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 83,
+                "label": "SpinSpeedCurrent",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": true
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 83,
+                "label": "NumberOfRinses",
+                "type": "Optional[NumberOfRinsesEnum]",
+                "writable": true
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 83,
+                "label": "SupportedRinses",
+                "type": "List[NumberOfRinsesEnum]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 83,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 83,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 83,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 83,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 83,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "SPIN",
+                "label": "Spin"
+            },
+            "1": {
+                "bit": 1,
+                "code": "RINSE",
+                "label": "Rinse"
+            }
+        }
+    },
+    "84": {
+        "id": 84,
+        "label": "RvcRunMode",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 84,
+                "label": "SupportedModes",
+                "type": "unknown",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 84,
+                "label": "CurrentMode",
+                "type": "unknown",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 84,
+                "label": "StartUpMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 84,
+                "label": "OnMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 84,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 84,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 84,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 84,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 84,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 84,
+                "name": "ChangeToMode",
+                "label": "Change To Mode"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "DEPONOFF",
+                "label": "On Off"
+            },
+            "20": {
+                "bit": 20,
+                "code": "DIRECTMODECH",
+                "label": "Direct Mode Change"
+            }
+        }
+    },
+    "85": {
+        "id": 85,
+        "label": "RvcCleanMode",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 85,
+                "label": "SupportedModes",
+                "type": "unknown",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 85,
+                "label": "CurrentMode",
+                "type": "unknown",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 85,
+                "label": "StartUpMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 85,
+                "label": "OnMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 85,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 85,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 85,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 85,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 85,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 85,
+                "name": "ChangeToMode",
+                "label": "Change To Mode"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "DEPONOFF",
+                "label": "On Off"
+            },
+            "20": {
+                "bit": 20,
+                "code": "DIRECTMODECH",
+                "label": "Direct Mode Change"
+            }
+        }
+    },
+    "86": {
+        "id": 86,
+        "label": "TemperatureControl",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 86,
+                "label": "TemperatureSetpoint",
+                "type": "Optional[temperature]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 86,
+                "label": "MinTemperature",
+                "type": "Optional[temperature]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 86,
+                "label": "MaxTemperature",
+                "type": "Optional[temperature]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 86,
+                "label": "Step",
+                "type": "Optional[temperature]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 86,
+                "label": "SelectedTemperatureLevel",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 86,
+                "label": "SupportedTemperatureLevels",
+                "type": "List[string]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 86,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 86,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 86,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 86,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 86,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 86,
+                "name": "SetTemperature",
+                "label": "Set Temperature"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "TN",
+                "label": "Temperature Number"
+            },
+            "1": {
+                "bit": 1,
+                "code": "TL",
+                "label": "Temperature Level"
+            },
+            "2": {
+                "bit": 2,
+                "code": "STEP",
+                "label": "Temperature Step"
+            }
+        }
+    },
+    "87": {
+        "id": 87,
+        "label": "RefrigeratorAlarm",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 87,
+                "label": "Mask",
+                "type": "AlarmBitmap",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 87,
+                "label": "Latch",
+                "type": "Optional[AlarmBitmap]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 87,
+                "label": "State",
+                "type": "AlarmBitmap",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 87,
+                "label": "Supported",
+                "type": "AlarmBitmap",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 87,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 87,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 87,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 87,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 87,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 87,
+                "name": "Reset",
+                "label": "Reset"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 87,
+                "name": "ModifyEnabledAlarms",
+                "label": "Modify Enabled Alarms"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "RESET",
+                "label": "Reset"
+            }
+        }
+    },
+    "89": {
+        "id": 89,
+        "label": "DishwasherMode",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 89,
+                "label": "SupportedModes",
+                "type": "unknown",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 89,
+                "label": "CurrentMode",
+                "type": "unknown",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 89,
+                "label": "StartUpMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 89,
+                "label": "OnMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 89,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 89,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 89,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 89,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 89,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 89,
+                "name": "ChangeToMode",
+                "label": "Change To Mode"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "DEPONOFF",
+                "label": "On Off"
+            }
+        }
+    },
+    "91": {
+        "id": 91,
+        "label": "AirQuality",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 91,
+                "label": "AirQuality",
+                "type": "AirQualityEnum",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 91,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 91,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 91,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 91,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 91,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "FAIR",
+                "label": "Fair"
+            },
+            "1": {
+                "bit": 1,
+                "code": "MOD",
+                "label": "Moderate"
+            },
+            "2": {
+                "bit": 2,
+                "code": "VPOOR",
+                "label": "Very Poor"
+            },
+            "3": {
+                "bit": 3,
+                "code": "XPOOR",
+                "label": "Extremely Poor"
+            }
+        }
+    },
+    "92": {
+        "id": 92,
+        "label": "SmokeCoAlarm",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 92,
+                "label": "ExpressedState",
+                "type": "ExpressedStateEnum",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 92,
+                "label": "SmokeState",
+                "type": "Optional[AlarmStateEnum]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 92,
+                "label": "CoState",
+                "type": "Optional[AlarmStateEnum]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 92,
+                "label": "BatteryAlert",
+                "type": "AlarmStateEnum",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 92,
+                "label": "DeviceMuted",
+                "type": "Optional[MuteStateEnum]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 92,
+                "label": "TestInProgress",
+                "type": "bool",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 92,
+                "label": "HardwareFaultAlert",
+                "type": "bool",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 92,
+                "label": "EndOfServiceAlert",
+                "type": "EndOfServiceEnum",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 92,
+                "label": "InterconnectSmokeAlarm",
+                "type": "Optional[AlarmStateEnum]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 92,
+                "label": "InterconnectCoAlarm",
+                "type": "Optional[AlarmStateEnum]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 92,
+                "label": "ContaminationState",
+                "type": "Optional[ContaminationStateEnum]",
+                "writable": false
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 92,
+                "label": "SmokeSensitivityLevel",
+                "type": "Optional[SensitivityEnum]",
+                "writable": true
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 92,
+                "label": "ExpiryDate",
+                "type": "Optional[epoch-s]",
+                "writable": false
+            },
+            "13": {
+                "id": 13,
+                "cluster_id": 92,
+                "label": "Unmounted",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 92,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 92,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 92,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 92,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 92,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 92,
+                "name": "SelfTestRequest",
+                "label": "Self Test Request"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "SMOKE",
+                "label": "Smoke Alarm"
+            },
+            "1": {
+                "bit": 1,
+                "code": "CO",
+                "label": "Co Alarm"
+            }
+        }
+    },
+    "93": {
+        "id": 93,
+        "label": "DishwasherAlarm",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 93,
+                "label": "Mask",
+                "type": "AlarmBitmap",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 93,
+                "label": "Latch",
+                "type": "Optional[AlarmBitmap]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 93,
+                "label": "State",
+                "type": "AlarmBitmap",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 93,
+                "label": "Supported",
+                "type": "AlarmBitmap",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 93,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 93,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 93,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 93,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 93,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 93,
+                "name": "Reset",
+                "label": "Reset"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 93,
+                "name": "ModifyEnabledAlarms",
+                "label": "Modify Enabled Alarms"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "RESET",
+                "label": "Reset"
+            }
+        }
+    },
+    "94": {
+        "id": 94,
+        "label": "MicrowaveOvenMode",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 94,
+                "label": "SupportedModes",
+                "type": "unknown",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 94,
+                "label": "CurrentMode",
+                "type": "unknown",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 94,
+                "label": "StartUpMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 94,
+                "label": "OnMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 94,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 94,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 94,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 94,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 94,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 94,
+                "name": "ChangeToMode",
+                "label": "Change To Mode"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "DEPONOFF",
+                "label": "On Off"
+            }
+        }
+    },
+    "95": {
+        "id": 95,
+        "label": "MicrowaveOvenControl",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 95,
+                "label": "CookTime",
+                "type": "elapsed-s",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 95,
+                "label": "MaxCookTime",
+                "type": "elapsed-s",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 95,
+                "label": "PowerSetting",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 95,
+                "label": "MinPower",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 95,
+                "label": "MaxPower",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 95,
+                "label": "PowerStep",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 95,
+                "label": "SupportedWatts",
+                "type": "List[uint16]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 95,
+                "label": "SelectedWattIndex",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 95,
+                "label": "WattRating",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 95,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 95,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 95,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 95,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 95,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 95,
+                "name": "SetCookingParameters",
+                "label": "Set Cooking Parameters"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 95,
+                "name": "AddMoreTime",
+                "label": "Add More Time"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "PWRNUM",
+                "label": "Power As Number"
+            },
+            "1": {
+                "bit": 1,
+                "code": "WATTS",
+                "label": "Power In Watts"
+            },
+            "2": {
+                "bit": 2,
+                "code": "PWRLMTS",
+                "label": "Power Number Limits"
+            }
+        }
+    },
+    "96": {
+        "id": 96,
+        "label": "OperationalState",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 96,
+                "label": "PhaseList",
+                "type": "List[string]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 96,
+                "label": "CurrentPhase",
+                "type": "Nullable[uint8]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 96,
+                "label": "CountdownTime",
+                "type": "Optional[Nullable[elapsed-s]]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 96,
+                "label": "OperationalStateList",
+                "type": "List[OperationalStateStruct]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 96,
+                "label": "OperationalState",
+                "type": "OperationalStateEnum",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 96,
+                "label": "OperationalError",
+                "type": "ErrorStateStruct",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 96,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 96,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 96,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 96,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 96,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 96,
+                "name": "Pause",
+                "label": "Pause"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 96,
+                "name": "Stop",
+                "label": "Stop"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 96,
+                "name": "Start",
+                "label": "Start"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 96,
+                "name": "Resume",
+                "label": "Resume"
+            }
+        },
+        "features": {}
+    },
+    "97": {
+        "id": 97,
+        "label": "RvcOperationalState",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 97,
+                "label": "PhaseList",
+                "type": "List[string]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 97,
+                "label": "CurrentPhase",
+                "type": "Nullable[uint8]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 97,
+                "label": "CountdownTime",
+                "type": "Optional[Nullable[elapsed-s]]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 97,
+                "label": "OperationalStateList",
+                "type": "List[OperationalStateStruct]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 97,
+                "label": "OperationalState",
+                "type": "OperationalStateEnum",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 97,
+                "label": "OperationalError",
+                "type": "ErrorStateStruct",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 97,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 97,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 97,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 97,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 97,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 97,
+                "name": "Pause",
+                "label": "Pause"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 97,
+                "name": "Stop",
+                "label": "Stop"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 97,
+                "name": "Start",
+                "label": "Start"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 97,
+                "name": "Resume",
+                "label": "Resume"
+            },
+            "128": {
+                "id": 128,
+                "cluster_id": 97,
+                "name": "GoHome",
+                "label": "Go Home"
+            }
+        },
+        "features": {}
+    },
+    "98": {
+        "id": 98,
+        "label": "ScenesManagement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 98,
+                "label": "DoNotUse",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 98,
+                "label": "SceneTableSize",
+                "type": "uint16",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 98,
+                "label": "FabricSceneInfo",
+                "type": "List[SceneInfoStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 98,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 98,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 98,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 98,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 98,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 98,
+                "name": "AddScene",
+                "label": "Add Scene"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 98,
+                "name": "ViewScene",
+                "label": "View Scene"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 98,
+                "name": "RemoveScene",
+                "label": "Remove Scene"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 98,
+                "name": "RemoveAllScenes",
+                "label": "Remove All Scenes"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 98,
+                "name": "StoreScene",
+                "label": "Store Scene"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 98,
+                "name": "RecallScene",
+                "label": "Recall Scene"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 98,
+                "name": "GetSceneMembership",
+                "label": "Get Scene Membership"
+            },
+            "64": {
+                "id": 64,
+                "cluster_id": 98,
+                "name": "CopyScene",
+                "label": "Copy Scene"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "SN",
+                "label": "Scene Names"
+            }
+        }
+    },
+    "100": {
+        "id": 100,
+        "label": "TemperatureAlarm",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 100,
+                "label": "Mask",
+                "type": "AlarmBitmap",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 100,
+                "label": "Latch",
+                "type": "Optional[AlarmBitmap]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 100,
+                "label": "State",
+                "type": "AlarmBitmap",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 100,
+                "label": "Supported",
+                "type": "AlarmBitmap",
+                "writable": false
+            },
+            "128": {
+                "id": 128,
+                "cluster_id": 100,
+                "label": "CriticalOverTemperatureThreshold",
+                "type": "Optional[temperature]",
+                "writable": false
+            },
+            "129": {
+                "id": 129,
+                "cluster_id": 100,
+                "label": "MajorOverTemperatureThreshold",
+                "type": "Optional[temperature]",
+                "writable": false
+            },
+            "130": {
+                "id": 130,
+                "cluster_id": 100,
+                "label": "MinorOverTemperatureThreshold",
+                "type": "Optional[temperature]",
+                "writable": false
+            },
+            "131": {
+                "id": 131,
+                "cluster_id": 100,
+                "label": "MinorUnderTemperatureThreshold",
+                "type": "Optional[temperature]",
+                "writable": false
+            },
+            "132": {
+                "id": 132,
+                "cluster_id": 100,
+                "label": "MajorUnderTemperatureThreshold",
+                "type": "Optional[temperature]",
+                "writable": false
+            },
+            "133": {
+                "id": 133,
+                "cluster_id": 100,
+                "label": "CriticalUnderTemperatureThreshold",
+                "type": "Optional[temperature]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 100,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 100,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 100,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 100,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 100,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 100,
+                "name": "Reset",
+                "label": "Reset"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 100,
+                "name": "ModifyEnabledAlarms",
+                "label": "Modify Enabled Alarms"
+            },
+            "128": {
+                "id": 128,
+                "cluster_id": 100,
+                "name": "SetTemperatureAlarmThresholds",
+                "label": "Set Temperature Alarm Thresholds"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "RESET",
+                "label": "Reset"
+            },
+            "20": {
+                "bit": 20,
+                "code": "OVER",
+                "label": "Over Temperature"
+            },
+            "21": {
+                "bit": 21,
+                "code": "UNDER",
+                "label": "Under Temperature"
+            },
+            "22": {
+                "bit": 22,
+                "code": "MAJOR",
+                "label": "Major Threshold"
+            },
+            "23": {
+                "bit": 23,
+                "code": "MINOR",
+                "label": "Minor Threshold"
+            },
+            "24": {
+                "bit": 24,
+                "code": "OCRIADJ",
+                "label": "Over Critical Adjustable"
+            },
+            "25": {
+                "bit": 25,
+                "code": "OMAJADJ",
+                "label": "Over Major Adjustable"
+            },
+            "26": {
+                "bit": 26,
+                "code": "OMINADJ",
+                "label": "Over Minor Adjustable"
+            },
+            "27": {
+                "bit": 27,
+                "code": "UMINADJ",
+                "label": "Under Minor Adjustable"
+            },
+            "28": {
+                "bit": 28,
+                "code": "UMAJADJ",
+                "label": "Under Major Adjustable"
+            },
+            "29": {
+                "bit": 29,
+                "code": "UCRIADJ",
+                "label": "Under Critical Adjustable"
+            }
+        }
+    },
+    "101": {
+        "id": 101,
+        "label": "Groupcast",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 101,
+                "label": "Membership",
+                "type": "List[MembershipStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 101,
+                "label": "MaxMembershipCount",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 101,
+                "label": "MaxMcastAddrCount",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 101,
+                "label": "UsedMcastAddrCount",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 101,
+                "label": "FabricUnderTest",
+                "type": "Optional[fabric-idx]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 101,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 101,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 101,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 101,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 101,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 101,
+                "name": "JoinGroup",
+                "label": "Join Group"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 101,
+                "name": "LeaveGroup",
+                "label": "Leave Group"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 101,
+                "name": "UpdateGroupKey",
+                "label": "Update Group Key"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 101,
+                "name": "ConfigureAuxiliaryAcl",
+                "label": "Configure Auxiliary Acl"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 101,
+                "name": "GroupcastTesting",
+                "label": "Groupcast Testing"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "LN",
+                "label": "Listener"
+            },
+            "1": {
+                "bit": 1,
+                "code": "SD",
+                "label": "Sender"
+            },
+            "2": {
+                "bit": 2,
+                "code": "PGA",
+                "label": "Per Group"
+            }
+        }
+    },
+    "113": {
+        "id": 113,
+        "label": "HepaFilterMonitoring",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 113,
+                "label": "Condition",
+                "type": "Optional[percent]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 113,
+                "label": "DegradationDirection",
+                "type": "Optional[DegradationDirectionEnum]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 113,
+                "label": "ChangeIndication",
+                "type": "ChangeIndicationEnum",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 113,
+                "label": "InPlaceIndicator",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 113,
+                "label": "LastChangedTime",
+                "type": "Optional[Nullable[epoch-s]]",
+                "writable": true
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 113,
+                "label": "ReplacementProductList",
+                "type": "List[ReplacementProductStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 113,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 113,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 113,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 113,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 113,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 113,
+                "name": "ResetCondition",
+                "label": "Reset Condition"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "CON",
+                "label": "Condition"
+            },
+            "1": {
+                "bit": 1,
+                "code": "WRN",
+                "label": "Warning"
+            },
+            "2": {
+                "bit": 2,
+                "code": "REP",
+                "label": "Replacement Product List"
+            }
+        }
+    },
+    "114": {
+        "id": 114,
+        "label": "ActivatedCarbonFilterMonitoring",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 114,
+                "label": "Condition",
+                "type": "Optional[percent]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 114,
+                "label": "DegradationDirection",
+                "type": "Optional[DegradationDirectionEnum]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 114,
+                "label": "ChangeIndication",
+                "type": "ChangeIndicationEnum",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 114,
+                "label": "InPlaceIndicator",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 114,
+                "label": "LastChangedTime",
+                "type": "Optional[Nullable[epoch-s]]",
+                "writable": true
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 114,
+                "label": "ReplacementProductList",
+                "type": "List[ReplacementProductStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 114,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 114,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 114,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 114,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 114,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 114,
+                "name": "ResetCondition",
+                "label": "Reset Condition"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "CON",
+                "label": "Condition"
+            },
+            "1": {
+                "bit": 1,
+                "code": "WRN",
+                "label": "Warning"
+            },
+            "2": {
+                "bit": 2,
+                "code": "REP",
+                "label": "Replacement Product List"
+            }
+        }
+    },
+    "121": {
+        "id": 121,
+        "label": "WaterTankLevelMonitoring",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 121,
+                "label": "Condition",
+                "type": "Optional[percent]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 121,
+                "label": "DegradationDirection",
+                "type": "Optional[DegradationDirectionEnum]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 121,
+                "label": "ChangeIndication",
+                "type": "ChangeIndicationEnum",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 121,
+                "label": "InPlaceIndicator",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 121,
+                "label": "LastChangedTime",
+                "type": "Optional[Nullable[epoch-s]]",
+                "writable": true
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 121,
+                "label": "ReplacementProductList",
+                "type": "List[ReplacementProductStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 121,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 121,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 121,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 121,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 121,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 121,
+                "name": "ResetCondition",
+                "label": "Reset Condition"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "CON",
+                "label": "Condition"
+            },
+            "1": {
+                "bit": 1,
+                "code": "WRN",
+                "label": "Warning"
+            },
+            "2": {
+                "bit": 2,
+                "code": "REP",
+                "label": "Replacement Product List"
+            }
+        }
+    },
+    "128": {
+        "id": 128,
+        "label": "BooleanStateConfiguration",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 128,
+                "label": "CurrentSensitivityLevel",
+                "type": "Optional[uint8]",
+                "writable": true
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 128,
+                "label": "SupportedSensitivityLevels",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 128,
+                "label": "DefaultSensitivityLevel",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 128,
+                "label": "AlarmsActive",
+                "type": "Optional[AlarmModeBitmap]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 128,
+                "label": "AlarmsSuppressed",
+                "type": "Optional[AlarmModeBitmap]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 128,
+                "label": "AlarmsEnabled",
+                "type": "Optional[AlarmModeBitmap]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 128,
+                "label": "AlarmsSupported",
+                "type": "Optional[AlarmModeBitmap]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 128,
+                "label": "SensorFault",
+                "type": "Optional[SensorFaultBitmap]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 128,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 128,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 128,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 128,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 128,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 128,
+                "name": "SuppressAlarm",
+                "label": "Suppress Alarm"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 128,
+                "name": "EnableDisableAlarm",
+                "label": "Enable Disable Alarm"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "VIS",
+                "label": "Visual"
+            },
+            "1": {
+                "bit": 1,
+                "code": "AUD",
+                "label": "Audible"
+            },
+            "2": {
+                "bit": 2,
+                "code": "SPRS",
+                "label": "Alarm Suppress"
+            },
+            "3": {
+                "bit": 3,
+                "code": "SENSLVL",
+                "label": "Sensitivity Level"
+            },
+            "4": {
+                "bit": 4,
+                "code": "FAULTEV",
+                "label": "Fault Events"
+            }
+        }
+    },
+    "129": {
+        "id": 129,
+        "label": "ValveConfigurationAndControl",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 129,
+                "label": "OpenDuration",
+                "type": "Nullable[elapsed-s]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 129,
+                "label": "DefaultOpenDuration",
+                "type": "Nullable[elapsed-s]",
+                "writable": true
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 129,
+                "label": "AutoCloseTime",
+                "type": "Optional[Nullable[epoch-us]]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 129,
+                "label": "RemainingDuration",
+                "type": "Nullable[elapsed-s]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 129,
+                "label": "CurrentState",
+                "type": "Nullable[ValveStateEnum]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 129,
+                "label": "TargetState",
+                "type": "Nullable[ValveStateEnum]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 129,
+                "label": "CurrentLevel",
+                "type": "Optional[Nullable[percent]]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 129,
+                "label": "TargetLevel",
+                "type": "Optional[Nullable[percent]]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 129,
+                "label": "DefaultOpenLevel",
+                "type": "Optional[percent]",
+                "writable": true
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 129,
+                "label": "ValveFault",
+                "type": "Optional[ValveFaultBitmap]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 129,
+                "label": "LevelStep",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 129,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 129,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 129,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 129,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 129,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 129,
+                "name": "Open",
+                "label": "Open"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 129,
+                "name": "Close",
+                "label": "Close"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "TS",
+                "label": "Time Sync"
+            },
+            "1": {
+                "bit": 1,
+                "code": "LVL",
+                "label": "Level"
+            }
+        }
+    },
+    "144": {
+        "id": 144,
+        "label": "ElectricalPowerMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 144,
+                "label": "PowerMode",
+                "type": "PowerModeEnum",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 144,
+                "label": "NumberOfMeasurementTypes",
+                "type": "uint8",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 144,
+                "label": "Accuracy",
+                "type": "List[MeasurementAccuracyStruct]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 144,
+                "label": "Ranges",
+                "type": "List[MeasurementRangeStruct]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 144,
+                "label": "Voltage",
+                "type": "Optional[Nullable[voltage-mV]]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 144,
+                "label": "ActiveCurrent",
+                "type": "Optional[Nullable[amperage-mA]]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 144,
+                "label": "ReactiveCurrent",
+                "type": "Optional[Nullable[amperage-mA]]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 144,
+                "label": "ApparentCurrent",
+                "type": "Optional[Nullable[amperage-mA]]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 144,
+                "label": "ActivePower",
+                "type": "Nullable[power-mW]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 144,
+                "label": "ReactivePower",
+                "type": "Optional[Nullable[power-mVAR]]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 144,
+                "label": "ApparentPower",
+                "type": "Optional[Nullable[power-mVA]]",
+                "writable": false
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 144,
+                "label": "RmsVoltage",
+                "type": "Optional[Nullable[voltage-mV]]",
+                "writable": false
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 144,
+                "label": "RmsCurrent",
+                "type": "Optional[Nullable[amperage-mA]]",
+                "writable": false
+            },
+            "13": {
+                "id": 13,
+                "cluster_id": 144,
+                "label": "RmsPower",
+                "type": "Optional[Nullable[power-mW]]",
+                "writable": false
+            },
+            "14": {
+                "id": 14,
+                "cluster_id": 144,
+                "label": "Frequency",
+                "type": "Optional[Nullable[int64]]",
+                "writable": false
+            },
+            "15": {
+                "id": 15,
+                "cluster_id": 144,
+                "label": "HarmonicCurrents",
+                "type": "List[HarmonicMeasurementStruct]",
+                "writable": false
+            },
+            "16": {
+                "id": 16,
+                "cluster_id": 144,
+                "label": "HarmonicPhases",
+                "type": "List[HarmonicMeasurementStruct]",
+                "writable": false
+            },
+            "17": {
+                "id": 17,
+                "cluster_id": 144,
+                "label": "PowerFactor",
+                "type": "Optional[Nullable[int64]]",
+                "writable": false
+            },
+            "18": {
+                "id": 18,
+                "cluster_id": 144,
+                "label": "NeutralCurrent",
+                "type": "Optional[Nullable[amperage-mA]]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 144,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 144,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 144,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 144,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 144,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "DIRC",
+                "label": "Direct Current"
+            },
+            "1": {
+                "bit": 1,
+                "code": "ALTC",
+                "label": "Alternating Current"
+            },
+            "2": {
+                "bit": 2,
+                "code": "POLY",
+                "label": "Polyphase Power"
+            },
+            "3": {
+                "bit": 3,
+                "code": "HARM",
+                "label": "Harmonics"
+            },
+            "4": {
+                "bit": 4,
+                "code": "PWRQ",
+                "label": "Power Quality"
+            }
+        }
+    },
+    "145": {
+        "id": 145,
+        "label": "ElectricalEnergyMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 145,
+                "label": "Accuracy",
+                "type": "MeasurementAccuracyStruct",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 145,
+                "label": "CumulativeEnergyImported",
+                "type": "Optional[Nullable[EnergyMeasurementStruct]]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 145,
+                "label": "CumulativeEnergyExported",
+                "type": "Optional[Nullable[EnergyMeasurementStruct]]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 145,
+                "label": "PeriodicEnergyImported",
+                "type": "Optional[Nullable[EnergyMeasurementStruct]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 145,
+                "label": "PeriodicEnergyExported",
+                "type": "Optional[Nullable[EnergyMeasurementStruct]]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 145,
+                "label": "CumulativeEnergyReset",
+                "type": "Optional[Nullable[CumulativeEnergyResetStruct]]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 145,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 145,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 145,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 145,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 145,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "IMPE",
+                "label": "Imported Energy"
+            },
+            "1": {
+                "bit": 1,
+                "code": "EXPE",
+                "label": "Exported Energy"
+            },
+            "2": {
+                "bit": 2,
+                "code": "CUME",
+                "label": "Cumulative Energy"
+            },
+            "3": {
+                "bit": 3,
+                "code": "PERE",
+                "label": "Periodic Energy"
+            },
+            "4": {
+                "bit": 4,
+                "code": "APPE",
+                "label": "Apparent Energy"
+            },
+            "5": {
+                "bit": 5,
+                "code": "REAE",
+                "label": "Reactive Energy"
+            }
+        }
+    },
+    "148": {
+        "id": 148,
+        "label": "WaterHeaterManagement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 148,
+                "label": "HeaterTypes",
+                "type": "WaterHeaterHeatSourceBitmap",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 148,
+                "label": "HeatDemand",
+                "type": "WaterHeaterHeatSourceBitmap",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 148,
+                "label": "TankVolume",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 148,
+                "label": "EstimatedHeatRequired",
+                "type": "Optional[energy-mWh]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 148,
+                "label": "TankPercentage",
+                "type": "Optional[percent]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 148,
+                "label": "BoostState",
+                "type": "BoostStateEnum",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 148,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 148,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 148,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 148,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 148,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 148,
+                "name": "Boost",
+                "label": "Boost"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 148,
+                "name": "CancelBoost",
+                "label": "Cancel Boost"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "EM",
+                "label": "Energy Management"
+            },
+            "1": {
+                "bit": 1,
+                "code": "TP",
+                "label": "Tank Percent"
+            }
+        }
+    },
+    "149": {
+        "id": 149,
+        "label": "CommodityPrice",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 149,
+                "label": "TariffUnit",
+                "type": "TariffUnitEnum",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 149,
+                "label": "Currency",
+                "type": "Nullable[currency]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 149,
+                "label": "CurrentPrice",
+                "type": "Nullable[CommodityPriceStruct]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 149,
+                "label": "PriceForecast",
+                "type": "List[CommodityPriceStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 149,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 149,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 149,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 149,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 149,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 149,
+                "name": "GetDetailedPriceRequest",
+                "label": "Get Detailed Price Request"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 149,
+                "name": "GetDetailedForecastRequest",
+                "label": "Get Detailed Forecast Request"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "FORE",
+                "label": "Forecasting"
+            }
+        }
+    },
+    "151": {
+        "id": 151,
+        "label": "Messages",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 151,
+                "label": "Messages",
+                "type": "List[MessageStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 151,
+                "label": "ActiveMessageIDs",
+                "type": "List[MessageID]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 151,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 151,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 151,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 151,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 151,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 151,
+                "name": "PresentMessagesRequest",
+                "label": "Present Messages Request"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 151,
+                "name": "CancelMessagesRequest",
+                "label": "Cancel Messages Request"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "CONF",
+                "label": "Received Confirmation"
+            },
+            "1": {
+                "bit": 1,
+                "code": "RESP",
+                "label": "Confirmation Response"
+            },
+            "2": {
+                "bit": 2,
+                "code": "RPLY",
+                "label": "Confirmation Reply"
+            },
+            "3": {
+                "bit": 3,
+                "code": "PROT",
+                "label": "Protected Messages"
+            }
+        }
+    },
+    "152": {
+        "id": 152,
+        "label": "DeviceEnergyManagement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 152,
+                "label": "EsaType",
+                "type": "ESATypeEnum",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 152,
+                "label": "EsaCanGenerate",
+                "type": "bool",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 152,
+                "label": "EsaState",
+                "type": "ESAStateEnum",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 152,
+                "label": "AbsMinPower",
+                "type": "power-mW",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 152,
+                "label": "AbsMaxPower",
+                "type": "power-mW",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 152,
+                "label": "PowerAdjustmentCapability",
+                "type": "Optional[Nullable[PowerAdjustCapabilityStruct]]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 152,
+                "label": "Forecast",
+                "type": "Optional[Nullable[ForecastStruct]]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 152,
+                "label": "OptOutState",
+                "type": "Optional[OptOutStateEnum]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 152,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 152,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 152,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 152,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 152,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 152,
+                "name": "PowerAdjustRequest",
+                "label": "Power Adjust Request"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 152,
+                "name": "CancelPowerAdjustRequest",
+                "label": "Cancel Power Adjust Request"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 152,
+                "name": "StartTimeAdjustRequest",
+                "label": "Start Time Adjust Request"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 152,
+                "name": "PauseRequest",
+                "label": "Pause Request"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 152,
+                "name": "ResumeRequest",
+                "label": "Resume Request"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 152,
+                "name": "ModifyForecastRequest",
+                "label": "Modify Forecast Request"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 152,
+                "name": "RequestConstraintBasedForecast",
+                "label": "Request Constraint Based Forecast"
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 152,
+                "name": "CancelRequest",
+                "label": "Cancel Request"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "PA",
+                "label": "Power Adjustment"
+            },
+            "1": {
+                "bit": 1,
+                "code": "PFR",
+                "label": "Power Forecast Reporting"
+            },
+            "2": {
+                "bit": 2,
+                "code": "SFR",
+                "label": "State Forecast Reporting"
+            },
+            "3": {
+                "bit": 3,
+                "code": "STA",
+                "label": "Start Time Adjustment"
+            },
+            "4": {
+                "bit": 4,
+                "code": "PAU",
+                "label": "Pausable"
+            },
+            "5": {
+                "bit": 5,
+                "code": "FA",
+                "label": "Forecast Adjustment"
+            },
+            "6": {
+                "bit": 6,
+                "code": "CON",
+                "label": "Constraint Based Adjustment"
+            }
+        }
+    },
+    "153": {
+        "id": 153,
+        "label": "EnergyEvse",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 153,
+                "label": "State",
+                "type": "Nullable[StateEnum]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 153,
+                "label": "SupplyState",
+                "type": "SupplyStateEnum",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 153,
+                "label": "FaultState",
+                "type": "FaultStateEnum",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 153,
+                "label": "ChargingEnabledUntil",
+                "type": "Nullable[epoch-s]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 153,
+                "label": "DischargingEnabledUntil",
+                "type": "Optional[Nullable[epoch-s]]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 153,
+                "label": "CircuitCapacity",
+                "type": "amperage-mA",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 153,
+                "label": "MinimumChargeCurrent",
+                "type": "amperage-mA",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 153,
+                "label": "MaximumChargeCurrent",
+                "type": "amperage-mA",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 153,
+                "label": "MaximumDischargeCurrent",
+                "type": "Optional[amperage-mA]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 153,
+                "label": "UserMaximumChargeCurrent",
+                "type": "Optional[amperage-mA]",
+                "writable": true
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 153,
+                "label": "RandomizationDelayWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": true
+            },
+            "35": {
+                "id": 35,
+                "cluster_id": 153,
+                "label": "NextChargeStartTime",
+                "type": "Optional[Nullable[epoch-s]]",
+                "writable": false
+            },
+            "36": {
+                "id": 36,
+                "cluster_id": 153,
+                "label": "NextChargeTargetTime",
+                "type": "Optional[Nullable[epoch-s]]",
+                "writable": false
+            },
+            "37": {
+                "id": 37,
+                "cluster_id": 153,
+                "label": "NextChargeRequiredEnergy",
+                "type": "Optional[Nullable[energy-mWh]]",
+                "writable": false
+            },
+            "38": {
+                "id": 38,
+                "cluster_id": 153,
+                "label": "NextChargeTargetSoC",
+                "type": "Optional[Nullable[percent]]",
+                "writable": false
+            },
+            "39": {
+                "id": 39,
+                "cluster_id": 153,
+                "label": "ApproximateEvEfficiency",
+                "type": "Optional[Nullable[uint16]]",
+                "writable": true
+            },
+            "48": {
+                "id": 48,
+                "cluster_id": 153,
+                "label": "StateOfCharge",
+                "type": "Optional[Nullable[percent]]",
+                "writable": false
+            },
+            "49": {
+                "id": 49,
+                "cluster_id": 153,
+                "label": "BatteryCapacity",
+                "type": "Optional[Nullable[energy-mWh]]",
+                "writable": false
+            },
+            "50": {
+                "id": 50,
+                "cluster_id": 153,
+                "label": "VehicleId",
+                "type": "Optional[Nullable[string]]",
+                "writable": false
+            },
+            "64": {
+                "id": 64,
+                "cluster_id": 153,
+                "label": "SessionId",
+                "type": "Nullable[uint32]",
+                "writable": false
+            },
+            "65": {
+                "id": 65,
+                "cluster_id": 153,
+                "label": "SessionDuration",
+                "type": "Nullable[elapsed-s]",
+                "writable": false
+            },
+            "66": {
+                "id": 66,
+                "cluster_id": 153,
+                "label": "SessionEnergyCharged",
+                "type": "Nullable[energy-mWh]",
+                "writable": false
+            },
+            "67": {
+                "id": 67,
+                "cluster_id": 153,
+                "label": "SessionEnergyDischarged",
+                "type": "Optional[Nullable[energy-mWh]]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 153,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 153,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 153,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 153,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 153,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "1": {
+                "id": 1,
+                "cluster_id": 153,
+                "name": "Disable",
+                "label": "Disable"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 153,
+                "name": "EnableCharging",
+                "label": "Enable Charging"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 153,
+                "name": "EnableDischarging",
+                "label": "Enable Discharging"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 153,
+                "name": "StartDiagnostics",
+                "label": "Start Diagnostics"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 153,
+                "name": "SetTargets",
+                "label": "Set Targets"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 153,
+                "name": "GetTargets",
+                "label": "Get Targets"
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 153,
+                "name": "ClearTargets",
+                "label": "Clear Targets"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "PREF",
+                "label": "Charging Preferences"
+            },
+            "1": {
+                "bit": 1,
+                "code": "SOC",
+                "label": "So Creporting"
+            },
+            "2": {
+                "bit": 2,
+                "code": "PNC",
+                "label": "Plug And Charge"
+            },
+            "3": {
+                "bit": 3,
+                "code": "RFID",
+                "label": "Rfid"
+            },
+            "4": {
+                "bit": 4,
+                "code": "V2X",
+                "label": "V2 X"
+            }
+        }
+    },
+    "155": {
+        "id": 155,
+        "label": "EnergyPreference",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 155,
+                "label": "EnergyBalances",
+                "type": "List[BalanceStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 155,
+                "label": "CurrentEnergyBalance",
+                "type": "Optional[uint8]",
+                "writable": true
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 155,
+                "label": "EnergyPriorities",
+                "type": "List[EnergyPriorityEnum]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 155,
+                "label": "LowPowerModeSensitivities",
+                "type": "List[BalanceStruct]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 155,
+                "label": "CurrentLowPowerModeSensitivity",
+                "type": "Optional[uint8]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 155,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 155,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 155,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 155,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 155,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "BALA",
+                "label": "Energy Balance"
+            },
+            "1": {
+                "bit": 1,
+                "code": "LPMS",
+                "label": "Low Power Mode Sensitivity"
+            }
+        }
+    },
+    "156": {
+        "id": 156,
+        "label": "PowerTopology",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 156,
+                "label": "AvailableEndpoints",
+                "type": "List[endpoint-no]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 156,
+                "label": "ActiveEndpoints",
+                "type": "List[endpoint-no]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 156,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 156,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 156,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 156,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 156,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "NODE",
+                "label": "Node Topology"
+            },
+            "1": {
+                "bit": 1,
+                "code": "TREE",
+                "label": "Tree Topology"
+            },
+            "2": {
+                "bit": 2,
+                "code": "SET",
+                "label": "Set Topology"
+            },
+            "3": {
+                "bit": 3,
+                "code": "DYPF",
+                "label": "Dynamic Power Flow"
+            }
+        }
+    },
+    "157": {
+        "id": 157,
+        "label": "EnergyEvseMode",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 157,
+                "label": "SupportedModes",
+                "type": "unknown",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 157,
+                "label": "CurrentMode",
+                "type": "unknown",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 157,
+                "label": "StartUpMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 157,
+                "label": "OnMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 157,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 157,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 157,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 157,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 157,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 157,
+                "name": "ChangeToMode",
+                "label": "Change To Mode"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "DEPONOFF",
+                "label": "On Off"
+            }
+        }
+    },
+    "158": {
+        "id": 158,
+        "label": "WaterHeaterMode",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 158,
+                "label": "SupportedModes",
+                "type": "unknown",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 158,
+                "label": "CurrentMode",
+                "type": "unknown",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 158,
+                "label": "StartUpMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 158,
+                "label": "OnMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 158,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 158,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 158,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 158,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 158,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 158,
+                "name": "ChangeToMode",
+                "label": "Change To Mode"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "DEPONOFF",
+                "label": "On Off"
+            }
+        }
+    },
+    "159": {
+        "id": 159,
+        "label": "DeviceEnergyManagementMode",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 159,
+                "label": "SupportedModes",
+                "type": "unknown",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 159,
+                "label": "CurrentMode",
+                "type": "unknown",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 159,
+                "label": "StartUpMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 159,
+                "label": "OnMode",
+                "type": "Optional[Nullable[unknown]]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 159,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 159,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 159,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 159,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 159,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 159,
+                "name": "ChangeToMode",
+                "label": "Change To Mode"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "DEPONOFF",
+                "label": "On Off"
+            }
+        }
+    },
+    "160": {
+        "id": 160,
+        "label": "ElectricalGridConditions",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 160,
+                "label": "LocalGenerationAvailable",
+                "type": "Nullable[bool]",
+                "writable": true
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 160,
+                "label": "CurrentConditions",
+                "type": "Nullable[ElectricalGridConditionsStruct]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 160,
+                "label": "ForecastConditions",
+                "type": "List[ElectricalGridConditionsStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 160,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 160,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 160,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 160,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 160,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "FORE",
+                "label": "Forecasting"
+            }
+        }
+    },
+    "257": {
+        "id": 257,
+        "label": "DoorLock",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 257,
+                "label": "LockState",
+                "type": "Nullable[LockStateEnum]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 257,
+                "label": "LockType",
+                "type": "LockTypeEnum",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 257,
+                "label": "ActuatorEnabled",
+                "type": "bool",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 257,
+                "label": "DoorState",
+                "type": "Optional[Nullable[DoorStateEnum]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 257,
+                "label": "DoorOpenEvents",
+                "type": "Optional[uint32]",
+                "writable": true
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 257,
+                "label": "DoorClosedEvents",
+                "type": "Optional[uint32]",
+                "writable": true
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 257,
+                "label": "OpenPeriod",
+                "type": "Optional[uint16]",
+                "writable": true
+            },
+            "17": {
+                "id": 17,
+                "cluster_id": 257,
+                "label": "NumberOfTotalUsersSupported",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "18": {
+                "id": 18,
+                "cluster_id": 257,
+                "label": "NumberOfPinUsersSupported",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "19": {
+                "id": 19,
+                "cluster_id": 257,
+                "label": "NumberOfRfidUsersSupported",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "20": {
+                "id": 20,
+                "cluster_id": 257,
+                "label": "NumberOfWeekDaySchedulesSupportedPerUser",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "21": {
+                "id": 21,
+                "cluster_id": 257,
+                "label": "NumberOfYearDaySchedulesSupportedPerUser",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "22": {
+                "id": 22,
+                "cluster_id": 257,
+                "label": "NumberOfHolidaySchedulesSupported",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "23": {
+                "id": 23,
+                "cluster_id": 257,
+                "label": "MaxPinCodeLength",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "24": {
+                "id": 24,
+                "cluster_id": 257,
+                "label": "MinPinCodeLength",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "25": {
+                "id": 25,
+                "cluster_id": 257,
+                "label": "MaxRfidCodeLength",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "26": {
+                "id": 26,
+                "cluster_id": 257,
+                "label": "MinRfidCodeLength",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "27": {
+                "id": 27,
+                "cluster_id": 257,
+                "label": "CredentialRulesSupport",
+                "type": "Optional[CredentialRulesBitmap]",
+                "writable": false
+            },
+            "28": {
+                "id": 28,
+                "cluster_id": 257,
+                "label": "NumberOfCredentialsSupportedPerUser",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "33": {
+                "id": 33,
+                "cluster_id": 257,
+                "label": "Language",
+                "type": "Optional[string]",
+                "writable": true
+            },
+            "34": {
+                "id": 34,
+                "cluster_id": 257,
+                "label": "LedSettings",
+                "type": "Optional[LEDSettingEnum]",
+                "writable": true
+            },
+            "35": {
+                "id": 35,
+                "cluster_id": 257,
+                "label": "AutoRelockTime",
+                "type": "Optional[uint32]",
+                "writable": true
+            },
+            "36": {
+                "id": 36,
+                "cluster_id": 257,
+                "label": "SoundVolume",
+                "type": "Optional[SoundVolumeEnum]",
+                "writable": true
+            },
+            "37": {
+                "id": 37,
+                "cluster_id": 257,
+                "label": "OperatingMode",
+                "type": "OperatingModeEnum",
+                "writable": true
+            },
+            "38": {
+                "id": 38,
+                "cluster_id": 257,
+                "label": "SupportedOperatingModes",
+                "type": "OperatingModesBitmap",
+                "writable": false
+            },
+            "39": {
+                "id": 39,
+                "cluster_id": 257,
+                "label": "DefaultConfigurationRegister",
+                "type": "Optional[ConfigurationRegisterBitmap]",
+                "writable": false
+            },
+            "40": {
+                "id": 40,
+                "cluster_id": 257,
+                "label": "EnableLocalProgramming",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "41": {
+                "id": 41,
+                "cluster_id": 257,
+                "label": "EnableOneTouchLocking",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "42": {
+                "id": 42,
+                "cluster_id": 257,
+                "label": "EnableInsideStatusLed",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "43": {
+                "id": 43,
+                "cluster_id": 257,
+                "label": "EnablePrivacyModeButton",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "44": {
+                "id": 44,
+                "cluster_id": 257,
+                "label": "LocalProgrammingFeatures",
+                "type": "Optional[LocalProgrammingFeaturesBitmap]",
+                "writable": true
+            },
+            "48": {
+                "id": 48,
+                "cluster_id": 257,
+                "label": "WrongCodeEntryLimit",
+                "type": "Optional[uint8]",
+                "writable": true
+            },
+            "49": {
+                "id": 49,
+                "cluster_id": 257,
+                "label": "UserCodeTemporaryDisableTime",
+                "type": "Optional[uint8]",
+                "writable": true
+            },
+            "50": {
+                "id": 50,
+                "cluster_id": 257,
+                "label": "SendPinOverTheAir",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "51": {
+                "id": 51,
+                "cluster_id": 257,
+                "label": "RequirePinForRemoteOperation",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "52": {
+                "id": 52,
+                "cluster_id": 257,
+                "label": "SecurityLevel",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "53": {
+                "id": 53,
+                "cluster_id": 257,
+                "label": "ExpiringUserTimeout",
+                "type": "Optional[uint16]",
+                "writable": true
+            },
+            "128": {
+                "id": 128,
+                "cluster_id": 257,
+                "label": "AliroReaderVerificationKey",
+                "type": "Optional[Nullable[bytes]]",
+                "writable": false
+            },
+            "129": {
+                "id": 129,
+                "cluster_id": 257,
+                "label": "AliroReaderGroupIdentifier",
+                "type": "Optional[Nullable[bytes]]",
+                "writable": false
+            },
+            "130": {
+                "id": 130,
+                "cluster_id": 257,
+                "label": "AliroReaderGroupSubIdentifier",
+                "type": "Optional[bytes]",
+                "writable": false
+            },
+            "131": {
+                "id": 131,
+                "cluster_id": 257,
+                "label": "AliroExpeditedTransactionSupportedProtocolVersions",
+                "type": "List[octstr]",
+                "writable": false
+            },
+            "132": {
+                "id": 132,
+                "cluster_id": 257,
+                "label": "AliroGroupResolvingKey",
+                "type": "Optional[Nullable[bytes]]",
+                "writable": false
+            },
+            "133": {
+                "id": 133,
+                "cluster_id": 257,
+                "label": "AliroSupportedBleuwbProtocolVersions",
+                "type": "List[octstr]",
+                "writable": false
+            },
+            "134": {
+                "id": 134,
+                "cluster_id": 257,
+                "label": "AliroBleAdvertisingVersion",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "135": {
+                "id": 135,
+                "cluster_id": 257,
+                "label": "NumberOfAliroCredentialIssuerKeysSupported",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "136": {
+                "id": 136,
+                "cluster_id": 257,
+                "label": "NumberOfAliroEndpointKeysSupported",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 257,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 257,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 257,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 257,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 257,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 257,
+                "name": "LockDoor",
+                "label": "Lock Door"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 257,
+                "name": "UnlockDoor",
+                "label": "Unlock Door"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 257,
+                "name": "Toggle",
+                "label": "Toggle"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 257,
+                "name": "UnlockWithTimeout",
+                "label": "Unlock With Timeout"
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 257,
+                "name": "SetWeekDaySchedule",
+                "label": "Set Week Day Schedule"
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 257,
+                "name": "GetWeekDaySchedule",
+                "label": "Get Week Day Schedule"
+            },
+            "13": {
+                "id": 13,
+                "cluster_id": 257,
+                "name": "ClearWeekDaySchedule",
+                "label": "Clear Week Day Schedule"
+            },
+            "14": {
+                "id": 14,
+                "cluster_id": 257,
+                "name": "SetYearDaySchedule",
+                "label": "Set Year Day Schedule"
+            },
+            "15": {
+                "id": 15,
+                "cluster_id": 257,
+                "name": "GetYearDaySchedule",
+                "label": "Get Year Day Schedule"
+            },
+            "16": {
+                "id": 16,
+                "cluster_id": 257,
+                "name": "ClearYearDaySchedule",
+                "label": "Clear Year Day Schedule"
+            },
+            "17": {
+                "id": 17,
+                "cluster_id": 257,
+                "name": "SetHolidaySchedule",
+                "label": "Set Holiday Schedule"
+            },
+            "18": {
+                "id": 18,
+                "cluster_id": 257,
+                "name": "GetHolidaySchedule",
+                "label": "Get Holiday Schedule"
+            },
+            "19": {
+                "id": 19,
+                "cluster_id": 257,
+                "name": "ClearHolidaySchedule",
+                "label": "Clear Holiday Schedule"
+            },
+            "26": {
+                "id": 26,
+                "cluster_id": 257,
+                "name": "SetUser",
+                "label": "Set User"
+            },
+            "27": {
+                "id": 27,
+                "cluster_id": 257,
+                "name": "GetUser",
+                "label": "Get User"
+            },
+            "29": {
+                "id": 29,
+                "cluster_id": 257,
+                "name": "ClearUser",
+                "label": "Clear User"
+            },
+            "34": {
+                "id": 34,
+                "cluster_id": 257,
+                "name": "SetCredential",
+                "label": "Set Credential"
+            },
+            "36": {
+                "id": 36,
+                "cluster_id": 257,
+                "name": "GetCredentialStatus",
+                "label": "Get Credential Status"
+            },
+            "38": {
+                "id": 38,
+                "cluster_id": 257,
+                "name": "ClearCredential",
+                "label": "Clear Credential"
+            },
+            "39": {
+                "id": 39,
+                "cluster_id": 257,
+                "name": "UnboltDoor",
+                "label": "Unbolt Door"
+            },
+            "40": {
+                "id": 40,
+                "cluster_id": 257,
+                "name": "SetAliroReaderConfig",
+                "label": "Set Aliro Reader Config"
+            },
+            "41": {
+                "id": 41,
+                "cluster_id": 257,
+                "name": "ClearAliroReaderConfig",
+                "label": "Clear Aliro Reader Config"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "PIN",
+                "label": "Pin Credential"
+            },
+            "1": {
+                "bit": 1,
+                "code": "RID",
+                "label": "Rfid Credential"
+            },
+            "2": {
+                "bit": 2,
+                "code": "FGP",
+                "label": "Finger Credentials"
+            },
+            "4": {
+                "bit": 4,
+                "code": "WDSCH",
+                "label": "Week Day Access Schedules"
+            },
+            "5": {
+                "bit": 5,
+                "code": "DPS",
+                "label": "Door Position Sensor"
+            },
+            "6": {
+                "bit": 6,
+                "code": "FACE",
+                "label": "Face Credentials"
+            },
+            "7": {
+                "bit": 7,
+                "code": "COTA",
+                "label": "Credential Over The Air Access"
+            },
+            "8": {
+                "bit": 8,
+                "code": "USR",
+                "label": "User"
+            },
+            "10": {
+                "bit": 10,
+                "code": "YDSCH",
+                "label": "Year Day Access Schedules"
+            },
+            "11": {
+                "bit": 11,
+                "code": "HDSCH",
+                "label": "Holiday Schedules"
+            },
+            "12": {
+                "bit": 12,
+                "code": "UBOLT",
+                "label": "Unbolting"
+            },
+            "13": {
+                "bit": 13,
+                "code": "ALIRO",
+                "label": "Aliro Provisioning"
+            },
+            "14": {
+                "bit": 14,
+                "code": "ALBU",
+                "label": "Aliro Bleuwb"
+            }
+        }
+    },
+    "258": {
+        "id": 258,
+        "label": "WindowCovering",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 258,
+                "label": "Type",
+                "type": "TypeEnum",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 258,
+                "label": "NumberOfActuationsLift",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 258,
+                "label": "NumberOfActuationsTilt",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 258,
+                "label": "ConfigStatus",
+                "type": "ConfigStatusBitmap",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 258,
+                "label": "CurrentPositionLiftPercentage",
+                "type": "Optional[Nullable[percent]]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 258,
+                "label": "CurrentPositionTiltPercentage",
+                "type": "Optional[Nullable[percent]]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 258,
+                "label": "OperationalStatus",
+                "type": "OperationalStatusBitmap",
+                "writable": false
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 258,
+                "label": "TargetPositionLiftPercent100ths",
+                "type": "Optional[Nullable[percent100ths]]",
+                "writable": false
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 258,
+                "label": "TargetPositionTiltPercent100ths",
+                "type": "Optional[Nullable[percent100ths]]",
+                "writable": false
+            },
+            "13": {
+                "id": 13,
+                "cluster_id": 258,
+                "label": "EndProductType",
+                "type": "EndProductTypeEnum",
+                "writable": false
+            },
+            "14": {
+                "id": 14,
+                "cluster_id": 258,
+                "label": "CurrentPositionLiftPercent100ths",
+                "type": "Optional[Nullable[percent100ths]]",
+                "writable": false
+            },
+            "15": {
+                "id": 15,
+                "cluster_id": 258,
+                "label": "CurrentPositionTiltPercent100ths",
+                "type": "Optional[Nullable[percent100ths]]",
+                "writable": false
+            },
+            "23": {
+                "id": 23,
+                "cluster_id": 258,
+                "label": "Mode",
+                "type": "ModeBitmap",
+                "writable": true
+            },
+            "26": {
+                "id": 26,
+                "cluster_id": 258,
+                "label": "SafetyStatus",
+                "type": "Optional[SafetyStatusBitmap]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 258,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 258,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 258,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 258,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 258,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            },
+            "355729409": {
+                "id": 355729409,
+                "cluster_id": 258,
+                "label": "WagoTravelTimeUp",
+                "type": "Optional[uint32]",
+                "writable": true
+            },
+            "355729410": {
+                "id": 355729410,
+                "cluster_id": 258,
+                "label": "WagoTravelTimeDown",
+                "type": "Optional[uint32]",
+                "writable": true
+            },
+            "355729411": {
+                "id": 355729411,
+                "cluster_id": 258,
+                "label": "WagoSlatRotationTime",
+                "type": "Optional[uint32]",
+                "writable": true
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 258,
+                "name": "UpOrOpen",
+                "label": "Up Or Open"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 258,
+                "name": "DownOrClose",
+                "label": "Down Or Close"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 258,
+                "name": "StopMotion",
+                "label": "Stop Motion"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 258,
+                "name": "GoToLiftPercentage",
+                "label": "Go To Lift Percentage"
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 258,
+                "name": "GoToTiltPercentage",
+                "label": "Go To Tilt Percentage"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "LF",
+                "label": "Lift"
+            },
+            "1": {
+                "bit": 1,
+                "code": "TL",
+                "label": "Tilt"
+            },
+            "2": {
+                "bit": 2,
+                "code": "PA_LF",
+                "label": "Position Aware Lift"
+            },
+            "4": {
+                "bit": 4,
+                "code": "PA_TL",
+                "label": "Position Aware Tilt"
+            }
+        }
+    },
+    "260": {
+        "id": 260,
+        "label": "ClosureControl",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 260,
+                "label": "CountdownTime",
+                "type": "Optional[Nullable[elapsed-s]]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 260,
+                "label": "MainState",
+                "type": "MainStateEnum",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 260,
+                "label": "CurrentErrorList",
+                "type": "List[ClosureErrorEnum]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 260,
+                "label": "OverallCurrentState",
+                "type": "Nullable[OverallCurrentStateStruct]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 260,
+                "label": "OverallTargetState",
+                "type": "Nullable[OverallTargetStateStruct]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 260,
+                "label": "LatchControlModes",
+                "type": "Optional[LatchControlModesBitmap]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 260,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 260,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 260,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 260,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 260,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 260,
+                "name": "Stop",
+                "label": "Stop"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 260,
+                "name": "MoveTo",
+                "label": "Move To"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 260,
+                "name": "Calibrate",
+                "label": "Calibrate"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "PS",
+                "label": "Positioning"
+            },
+            "1": {
+                "bit": 1,
+                "code": "LT",
+                "label": "Motion Latching"
+            },
+            "2": {
+                "bit": 2,
+                "code": "IS",
+                "label": "Instantaneous"
+            },
+            "3": {
+                "bit": 3,
+                "code": "SP",
+                "label": "Speed"
+            },
+            "4": {
+                "bit": 4,
+                "code": "VT",
+                "label": "Ventilation"
+            },
+            "5": {
+                "bit": 5,
+                "code": "PD",
+                "label": "Pedestrian"
+            },
+            "6": {
+                "bit": 6,
+                "code": "CL",
+                "label": "Calibration"
+            },
+            "7": {
+                "bit": 7,
+                "code": "PT",
+                "label": "Protection"
+            },
+            "8": {
+                "bit": 8,
+                "code": "MO",
+                "label": "Manually Operable"
+            }
+        }
+    },
+    "261": {
+        "id": 261,
+        "label": "ClosureDimension",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 261,
+                "label": "CurrentState",
+                "type": "Nullable[DimensionStateStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 261,
+                "label": "TargetState",
+                "type": "Nullable[DimensionStateStruct]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 261,
+                "label": "Resolution",
+                "type": "Optional[percent100ths]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 261,
+                "label": "StepValue",
+                "type": "Optional[percent100ths]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 261,
+                "label": "Unit",
+                "type": "Optional[ClosureUnitEnum]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 261,
+                "label": "UnitRange",
+                "type": "Optional[Nullable[UnitRangeStruct]]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 261,
+                "label": "LimitRange",
+                "type": "Optional[RangePercent100thsStruct]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 261,
+                "label": "TranslationDirection",
+                "type": "Optional[TranslationDirectionEnum]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 261,
+                "label": "RotationAxis",
+                "type": "Optional[RotationAxisEnum]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 261,
+                "label": "Overflow",
+                "type": "Optional[OverflowEnum]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 261,
+                "label": "ModulationType",
+                "type": "Optional[ModulationTypeEnum]",
+                "writable": false
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 261,
+                "label": "LatchControlModes",
+                "type": "Optional[LatchControlModesBitmap]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 261,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 261,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 261,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 261,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 261,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 261,
+                "name": "SetTarget",
+                "label": "Set Target"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 261,
+                "name": "Step",
+                "label": "Step"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "PS",
+                "label": "Positioning"
+            },
+            "1": {
+                "bit": 1,
+                "code": "LT",
+                "label": "Motion Latching"
+            },
+            "2": {
+                "bit": 2,
+                "code": "UT",
+                "label": "Unit"
+            },
+            "3": {
+                "bit": 3,
+                "code": "LM",
+                "label": "Limitation"
+            },
+            "4": {
+                "bit": 4,
+                "code": "SP",
+                "label": "Speed"
+            },
+            "5": {
+                "bit": 5,
+                "code": "TR",
+                "label": "Translation"
+            },
+            "6": {
+                "bit": 6,
+                "code": "RO",
+                "label": "Rotation"
+            },
+            "7": {
+                "bit": 7,
+                "code": "MD",
+                "label": "Modulation"
+            }
+        }
+    },
+    "336": {
+        "id": 336,
+        "label": "ServiceArea",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 336,
+                "label": "SupportedAreas",
+                "type": "List[AreaStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 336,
+                "label": "SupportedMaps",
+                "type": "List[MapStruct]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 336,
+                "label": "SelectedAreas",
+                "type": "List[uint32]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 336,
+                "label": "CurrentArea",
+                "type": "Optional[Nullable[uint32]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 336,
+                "label": "EstimatedEndTime",
+                "type": "Optional[Nullable[epoch-s]]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 336,
+                "label": "Progress",
+                "type": "List[ProgressStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 336,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 336,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 336,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 336,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 336,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 336,
+                "name": "SelectAreas",
+                "label": "Select Areas"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 336,
+                "name": "SkipArea",
+                "label": "Skip Area"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "SELRUN",
+                "label": "Select While Running"
+            },
+            "1": {
+                "bit": 1,
+                "code": "PROG",
+                "label": "Progress Reporting"
+            },
+            "2": {
+                "bit": 2,
+                "code": "MAPS",
+                "label": "Maps"
+            }
+        }
+    },
+    "512": {
+        "id": 512,
+        "label": "PumpConfigurationAndControl",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 512,
+                "label": "MaxPressure",
+                "type": "Nullable[int16]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 512,
+                "label": "MaxSpeed",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 512,
+                "label": "MaxFlow",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 512,
+                "label": "MinConstPressure",
+                "type": "Optional[Nullable[int16]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 512,
+                "label": "MaxConstPressure",
+                "type": "Optional[Nullable[int16]]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 512,
+                "label": "MinCompPressure",
+                "type": "Optional[Nullable[int16]]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 512,
+                "label": "MaxCompPressure",
+                "type": "Optional[Nullable[int16]]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 512,
+                "label": "MinConstSpeed",
+                "type": "Optional[Nullable[uint16]]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 512,
+                "label": "MaxConstSpeed",
+                "type": "Optional[Nullable[uint16]]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 512,
+                "label": "MinConstFlow",
+                "type": "Optional[Nullable[uint16]]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 512,
+                "label": "MaxConstFlow",
+                "type": "Optional[Nullable[uint16]]",
+                "writable": false
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 512,
+                "label": "MinConstTemp",
+                "type": "Optional[Nullable[int16]]",
+                "writable": false
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 512,
+                "label": "MaxConstTemp",
+                "type": "Optional[Nullable[int16]]",
+                "writable": false
+            },
+            "16": {
+                "id": 16,
+                "cluster_id": 512,
+                "label": "PumpStatus",
+                "type": "Optional[PumpStatusBitmap]",
+                "writable": false
+            },
+            "17": {
+                "id": 17,
+                "cluster_id": 512,
+                "label": "EffectiveOperationMode",
+                "type": "OperationModeEnum",
+                "writable": false
+            },
+            "18": {
+                "id": 18,
+                "cluster_id": 512,
+                "label": "EffectiveControlMode",
+                "type": "ControlModeEnum",
+                "writable": false
+            },
+            "19": {
+                "id": 19,
+                "cluster_id": 512,
+                "label": "Capacity",
+                "type": "Nullable[int16]",
+                "writable": false
+            },
+            "20": {
+                "id": 20,
+                "cluster_id": 512,
+                "label": "Speed",
+                "type": "Optional[Nullable[uint16]]",
+                "writable": false
+            },
+            "21": {
+                "id": 21,
+                "cluster_id": 512,
+                "label": "LifetimeRunningHours",
+                "type": "Optional[Nullable[uint24]]",
+                "writable": true
+            },
+            "22": {
+                "id": 22,
+                "cluster_id": 512,
+                "label": "Power",
+                "type": "Optional[Nullable[uint24]]",
+                "writable": false
+            },
+            "23": {
+                "id": 23,
+                "cluster_id": 512,
+                "label": "LifetimeEnergyConsumed",
+                "type": "Optional[Nullable[uint32]]",
+                "writable": true
+            },
+            "32": {
+                "id": 32,
+                "cluster_id": 512,
+                "label": "OperationMode",
+                "type": "OperationModeEnum",
+                "writable": true
+            },
+            "33": {
+                "id": 33,
+                "cluster_id": 512,
+                "label": "ControlMode",
+                "type": "Optional[ControlModeEnum]",
+                "writable": true
+            },
+            "34": {
+                "id": 34,
+                "cluster_id": 512,
+                "label": "AlarmMask",
+                "type": "Optional[uint16]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 512,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 512,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 512,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 512,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 512,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "PRSCONST",
+                "label": "Constant Pressure"
+            },
+            "1": {
+                "bit": 1,
+                "code": "PRSCOMP",
+                "label": "Compensated Pressure"
+            },
+            "2": {
+                "bit": 2,
+                "code": "FLW",
+                "label": "Constant Flow"
+            },
+            "3": {
+                "bit": 3,
+                "code": "SPD",
+                "label": "Constant Speed"
+            },
+            "4": {
+                "bit": 4,
+                "code": "TEMP",
+                "label": "Constant Temperature"
+            },
+            "5": {
+                "bit": 5,
+                "code": "AUTO",
+                "label": "Automatic"
+            },
+            "6": {
+                "bit": 6,
+                "code": "LOCAL",
+                "label": "Local Operation"
+            }
+        }
+    },
+    "513": {
+        "id": 513,
+        "label": "Thermostat",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 513,
+                "label": "LocalTemperature",
+                "type": "Nullable[temperature]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 513,
+                "label": "OutdoorTemperature",
+                "type": "Optional[Nullable[temperature]]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 513,
+                "label": "Occupancy",
+                "type": "Optional[OccupancyBitmap]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 513,
+                "label": "AbsMinHeatSetpointLimit",
+                "type": "Optional[temperature]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 513,
+                "label": "AbsMaxHeatSetpointLimit",
+                "type": "Optional[temperature]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 513,
+                "label": "AbsMinCoolSetpointLimit",
+                "type": "Optional[temperature]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 513,
+                "label": "AbsMaxCoolSetpointLimit",
+                "type": "Optional[temperature]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 513,
+                "label": "PiCoolingDemand",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 513,
+                "label": "PiHeatingDemand",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 513,
+                "label": "HvacSystemTypeConfiguration",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "16": {
+                "id": 16,
+                "cluster_id": 513,
+                "label": "LocalTemperatureCalibration",
+                "type": "Optional[SignedTemperature]",
+                "writable": true
+            },
+            "17": {
+                "id": 17,
+                "cluster_id": 513,
+                "label": "OccupiedCoolingSetpoint",
+                "type": "Optional[temperature]",
+                "writable": true
+            },
+            "18": {
+                "id": 18,
+                "cluster_id": 513,
+                "label": "OccupiedHeatingSetpoint",
+                "type": "Optional[temperature]",
+                "writable": true
+            },
+            "19": {
+                "id": 19,
+                "cluster_id": 513,
+                "label": "UnoccupiedCoolingSetpoint",
+                "type": "Optional[temperature]",
+                "writable": true
+            },
+            "20": {
+                "id": 20,
+                "cluster_id": 513,
+                "label": "UnoccupiedHeatingSetpoint",
+                "type": "Optional[temperature]",
+                "writable": true
+            },
+            "21": {
+                "id": 21,
+                "cluster_id": 513,
+                "label": "MinHeatSetpointLimit",
+                "type": "Optional[temperature]",
+                "writable": true
+            },
+            "22": {
+                "id": 22,
+                "cluster_id": 513,
+                "label": "MaxHeatSetpointLimit",
+                "type": "Optional[temperature]",
+                "writable": true
+            },
+            "23": {
+                "id": 23,
+                "cluster_id": 513,
+                "label": "MinCoolSetpointLimit",
+                "type": "Optional[temperature]",
+                "writable": true
+            },
+            "24": {
+                "id": 24,
+                "cluster_id": 513,
+                "label": "MaxCoolSetpointLimit",
+                "type": "Optional[temperature]",
+                "writable": true
+            },
+            "25": {
+                "id": 25,
+                "cluster_id": 513,
+                "label": "MinSetpointDeadBand",
+                "type": "Optional[SignedTemperature]",
+                "writable": true
+            },
+            "26": {
+                "id": 26,
+                "cluster_id": 513,
+                "label": "RemoteSensing",
+                "type": "Optional[RemoteSensingBitmap]",
+                "writable": true
+            },
+            "27": {
+                "id": 27,
+                "cluster_id": 513,
+                "label": "ControlSequenceOfOperation",
+                "type": "ControlSequenceOfOperationEnum",
+                "writable": true
+            },
+            "28": {
+                "id": 28,
+                "cluster_id": 513,
+                "label": "SystemMode",
+                "type": "SystemModeEnum",
+                "writable": true
+            },
+            "30": {
+                "id": 30,
+                "cluster_id": 513,
+                "label": "ThermostatRunningMode",
+                "type": "Optional[ThermostatRunningModeEnum]",
+                "writable": false
+            },
+            "35": {
+                "id": 35,
+                "cluster_id": 513,
+                "label": "TemperatureSetpointHold",
+                "type": "Optional[TemperatureSetpointHoldEnum]",
+                "writable": true
+            },
+            "36": {
+                "id": 36,
+                "cluster_id": 513,
+                "label": "TemperatureSetpointHoldDuration",
+                "type": "Optional[Nullable[uint16]]",
+                "writable": true
+            },
+            "37": {
+                "id": 37,
+                "cluster_id": 513,
+                "label": "ThermostatProgrammingOperationMode",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "41": {
+                "id": 41,
+                "cluster_id": 513,
+                "label": "ThermostatRunningState",
+                "type": "Optional[RelayStateBitmap]",
+                "writable": false
+            },
+            "48": {
+                "id": 48,
+                "cluster_id": 513,
+                "label": "SetpointChangeSource",
+                "type": "Optional[SetpointChangeSourceEnum]",
+                "writable": false
+            },
+            "49": {
+                "id": 49,
+                "cluster_id": 513,
+                "label": "SetpointChangeAmount",
+                "type": "Optional[Nullable[TemperatureDifference]]",
+                "writable": false
+            },
+            "50": {
+                "id": 50,
+                "cluster_id": 513,
+                "label": "SetpointChangeSourceTimestamp",
+                "type": "Optional[epoch-s]",
+                "writable": false
+            },
+            "52": {
+                "id": 52,
+                "cluster_id": 513,
+                "label": "OccupiedSetback",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "53": {
+                "id": 53,
+                "cluster_id": 513,
+                "label": "OccupiedSetbackMin",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "54": {
+                "id": 54,
+                "cluster_id": 513,
+                "label": "OccupiedSetbackMax",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "55": {
+                "id": 55,
+                "cluster_id": 513,
+                "label": "UnoccupiedSetback",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "56": {
+                "id": 56,
+                "cluster_id": 513,
+                "label": "UnoccupiedSetbackMin",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "57": {
+                "id": 57,
+                "cluster_id": 513,
+                "label": "UnoccupiedSetbackMax",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "58": {
+                "id": 58,
+                "cluster_id": 513,
+                "label": "EmergencyHeatDelta",
+                "type": "Optional[UnsignedTemperature]",
+                "writable": true
+            },
+            "64": {
+                "id": 64,
+                "cluster_id": 513,
+                "label": "AcType",
+                "type": "Optional[ACTypeEnum]",
+                "writable": true
+            },
+            "65": {
+                "id": 65,
+                "cluster_id": 513,
+                "label": "AcCapacity",
+                "type": "Optional[uint16]",
+                "writable": true
+            },
+            "66": {
+                "id": 66,
+                "cluster_id": 513,
+                "label": "AcRefrigerantType",
+                "type": "Optional[ACRefrigerantTypeEnum]",
+                "writable": true
+            },
+            "67": {
+                "id": 67,
+                "cluster_id": 513,
+                "label": "AcCompressorType",
+                "type": "Optional[ACCompressorTypeEnum]",
+                "writable": true
+            },
+            "68": {
+                "id": 68,
+                "cluster_id": 513,
+                "label": "AcErrorCode",
+                "type": "Optional[ACErrorCodeBitmap]",
+                "writable": true
+            },
+            "69": {
+                "id": 69,
+                "cluster_id": 513,
+                "label": "AcLouverPosition",
+                "type": "Optional[ACLouverPositionEnum]",
+                "writable": true
+            },
+            "70": {
+                "id": 70,
+                "cluster_id": 513,
+                "label": "AcCoilTemperature",
+                "type": "Optional[Nullable[temperature]]",
+                "writable": false
+            },
+            "71": {
+                "id": 71,
+                "cluster_id": 513,
+                "label": "AcCapacityFormat",
+                "type": "Optional[ACCapacityFormatEnum]",
+                "writable": true
+            },
+            "72": {
+                "id": 72,
+                "cluster_id": 513,
+                "label": "PresetTypes",
+                "type": "List[PresetTypeStruct]",
+                "writable": false
+            },
+            "73": {
+                "id": 73,
+                "cluster_id": 513,
+                "label": "ScheduleTypes",
+                "type": "List[ScheduleTypeStruct]",
+                "writable": false
+            },
+            "74": {
+                "id": 74,
+                "cluster_id": 513,
+                "label": "NumberOfPresets",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "75": {
+                "id": 75,
+                "cluster_id": 513,
+                "label": "NumberOfSchedules",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "76": {
+                "id": 76,
+                "cluster_id": 513,
+                "label": "NumberOfScheduleTransitions",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "77": {
+                "id": 77,
+                "cluster_id": 513,
+                "label": "NumberOfScheduleTransitionPerDay",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": false
+            },
+            "78": {
+                "id": 78,
+                "cluster_id": 513,
+                "label": "ActivePresetHandle",
+                "type": "Optional[Nullable[bytes]]",
+                "writable": false
+            },
+            "79": {
+                "id": 79,
+                "cluster_id": 513,
+                "label": "ActiveScheduleHandle",
+                "type": "Optional[Nullable[bytes]]",
+                "writable": false
+            },
+            "80": {
+                "id": 80,
+                "cluster_id": 513,
+                "label": "Presets",
+                "type": "List[PresetStruct]",
+                "writable": true
+            },
+            "81": {
+                "id": 81,
+                "cluster_id": 513,
+                "label": "Schedules",
+                "type": "List[ScheduleStruct]",
+                "writable": true
+            },
+            "82": {
+                "id": 82,
+                "cluster_id": 513,
+                "label": "SetpointHoldExpiryTimestamp",
+                "type": "Optional[Nullable[epoch-s]]",
+                "writable": false
+            },
+            "83": {
+                "id": 83,
+                "cluster_id": 513,
+                "label": "MaxThermostatSuggestions",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "84": {
+                "id": 84,
+                "cluster_id": 513,
+                "label": "ThermostatSuggestions",
+                "type": "List[ThermostatSuggestionStruct]",
+                "writable": false
+            },
+            "85": {
+                "id": 85,
+                "cluster_id": 513,
+                "label": "CurrentThermostatSuggestion",
+                "type": "Optional[Nullable[ThermostatSuggestionStruct]]",
+                "writable": false
+            },
+            "86": {
+                "id": 86,
+                "cluster_id": 513,
+                "label": "ThermostatSuggestionNotFollowingReason",
+                "type": "Optional[Nullable[ThermostatSuggestionNotFollowingReasonBitmap]]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 513,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 513,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 513,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 513,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 513,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 513,
+                "name": "SetpointRaiseLower",
+                "label": "Setpoint Raise Lower"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 513,
+                "name": "SetActiveScheduleRequest",
+                "label": "Set Active Schedule Request"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 513,
+                "name": "SetActivePresetRequest",
+                "label": "Set Active Preset Request"
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 513,
+                "name": "AddThermostatSuggestion",
+                "label": "Add Thermostat Suggestion"
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 513,
+                "name": "RemoveThermostatSuggestion",
+                "label": "Remove Thermostat Suggestion"
+            },
+            "254": {
+                "id": 254,
+                "cluster_id": 513,
+                "name": "AtomicRequest",
+                "label": "Atomic Request"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "HEAT",
+                "label": "Heating"
+            },
+            "1": {
+                "bit": 1,
+                "code": "COOL",
+                "label": "Cooling"
+            },
+            "2": {
+                "bit": 2,
+                "code": "OCC",
+                "label": "Occupancy"
+            },
+            "4": {
+                "bit": 4,
+                "code": "SB",
+                "label": "Setback"
+            },
+            "5": {
+                "bit": 5,
+                "code": "AUTO",
+                "label": "Auto Mode"
+            },
+            "6": {
+                "bit": 6,
+                "code": "LTNE",
+                "label": "Local Temperature Not Exposed"
+            },
+            "7": {
+                "bit": 7,
+                "code": "MSCH",
+                "label": "Matter Schedule Configuration"
+            },
+            "8": {
+                "bit": 8,
+                "code": "PRES",
+                "label": "Presets"
+            },
+            "9": {
+                "bit": 9,
+                "code": "TEVT",
+                "label": "Events"
+            },
+            "10": {
+                "bit": 10,
+                "code": "TSUGGEST",
+                "label": "Thermostat Suggestions"
+            }
+        }
+    },
+    "514": {
+        "id": 514,
+        "label": "FanControl",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 514,
+                "label": "FanMode",
+                "type": "FanModeEnum",
+                "writable": true
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 514,
+                "label": "FanModeSequence",
+                "type": "FanModeSequenceEnum",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 514,
+                "label": "PercentSetting",
+                "type": "Nullable[percent]",
+                "writable": true
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 514,
+                "label": "PercentCurrent",
+                "type": "percent",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 514,
+                "label": "SpeedMax",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 514,
+                "label": "SpeedSetting",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": true
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 514,
+                "label": "SpeedCurrent",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 514,
+                "label": "RockSupport",
+                "type": "Optional[RockBitmap]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 514,
+                "label": "RockSetting",
+                "type": "Optional[RockBitmap]",
+                "writable": true
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 514,
+                "label": "WindSupport",
+                "type": "Optional[WindBitmap]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 514,
+                "label": "WindSetting",
+                "type": "Optional[WindBitmap]",
+                "writable": true
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 514,
+                "label": "AirflowDirection",
+                "type": "Optional[AirflowDirectionEnum]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 514,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 514,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 514,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 514,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 514,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 514,
+                "name": "Step",
+                "label": "Step"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "SPD",
+                "label": "Multi Speed"
+            },
+            "1": {
+                "bit": 1,
+                "code": "AUT",
+                "label": "Auto"
+            },
+            "2": {
+                "bit": 2,
+                "code": "RCK",
+                "label": "Rocking"
+            },
+            "3": {
+                "bit": 3,
+                "code": "WND",
+                "label": "Wind"
+            },
+            "4": {
+                "bit": 4,
+                "code": "STEP",
+                "label": "Step"
+            },
+            "5": {
+                "bit": 5,
+                "code": "DIR",
+                "label": "Airflow Direction"
+            }
+        }
+    },
+    "516": {
+        "id": 516,
+        "label": "ThermostatUserInterfaceConfiguration",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 516,
+                "label": "TemperatureDisplayMode",
+                "type": "TemperatureDisplayModeEnum",
+                "writable": true
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 516,
+                "label": "KeypadLockout",
+                "type": "KeypadLockoutEnum",
+                "writable": true
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 516,
+                "label": "ScheduleProgrammingVisibility",
+                "type": "Optional[ScheduleProgrammingVisibilityEnum]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 516,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 516,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 516,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 516,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 516,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "768": {
+        "id": 768,
+        "label": "ColorControl",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 768,
+                "label": "CurrentHue",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 768,
+                "label": "CurrentSaturation",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 768,
+                "label": "RemainingTime",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 768,
+                "label": "CurrentX",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 768,
+                "label": "CurrentY",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 768,
+                "label": "DriftCompensation",
+                "type": "Optional[DriftCompensationEnum]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 768,
+                "label": "CompensationText",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 768,
+                "label": "ColorTemperatureMireds",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 768,
+                "label": "ColorMode",
+                "type": "ColorModeEnum",
+                "writable": false
+            },
+            "15": {
+                "id": 15,
+                "cluster_id": 768,
+                "label": "Options",
+                "type": "OptionsBitmap",
+                "writable": true
+            },
+            "16": {
+                "id": 16,
+                "cluster_id": 768,
+                "label": "NumberOfPrimaries",
+                "type": "Nullable[uint8]",
+                "writable": false
+            },
+            "17": {
+                "id": 17,
+                "cluster_id": 768,
+                "label": "Primary1X",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "18": {
+                "id": 18,
+                "cluster_id": 768,
+                "label": "Primary1Y",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "19": {
+                "id": 19,
+                "cluster_id": 768,
+                "label": "Primary1Intensity",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": false
+            },
+            "21": {
+                "id": 21,
+                "cluster_id": 768,
+                "label": "Primary2X",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "22": {
+                "id": 22,
+                "cluster_id": 768,
+                "label": "Primary2Y",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "23": {
+                "id": 23,
+                "cluster_id": 768,
+                "label": "Primary2Intensity",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": false
+            },
+            "25": {
+                "id": 25,
+                "cluster_id": 768,
+                "label": "Primary3X",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "26": {
+                "id": 26,
+                "cluster_id": 768,
+                "label": "Primary3Y",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "27": {
+                "id": 27,
+                "cluster_id": 768,
+                "label": "Primary3Intensity",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": false
+            },
+            "32": {
+                "id": 32,
+                "cluster_id": 768,
+                "label": "Primary4X",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "33": {
+                "id": 33,
+                "cluster_id": 768,
+                "label": "Primary4Y",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "34": {
+                "id": 34,
+                "cluster_id": 768,
+                "label": "Primary4Intensity",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": false
+            },
+            "36": {
+                "id": 36,
+                "cluster_id": 768,
+                "label": "Primary5X",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "37": {
+                "id": 37,
+                "cluster_id": 768,
+                "label": "Primary5Y",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "38": {
+                "id": 38,
+                "cluster_id": 768,
+                "label": "Primary5Intensity",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": false
+            },
+            "40": {
+                "id": 40,
+                "cluster_id": 768,
+                "label": "Primary6X",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "41": {
+                "id": 41,
+                "cluster_id": 768,
+                "label": "Primary6Y",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "42": {
+                "id": 42,
+                "cluster_id": 768,
+                "label": "Primary6Intensity",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": false
+            },
+            "48": {
+                "id": 48,
+                "cluster_id": 768,
+                "label": "WhitePointX",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "49": {
+                "id": 49,
+                "cluster_id": 768,
+                "label": "WhitePointY",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "50": {
+                "id": 50,
+                "cluster_id": 768,
+                "label": "ColorPointRx",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "51": {
+                "id": 51,
+                "cluster_id": 768,
+                "label": "ColorPointRy",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "52": {
+                "id": 52,
+                "cluster_id": 768,
+                "label": "ColorPointRIntensity",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": false
+            },
+            "54": {
+                "id": 54,
+                "cluster_id": 768,
+                "label": "ColorPointGx",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "55": {
+                "id": 55,
+                "cluster_id": 768,
+                "label": "ColorPointGy",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "56": {
+                "id": 56,
+                "cluster_id": 768,
+                "label": "ColorPointGIntensity",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": false
+            },
+            "58": {
+                "id": 58,
+                "cluster_id": 768,
+                "label": "ColorPointBx",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "59": {
+                "id": 59,
+                "cluster_id": 768,
+                "label": "ColorPointBy",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "60": {
+                "id": 60,
+                "cluster_id": 768,
+                "label": "ColorPointBIntensity",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": false
+            },
+            "16384": {
+                "id": 16384,
+                "cluster_id": 768,
+                "label": "EnhancedCurrentHue",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "16385": {
+                "id": 16385,
+                "cluster_id": 768,
+                "label": "EnhancedColorMode",
+                "type": "EnhancedColorModeEnum",
+                "writable": false
+            },
+            "16386": {
+                "id": 16386,
+                "cluster_id": 768,
+                "label": "ColorLoopActive",
+                "type": "Optional[enum8]",
+                "writable": false
+            },
+            "16387": {
+                "id": 16387,
+                "cluster_id": 768,
+                "label": "ColorLoopDirection",
+                "type": "Optional[ColorLoopDirectionEnum]",
+                "writable": false
+            },
+            "16388": {
+                "id": 16388,
+                "cluster_id": 768,
+                "label": "ColorLoopTime",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "16389": {
+                "id": 16389,
+                "cluster_id": 768,
+                "label": "ColorLoopStartEnhancedHue",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "16390": {
+                "id": 16390,
+                "cluster_id": 768,
+                "label": "ColorLoopStoredEnhancedHue",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "16394": {
+                "id": 16394,
+                "cluster_id": 768,
+                "label": "ColorCapabilities",
+                "type": "ColorCapabilitiesBitmap",
+                "writable": false
+            },
+            "16395": {
+                "id": 16395,
+                "cluster_id": 768,
+                "label": "ColorTempPhysicalMinMireds",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "16396": {
+                "id": 16396,
+                "cluster_id": 768,
+                "label": "ColorTempPhysicalMaxMireds",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "16397": {
+                "id": 16397,
+                "cluster_id": 768,
+                "label": "CoupleColorTempToLevelMinMireds",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "16400": {
+                "id": 16400,
+                "cluster_id": 768,
+                "label": "StartUpColorTemperatureMireds",
+                "type": "Optional[Nullable[uint16]]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 768,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 768,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 768,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 768,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 768,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 768,
+                "name": "MoveToHue",
+                "label": "Move To Hue"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 768,
+                "name": "MoveHue",
+                "label": "Move Hue"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 768,
+                "name": "StepHue",
+                "label": "Step Hue"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 768,
+                "name": "MoveToSaturation",
+                "label": "Move To Saturation"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 768,
+                "name": "MoveSaturation",
+                "label": "Move Saturation"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 768,
+                "name": "StepSaturation",
+                "label": "Step Saturation"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 768,
+                "name": "MoveToHueAndSaturation",
+                "label": "Move To Hue And Saturation"
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 768,
+                "name": "MoveToColor",
+                "label": "Move To Color"
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 768,
+                "name": "MoveColor",
+                "label": "Move Color"
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 768,
+                "name": "StepColor",
+                "label": "Step Color"
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 768,
+                "name": "MoveToColorTemperature",
+                "label": "Move To Color Temperature"
+            },
+            "64": {
+                "id": 64,
+                "cluster_id": 768,
+                "name": "EnhancedMoveToHue",
+                "label": "Enhanced Move To Hue"
+            },
+            "65": {
+                "id": 65,
+                "cluster_id": 768,
+                "name": "EnhancedMoveHue",
+                "label": "Enhanced Move Hue"
+            },
+            "66": {
+                "id": 66,
+                "cluster_id": 768,
+                "name": "EnhancedStepHue",
+                "label": "Enhanced Step Hue"
+            },
+            "67": {
+                "id": 67,
+                "cluster_id": 768,
+                "name": "EnhancedMoveToHueAndSaturation",
+                "label": "Enhanced Move To Hue And Saturation"
+            },
+            "68": {
+                "id": 68,
+                "cluster_id": 768,
+                "name": "ColorLoopSet",
+                "label": "Color Loop Set"
+            },
+            "71": {
+                "id": 71,
+                "cluster_id": 768,
+                "name": "StopMoveStep",
+                "label": "Stop Move Step"
+            },
+            "75": {
+                "id": 75,
+                "cluster_id": 768,
+                "name": "MoveColorTemperature",
+                "label": "Move Color Temperature"
+            },
+            "76": {
+                "id": 76,
+                "cluster_id": 768,
+                "name": "StepColorTemperature",
+                "label": "Step Color Temperature"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "HS",
+                "label": "Hue Saturation"
+            },
+            "1": {
+                "bit": 1,
+                "code": "EHUE",
+                "label": "Enhanced Hue"
+            },
+            "2": {
+                "bit": 2,
+                "code": "CL",
+                "label": "Color Loop"
+            },
+            "3": {
+                "bit": 3,
+                "code": "XY",
+                "label": "Xy"
+            },
+            "4": {
+                "bit": 4,
+                "code": "CT",
+                "label": "Color Temperature"
+            }
+        }
+    },
+    "1024": {
+        "id": 1024,
+        "label": "IlluminanceMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1024,
+                "label": "MeasuredValue",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1024,
+                "label": "MinMeasuredValue",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1024,
+                "label": "MaxMeasuredValue",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1024,
+                "label": "Tolerance",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1024,
+                "label": "LightSensorType",
+                "type": "Optional[Nullable[uint8]]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1024,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1024,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1024,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1024,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1024,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "1026": {
+        "id": 1026,
+        "label": "TemperatureMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1026,
+                "label": "MeasuredValue",
+                "type": "Nullable[temperature]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1026,
+                "label": "MinMeasuredValue",
+                "type": "Nullable[temperature]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1026,
+                "label": "MaxMeasuredValue",
+                "type": "Nullable[temperature]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1026,
+                "label": "Tolerance",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1026,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1026,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1026,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1026,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1026,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "1027": {
+        "id": 1027,
+        "label": "PressureMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1027,
+                "label": "MeasuredValue",
+                "type": "Nullable[int16]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1027,
+                "label": "MinMeasuredValue",
+                "type": "Nullable[int16]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1027,
+                "label": "MaxMeasuredValue",
+                "type": "Nullable[int16]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1027,
+                "label": "Tolerance",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "16": {
+                "id": 16,
+                "cluster_id": 1027,
+                "label": "ScaledValue",
+                "type": "Optional[Nullable[int16]]",
+                "writable": false
+            },
+            "17": {
+                "id": 17,
+                "cluster_id": 1027,
+                "label": "MinScaledValue",
+                "type": "Optional[Nullable[int16]]",
+                "writable": false
+            },
+            "18": {
+                "id": 18,
+                "cluster_id": 1027,
+                "label": "MaxScaledValue",
+                "type": "Optional[Nullable[int16]]",
+                "writable": false
+            },
+            "19": {
+                "id": 19,
+                "cluster_id": 1027,
+                "label": "ScaledTolerance",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "20": {
+                "id": 20,
+                "cluster_id": 1027,
+                "label": "Scale",
+                "type": "Optional[int8]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1027,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1027,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1027,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1027,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1027,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "EXT",
+                "label": "Extended"
+            }
+        }
+    },
+    "1028": {
+        "id": 1028,
+        "label": "FlowMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1028,
+                "label": "MeasuredValue",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1028,
+                "label": "MinMeasuredValue",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1028,
+                "label": "MaxMeasuredValue",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1028,
+                "label": "Tolerance",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1028,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1028,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1028,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1028,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1028,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "1029": {
+        "id": 1029,
+        "label": "RelativeHumidityMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1029,
+                "label": "MeasuredValue",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1029,
+                "label": "MinMeasuredValue",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1029,
+                "label": "MaxMeasuredValue",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1029,
+                "label": "Tolerance",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1029,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1029,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1029,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1029,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1029,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "1030": {
+        "id": 1030,
+        "label": "OccupancySensing",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1030,
+                "label": "Occupancy",
+                "type": "OccupancyBitmap",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1030,
+                "label": "OccupancySensorType",
+                "type": "OccupancySensorTypeEnum",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1030,
+                "label": "OccupancySensorTypeBitmap",
+                "type": "OccupancySensorTypeBitmap",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1030,
+                "label": "HoldTime",
+                "type": "Optional[uint16]",
+                "writable": true
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1030,
+                "label": "HoldTimeLimits",
+                "type": "Optional[HoldTimeLimitsStruct]",
+                "writable": false
+            },
+            "16": {
+                "id": 16,
+                "cluster_id": 1030,
+                "label": "PirOccupiedToUnoccupiedDelay",
+                "type": "Optional[uint16]",
+                "writable": true
+            },
+            "17": {
+                "id": 17,
+                "cluster_id": 1030,
+                "label": "PirUnoccupiedToOccupiedDelay",
+                "type": "Optional[uint16]",
+                "writable": true
+            },
+            "18": {
+                "id": 18,
+                "cluster_id": 1030,
+                "label": "PirUnoccupiedToOccupiedThreshold",
+                "type": "Optional[uint8]",
+                "writable": true
+            },
+            "32": {
+                "id": 32,
+                "cluster_id": 1030,
+                "label": "UltrasonicOccupiedToUnoccupiedDelay",
+                "type": "Optional[uint16]",
+                "writable": true
+            },
+            "33": {
+                "id": 33,
+                "cluster_id": 1030,
+                "label": "UltrasonicUnoccupiedToOccupiedDelay",
+                "type": "Optional[uint16]",
+                "writable": true
+            },
+            "34": {
+                "id": 34,
+                "cluster_id": 1030,
+                "label": "UltrasonicUnoccupiedToOccupiedThreshold",
+                "type": "Optional[uint8]",
+                "writable": true
+            },
+            "48": {
+                "id": 48,
+                "cluster_id": 1030,
+                "label": "PhysicalContactOccupiedToUnoccupiedDelay",
+                "type": "Optional[uint16]",
+                "writable": true
+            },
+            "49": {
+                "id": 49,
+                "cluster_id": 1030,
+                "label": "PhysicalContactUnoccupiedToOccupiedDelay",
+                "type": "Optional[uint16]",
+                "writable": true
+            },
+            "50": {
+                "id": 50,
+                "cluster_id": 1030,
+                "label": "PhysicalContactUnoccupiedToOccupiedThreshold",
+                "type": "Optional[uint8]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1030,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1030,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1030,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1030,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1030,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "OTHER",
+                "label": "Other"
+            },
+            "1": {
+                "bit": 1,
+                "code": "PIR",
+                "label": "Passive Infrared"
+            },
+            "2": {
+                "bit": 2,
+                "code": "US",
+                "label": "Ultrasonic"
+            },
+            "3": {
+                "bit": 3,
+                "code": "PHY",
+                "label": "Physical Contact"
+            },
+            "4": {
+                "bit": 4,
+                "code": "AIR",
+                "label": "Active Infrared"
+            },
+            "5": {
+                "bit": 5,
+                "code": "RAD",
+                "label": "Radar"
+            },
+            "6": {
+                "bit": 6,
+                "code": "RFS",
+                "label": "Rf Sensing"
+            },
+            "7": {
+                "bit": 7,
+                "code": "VIS",
+                "label": "Vision"
+            },
+            "9": {
+                "bit": 9,
+                "code": "OCCEVENT",
+                "label": "Occupancy Event"
+            }
+        }
+    },
+    "1036": {
+        "id": 1036,
+        "label": "CarbonMonoxideConcentrationMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1036,
+                "label": "MeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1036,
+                "label": "MinMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1036,
+                "label": "MaxMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1036,
+                "label": "PeakMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1036,
+                "label": "PeakMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1036,
+                "label": "AverageMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1036,
+                "label": "AverageMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1036,
+                "label": "Uncertainty",
+                "type": "Optional[single]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1036,
+                "label": "MeasurementUnit",
+                "type": "Optional[MeasurementUnitEnum]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1036,
+                "label": "MeasurementMedium",
+                "type": "MeasurementMediumEnum",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1036,
+                "label": "LevelValue",
+                "type": "Optional[LevelValueEnum]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1036,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1036,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1036,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1036,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1036,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "MEA",
+                "label": "Numeric Measurement"
+            },
+            "1": {
+                "bit": 1,
+                "code": "LEV",
+                "label": "Level Indication"
+            },
+            "2": {
+                "bit": 2,
+                "code": "MED",
+                "label": "Medium Level"
+            },
+            "3": {
+                "bit": 3,
+                "code": "CRI",
+                "label": "Critical Level"
+            },
+            "4": {
+                "bit": 4,
+                "code": "PEA",
+                "label": "Peak Measurement"
+            },
+            "5": {
+                "bit": 5,
+                "code": "AVG",
+                "label": "Average Measurement"
+            }
+        }
+    },
+    "1037": {
+        "id": 1037,
+        "label": "CarbonDioxideConcentrationMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1037,
+                "label": "MeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1037,
+                "label": "MinMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1037,
+                "label": "MaxMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1037,
+                "label": "PeakMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1037,
+                "label": "PeakMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1037,
+                "label": "AverageMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1037,
+                "label": "AverageMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1037,
+                "label": "Uncertainty",
+                "type": "Optional[single]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1037,
+                "label": "MeasurementUnit",
+                "type": "Optional[MeasurementUnitEnum]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1037,
+                "label": "MeasurementMedium",
+                "type": "MeasurementMediumEnum",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1037,
+                "label": "LevelValue",
+                "type": "Optional[LevelValueEnum]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1037,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1037,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1037,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1037,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1037,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "MEA",
+                "label": "Numeric Measurement"
+            },
+            "1": {
+                "bit": 1,
+                "code": "LEV",
+                "label": "Level Indication"
+            },
+            "2": {
+                "bit": 2,
+                "code": "MED",
+                "label": "Medium Level"
+            },
+            "3": {
+                "bit": 3,
+                "code": "CRI",
+                "label": "Critical Level"
+            },
+            "4": {
+                "bit": 4,
+                "code": "PEA",
+                "label": "Peak Measurement"
+            },
+            "5": {
+                "bit": 5,
+                "code": "AVG",
+                "label": "Average Measurement"
+            }
+        }
+    },
+    "1043": {
+        "id": 1043,
+        "label": "NitrogenDioxideConcentrationMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1043,
+                "label": "MeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1043,
+                "label": "MinMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1043,
+                "label": "MaxMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1043,
+                "label": "PeakMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1043,
+                "label": "PeakMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1043,
+                "label": "AverageMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1043,
+                "label": "AverageMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1043,
+                "label": "Uncertainty",
+                "type": "Optional[single]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1043,
+                "label": "MeasurementUnit",
+                "type": "Optional[MeasurementUnitEnum]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1043,
+                "label": "MeasurementMedium",
+                "type": "MeasurementMediumEnum",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1043,
+                "label": "LevelValue",
+                "type": "Optional[LevelValueEnum]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1043,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1043,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1043,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1043,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1043,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "MEA",
+                "label": "Numeric Measurement"
+            },
+            "1": {
+                "bit": 1,
+                "code": "LEV",
+                "label": "Level Indication"
+            },
+            "2": {
+                "bit": 2,
+                "code": "MED",
+                "label": "Medium Level"
+            },
+            "3": {
+                "bit": 3,
+                "code": "CRI",
+                "label": "Critical Level"
+            },
+            "4": {
+                "bit": 4,
+                "code": "PEA",
+                "label": "Peak Measurement"
+            },
+            "5": {
+                "bit": 5,
+                "code": "AVG",
+                "label": "Average Measurement"
+            }
+        }
+    },
+    "1045": {
+        "id": 1045,
+        "label": "OzoneConcentrationMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1045,
+                "label": "MeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1045,
+                "label": "MinMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1045,
+                "label": "MaxMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1045,
+                "label": "PeakMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1045,
+                "label": "PeakMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1045,
+                "label": "AverageMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1045,
+                "label": "AverageMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1045,
+                "label": "Uncertainty",
+                "type": "Optional[single]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1045,
+                "label": "MeasurementUnit",
+                "type": "Optional[MeasurementUnitEnum]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1045,
+                "label": "MeasurementMedium",
+                "type": "MeasurementMediumEnum",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1045,
+                "label": "LevelValue",
+                "type": "Optional[LevelValueEnum]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1045,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1045,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1045,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1045,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1045,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "MEA",
+                "label": "Numeric Measurement"
+            },
+            "1": {
+                "bit": 1,
+                "code": "LEV",
+                "label": "Level Indication"
+            },
+            "2": {
+                "bit": 2,
+                "code": "MED",
+                "label": "Medium Level"
+            },
+            "3": {
+                "bit": 3,
+                "code": "CRI",
+                "label": "Critical Level"
+            },
+            "4": {
+                "bit": 4,
+                "code": "PEA",
+                "label": "Peak Measurement"
+            },
+            "5": {
+                "bit": 5,
+                "code": "AVG",
+                "label": "Average Measurement"
+            }
+        }
+    },
+    "1066": {
+        "id": 1066,
+        "label": "Pm25ConcentrationMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1066,
+                "label": "MeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1066,
+                "label": "MinMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1066,
+                "label": "MaxMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1066,
+                "label": "PeakMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1066,
+                "label": "PeakMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1066,
+                "label": "AverageMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1066,
+                "label": "AverageMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1066,
+                "label": "Uncertainty",
+                "type": "Optional[single]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1066,
+                "label": "MeasurementUnit",
+                "type": "Optional[MeasurementUnitEnum]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1066,
+                "label": "MeasurementMedium",
+                "type": "MeasurementMediumEnum",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1066,
+                "label": "LevelValue",
+                "type": "Optional[LevelValueEnum]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1066,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1066,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1066,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1066,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1066,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "MEA",
+                "label": "Numeric Measurement"
+            },
+            "1": {
+                "bit": 1,
+                "code": "LEV",
+                "label": "Level Indication"
+            },
+            "2": {
+                "bit": 2,
+                "code": "MED",
+                "label": "Medium Level"
+            },
+            "3": {
+                "bit": 3,
+                "code": "CRI",
+                "label": "Critical Level"
+            },
+            "4": {
+                "bit": 4,
+                "code": "PEA",
+                "label": "Peak Measurement"
+            },
+            "5": {
+                "bit": 5,
+                "code": "AVG",
+                "label": "Average Measurement"
+            }
+        }
+    },
+    "1067": {
+        "id": 1067,
+        "label": "FormaldehydeConcentrationMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1067,
+                "label": "MeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1067,
+                "label": "MinMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1067,
+                "label": "MaxMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1067,
+                "label": "PeakMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1067,
+                "label": "PeakMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1067,
+                "label": "AverageMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1067,
+                "label": "AverageMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1067,
+                "label": "Uncertainty",
+                "type": "Optional[single]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1067,
+                "label": "MeasurementUnit",
+                "type": "Optional[MeasurementUnitEnum]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1067,
+                "label": "MeasurementMedium",
+                "type": "MeasurementMediumEnum",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1067,
+                "label": "LevelValue",
+                "type": "Optional[LevelValueEnum]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1067,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1067,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1067,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1067,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1067,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "MEA",
+                "label": "Numeric Measurement"
+            },
+            "1": {
+                "bit": 1,
+                "code": "LEV",
+                "label": "Level Indication"
+            },
+            "2": {
+                "bit": 2,
+                "code": "MED",
+                "label": "Medium Level"
+            },
+            "3": {
+                "bit": 3,
+                "code": "CRI",
+                "label": "Critical Level"
+            },
+            "4": {
+                "bit": 4,
+                "code": "PEA",
+                "label": "Peak Measurement"
+            },
+            "5": {
+                "bit": 5,
+                "code": "AVG",
+                "label": "Average Measurement"
+            }
+        }
+    },
+    "1068": {
+        "id": 1068,
+        "label": "Pm1ConcentrationMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1068,
+                "label": "MeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1068,
+                "label": "MinMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1068,
+                "label": "MaxMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1068,
+                "label": "PeakMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1068,
+                "label": "PeakMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1068,
+                "label": "AverageMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1068,
+                "label": "AverageMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1068,
+                "label": "Uncertainty",
+                "type": "Optional[single]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1068,
+                "label": "MeasurementUnit",
+                "type": "Optional[MeasurementUnitEnum]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1068,
+                "label": "MeasurementMedium",
+                "type": "MeasurementMediumEnum",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1068,
+                "label": "LevelValue",
+                "type": "Optional[LevelValueEnum]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1068,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1068,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1068,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1068,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1068,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "MEA",
+                "label": "Numeric Measurement"
+            },
+            "1": {
+                "bit": 1,
+                "code": "LEV",
+                "label": "Level Indication"
+            },
+            "2": {
+                "bit": 2,
+                "code": "MED",
+                "label": "Medium Level"
+            },
+            "3": {
+                "bit": 3,
+                "code": "CRI",
+                "label": "Critical Level"
+            },
+            "4": {
+                "bit": 4,
+                "code": "PEA",
+                "label": "Peak Measurement"
+            },
+            "5": {
+                "bit": 5,
+                "code": "AVG",
+                "label": "Average Measurement"
+            }
+        }
+    },
+    "1069": {
+        "id": 1069,
+        "label": "Pm10ConcentrationMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1069,
+                "label": "MeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1069,
+                "label": "MinMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1069,
+                "label": "MaxMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1069,
+                "label": "PeakMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1069,
+                "label": "PeakMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1069,
+                "label": "AverageMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1069,
+                "label": "AverageMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1069,
+                "label": "Uncertainty",
+                "type": "Optional[single]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1069,
+                "label": "MeasurementUnit",
+                "type": "Optional[MeasurementUnitEnum]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1069,
+                "label": "MeasurementMedium",
+                "type": "MeasurementMediumEnum",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1069,
+                "label": "LevelValue",
+                "type": "Optional[LevelValueEnum]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1069,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1069,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1069,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1069,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1069,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "MEA",
+                "label": "Numeric Measurement"
+            },
+            "1": {
+                "bit": 1,
+                "code": "LEV",
+                "label": "Level Indication"
+            },
+            "2": {
+                "bit": 2,
+                "code": "MED",
+                "label": "Medium Level"
+            },
+            "3": {
+                "bit": 3,
+                "code": "CRI",
+                "label": "Critical Level"
+            },
+            "4": {
+                "bit": 4,
+                "code": "PEA",
+                "label": "Peak Measurement"
+            },
+            "5": {
+                "bit": 5,
+                "code": "AVG",
+                "label": "Average Measurement"
+            }
+        }
+    },
+    "1070": {
+        "id": 1070,
+        "label": "TotalVolatileOrganicCompoundsConcentrationMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1070,
+                "label": "MeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1070,
+                "label": "MinMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1070,
+                "label": "MaxMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1070,
+                "label": "PeakMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1070,
+                "label": "PeakMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1070,
+                "label": "AverageMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1070,
+                "label": "AverageMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1070,
+                "label": "Uncertainty",
+                "type": "Optional[single]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1070,
+                "label": "MeasurementUnit",
+                "type": "Optional[MeasurementUnitEnum]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1070,
+                "label": "MeasurementMedium",
+                "type": "MeasurementMediumEnum",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1070,
+                "label": "LevelValue",
+                "type": "Optional[LevelValueEnum]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1070,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1070,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1070,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1070,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1070,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "MEA",
+                "label": "Numeric Measurement"
+            },
+            "1": {
+                "bit": 1,
+                "code": "LEV",
+                "label": "Level Indication"
+            },
+            "2": {
+                "bit": 2,
+                "code": "MED",
+                "label": "Medium Level"
+            },
+            "3": {
+                "bit": 3,
+                "code": "CRI",
+                "label": "Critical Level"
+            },
+            "4": {
+                "bit": 4,
+                "code": "PEA",
+                "label": "Peak Measurement"
+            },
+            "5": {
+                "bit": 5,
+                "code": "AVG",
+                "label": "Average Measurement"
+            }
+        }
+    },
+    "1071": {
+        "id": 1071,
+        "label": "RadonConcentrationMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1071,
+                "label": "MeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1071,
+                "label": "MinMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1071,
+                "label": "MaxMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1071,
+                "label": "PeakMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1071,
+                "label": "PeakMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1071,
+                "label": "AverageMeasuredValue",
+                "type": "Optional[Nullable[single]]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1071,
+                "label": "AverageMeasuredValueWindow",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1071,
+                "label": "Uncertainty",
+                "type": "Optional[single]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1071,
+                "label": "MeasurementUnit",
+                "type": "Optional[MeasurementUnitEnum]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1071,
+                "label": "MeasurementMedium",
+                "type": "MeasurementMediumEnum",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1071,
+                "label": "LevelValue",
+                "type": "Optional[LevelValueEnum]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1071,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1071,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1071,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1071,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1071,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "MEA",
+                "label": "Numeric Measurement"
+            },
+            "1": {
+                "bit": 1,
+                "code": "LEV",
+                "label": "Level Indication"
+            },
+            "2": {
+                "bit": 2,
+                "code": "MED",
+                "label": "Medium Level"
+            },
+            "3": {
+                "bit": 3,
+                "code": "CRI",
+                "label": "Critical Level"
+            },
+            "4": {
+                "bit": 4,
+                "code": "PEA",
+                "label": "Peak Measurement"
+            },
+            "5": {
+                "bit": 5,
+                "code": "AVG",
+                "label": "Average Measurement"
+            }
+        }
+    },
+    "1072": {
+        "id": 1072,
+        "label": "SoilMeasurement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1072,
+                "label": "SoilMoistureMeasurementLimits",
+                "type": "MeasurementAccuracyStruct",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1072,
+                "label": "SoilMoistureMeasuredValue",
+                "type": "Nullable[percent]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1072,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1072,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1072,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1072,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1072,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "1073": {
+        "id": 1073,
+        "label": "AmbientContextSensing",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1073,
+                "label": "HumanActivityDetected",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1073,
+                "label": "ObjectIdentified",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1073,
+                "label": "AudioContextDetected",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1073,
+                "label": "AmbientContextType",
+                "type": "List[AmbientContextTypeStruct]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1073,
+                "label": "AmbientContextTypeSupported",
+                "type": "List[ModeSelect.SemanticTagStruct]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1073,
+                "label": "ObjectCountReached",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1073,
+                "label": "ObjectCountConfig",
+                "type": "Optional[ObjectCountConfigStruct]",
+                "writable": true
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1073,
+                "label": "ObjectCount",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1073,
+                "label": "SimultaneousDetectionLimit",
+                "type": "Optional[uint8]",
+                "writable": true
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1073,
+                "label": "HoldTime",
+                "type": "Optional[uint16]",
+                "writable": true
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1073,
+                "label": "HoldTimeLimits",
+                "type": "Optional[HoldTimeLimitsStruct]",
+                "writable": false
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 1073,
+                "label": "PredictedActivity",
+                "type": "List[PredictedActivityStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1073,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1073,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1073,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1073,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1073,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "HA",
+                "label": "Human Activity"
+            },
+            "1": {
+                "bit": 1,
+                "code": "OC",
+                "label": "Object Counting"
+            },
+            "2": {
+                "bit": 2,
+                "code": "OI",
+                "label": "Object Identification"
+            },
+            "3": {
+                "bit": 3,
+                "code": "AUD",
+                "label": "Sound Identification"
+            },
+            "4": {
+                "bit": 4,
+                "code": "PRED",
+                "label": "Predicted Activity"
+            }
+        }
+    },
+    "1105": {
+        "id": 1105,
+        "label": "WiFiNetworkManagement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1105,
+                "label": "Ssid",
+                "type": "Nullable[bytes]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1105,
+                "label": "PassphraseSurrogate",
+                "type": "Nullable[uint64]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1105,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1105,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1105,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1105,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1105,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1105,
+                "name": "NetworkPassphraseRequest",
+                "label": "Network Passphrase Request"
+            }
+        },
+        "features": {}
+    },
+    "1106": {
+        "id": 1106,
+        "label": "ThreadBorderRouterManagement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1106,
+                "label": "BorderRouterName",
+                "type": "string",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1106,
+                "label": "BorderAgentId",
+                "type": "bytes",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1106,
+                "label": "ThreadVersion",
+                "type": "uint16",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1106,
+                "label": "InterfaceEnabled",
+                "type": "bool",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1106,
+                "label": "ActiveDatasetTimestamp",
+                "type": "Nullable[uint64]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1106,
+                "label": "PendingDatasetTimestamp",
+                "type": "Nullable[uint64]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1106,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1106,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1106,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1106,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1106,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1106,
+                "name": "GetActiveDatasetRequest",
+                "label": "Get Active Dataset Request"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1106,
+                "name": "GetPendingDatasetRequest",
+                "label": "Get Pending Dataset Request"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1106,
+                "name": "SetActiveDatasetRequest",
+                "label": "Set Active Dataset Request"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1106,
+                "name": "SetPendingDatasetRequest",
+                "label": "Set Pending Dataset Request"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "PC",
+                "label": "Pan Change"
+            }
+        }
+    },
+    "1107": {
+        "id": 1107,
+        "label": "ThreadNetworkDirectory",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1107,
+                "label": "PreferredExtendedPanId",
+                "type": "Nullable[bytes]",
+                "writable": true
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1107,
+                "label": "ThreadNetworks",
+                "type": "List[ThreadNetworkStruct]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1107,
+                "label": "ThreadNetworkTableSize",
+                "type": "uint8",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1107,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1107,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1107,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1107,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1107,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1107,
+                "name": "AddNetwork",
+                "label": "Add Network"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1107,
+                "name": "RemoveNetwork",
+                "label": "Remove Network"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1107,
+                "name": "GetOperationalDataset",
+                "label": "Get Operational Dataset"
+            }
+        },
+        "features": {}
+    },
+    "1283": {
+        "id": 1283,
+        "label": "WakeOnLan",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1283,
+                "label": "MacAddress",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1283,
+                "label": "LinkLocalAddress",
+                "type": "Optional[bytes]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1283,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1283,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1283,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1283,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1283,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "1284": {
+        "id": 1284,
+        "label": "Channel",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1284,
+                "label": "ChannelList",
+                "type": "List[ChannelInfoStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1284,
+                "label": "Lineup",
+                "type": "Optional[Nullable[LineupInfoStruct]]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1284,
+                "label": "CurrentChannel",
+                "type": "Optional[Nullable[ChannelInfoStruct]]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1284,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1284,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1284,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1284,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1284,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1284,
+                "name": "ChangeChannel",
+                "label": "Change Channel"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1284,
+                "name": "ChangeChannelByNumber",
+                "label": "Change Channel By Number"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1284,
+                "name": "SkipChannel",
+                "label": "Skip Channel"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1284,
+                "name": "GetProgramGuide",
+                "label": "Get Program Guide"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1284,
+                "name": "RecordProgram",
+                "label": "Record Program"
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1284,
+                "name": "CancelRecordProgram",
+                "label": "Cancel Record Program"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "CL",
+                "label": "Channel List"
+            },
+            "1": {
+                "bit": 1,
+                "code": "LI",
+                "label": "Lineup Info"
+            },
+            "2": {
+                "bit": 2,
+                "code": "EG",
+                "label": "Electronic Guide"
+            },
+            "3": {
+                "bit": 3,
+                "code": "RP",
+                "label": "Record Program"
+            }
+        }
+    },
+    "1285": {
+        "id": 1285,
+        "label": "TargetNavigator",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1285,
+                "label": "TargetList",
+                "type": "List[TargetInfoStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1285,
+                "label": "CurrentTarget",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1285,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1285,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1285,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1285,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1285,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1285,
+                "name": "NavigateTarget",
+                "label": "Navigate Target"
+            }
+        },
+        "features": {}
+    },
+    "1286": {
+        "id": 1286,
+        "label": "MediaPlayback",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1286,
+                "label": "CurrentState",
+                "type": "PlaybackStateEnum",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1286,
+                "label": "StartTime",
+                "type": "Optional[Nullable[epoch-us]]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1286,
+                "label": "Duration",
+                "type": "Optional[Nullable[uint64]]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1286,
+                "label": "SampledPosition",
+                "type": "Optional[Nullable[PlaybackPositionStruct]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1286,
+                "label": "PlaybackSpeed",
+                "type": "Optional[single]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1286,
+                "label": "SeekRangeEnd",
+                "type": "Optional[Nullable[uint64]]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1286,
+                "label": "SeekRangeStart",
+                "type": "Optional[Nullable[uint64]]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1286,
+                "label": "ActiveAudioTrack",
+                "type": "Optional[Nullable[TrackStruct]]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1286,
+                "label": "AvailableAudioTracks",
+                "type": "List[TrackStruct]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1286,
+                "label": "ActiveTextTrack",
+                "type": "Optional[Nullable[TrackStruct]]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1286,
+                "label": "AvailableTextTracks",
+                "type": "List[TrackStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1286,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1286,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1286,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1286,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1286,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1286,
+                "name": "Play",
+                "label": "Play"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1286,
+                "name": "Pause",
+                "label": "Pause"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1286,
+                "name": "Stop",
+                "label": "Stop"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1286,
+                "name": "StartOver",
+                "label": "Start Over"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1286,
+                "name": "Previous",
+                "label": "Previous"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1286,
+                "name": "Next",
+                "label": "Next"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1286,
+                "name": "Rewind",
+                "label": "Rewind"
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1286,
+                "name": "FastForward",
+                "label": "Fast Forward"
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1286,
+                "name": "SkipForward",
+                "label": "Skip Forward"
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1286,
+                "name": "SkipBackward",
+                "label": "Skip Backward"
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 1286,
+                "name": "Seek",
+                "label": "Seek"
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 1286,
+                "name": "ActivateAudioTrack",
+                "label": "Activate Audio Track"
+            },
+            "13": {
+                "id": 13,
+                "cluster_id": 1286,
+                "name": "ActivateTextTrack",
+                "label": "Activate Text Track"
+            },
+            "14": {
+                "id": 14,
+                "cluster_id": 1286,
+                "name": "DeactivateTextTrack",
+                "label": "Deactivate Text Track"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "AS",
+                "label": "Advanced Seek"
+            },
+            "1": {
+                "bit": 1,
+                "code": "VS",
+                "label": "Variable Speed"
+            },
+            "2": {
+                "bit": 2,
+                "code": "TT",
+                "label": "Text Tracks"
+            },
+            "3": {
+                "bit": 3,
+                "code": "AT",
+                "label": "Audio Tracks"
+            },
+            "4": {
+                "bit": 4,
+                "code": "AA",
+                "label": "Audio Advance"
+            }
+        }
+    },
+    "1287": {
+        "id": 1287,
+        "label": "MediaInput",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1287,
+                "label": "InputList",
+                "type": "List[InputInfoStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1287,
+                "label": "CurrentInput",
+                "type": "uint8",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1287,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1287,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1287,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1287,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1287,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1287,
+                "name": "SelectInput",
+                "label": "Select Input"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1287,
+                "name": "ShowInputStatus",
+                "label": "Show Input Status"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1287,
+                "name": "HideInputStatus",
+                "label": "Hide Input Status"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1287,
+                "name": "RenameInput",
+                "label": "Rename Input"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "NU",
+                "label": "Name Updates"
+            }
+        }
+    },
+    "1288": {
+        "id": 1288,
+        "label": "LowPower",
+        "attributes": {
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1288,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1288,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1288,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1288,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1288,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1288,
+                "name": "Sleep",
+                "label": "Sleep"
+            }
+        },
+        "features": {}
+    },
+    "1289": {
+        "id": 1289,
+        "label": "KeypadInput",
+        "attributes": {
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1289,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1289,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1289,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1289,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1289,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1289,
+                "name": "SendKey",
+                "label": "Send Key"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "NV",
+                "label": "Navigation Key Codes"
+            },
+            "1": {
+                "bit": 1,
+                "code": "LK",
+                "label": "Location Keys"
+            },
+            "2": {
+                "bit": 2,
+                "code": "NK",
+                "label": "Number Keys"
+            }
+        }
+    },
+    "1290": {
+        "id": 1290,
+        "label": "ContentLauncher",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1290,
+                "label": "AcceptHeader",
+                "type": "List[string]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1290,
+                "label": "SupportedStreamingProtocols",
+                "type": "Optional[SupportedProtocolsBitmap]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1290,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1290,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1290,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1290,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1290,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1290,
+                "name": "LaunchContent",
+                "label": "Launch Content"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1290,
+                "name": "LaunchUrl",
+                "label": "Launch Url"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "CS",
+                "label": "Content Search"
+            },
+            "1": {
+                "bit": 1,
+                "code": "UP",
+                "label": "Url Playback"
+            },
+            "2": {
+                "bit": 2,
+                "code": "AS",
+                "label": "Advanced Seek"
+            },
+            "3": {
+                "bit": 3,
+                "code": "TT",
+                "label": "Text Tracks"
+            },
+            "4": {
+                "bit": 4,
+                "code": "AT",
+                "label": "Audio Tracks"
+            }
+        }
+    },
+    "1291": {
+        "id": 1291,
+        "label": "AudioOutput",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1291,
+                "label": "OutputList",
+                "type": "List[OutputInfoStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1291,
+                "label": "CurrentOutput",
+                "type": "uint8",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1291,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1291,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1291,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1291,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1291,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1291,
+                "name": "SelectOutput",
+                "label": "Select Output"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1291,
+                "name": "RenameOutput",
+                "label": "Rename Output"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "NU",
+                "label": "Name Updates"
+            }
+        }
+    },
+    "1292": {
+        "id": 1292,
+        "label": "ApplicationLauncher",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1292,
+                "label": "CatalogList",
+                "type": "List[uint16]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1292,
+                "label": "CurrentApp",
+                "type": "Optional[Nullable[ApplicationEPStruct]]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1292,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1292,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1292,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1292,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1292,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1292,
+                "name": "LaunchApp",
+                "label": "Launch App"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1292,
+                "name": "StopApp",
+                "label": "Stop App"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1292,
+                "name": "HideApp",
+                "label": "Hide App"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "AP",
+                "label": "Application Platform"
+            }
+        }
+    },
+    "1293": {
+        "id": 1293,
+        "label": "ApplicationBasic",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1293,
+                "label": "VendorName",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1293,
+                "label": "VendorId",
+                "type": "Optional[vendor-id]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1293,
+                "label": "ApplicationName",
+                "type": "string",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1293,
+                "label": "ProductId",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1293,
+                "label": "Application",
+                "type": "ApplicationStruct",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1293,
+                "label": "Status",
+                "type": "ApplicationStatusEnum",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1293,
+                "label": "ApplicationVersion",
+                "type": "string",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1293,
+                "label": "AllowedVendorList",
+                "type": "List[vendor-id]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1293,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1293,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1293,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1293,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1293,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "1294": {
+        "id": 1294,
+        "label": "AccountLogin",
+        "attributes": {
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1294,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1294,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1294,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1294,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1294,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1294,
+                "name": "GetSetupPin",
+                "label": "Get Setup Pin"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1294,
+                "name": "Login",
+                "label": "Login"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1294,
+                "name": "Logout",
+                "label": "Logout"
+            }
+        },
+        "features": {}
+    },
+    "1295": {
+        "id": 1295,
+        "label": "ContentControl",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1295,
+                "label": "Enabled",
+                "type": "bool",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1295,
+                "label": "OnDemandRatings",
+                "type": "List[RatingNameStruct]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1295,
+                "label": "OnDemandRatingThreshold",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1295,
+                "label": "ScheduledContentRatings",
+                "type": "List[RatingNameStruct]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1295,
+                "label": "ScheduledContentRatingThreshold",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1295,
+                "label": "ScreenDailyTime",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1295,
+                "label": "RemainingScreenTime",
+                "type": "Optional[elapsed-s]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1295,
+                "label": "BlockUnrated",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1295,
+                "label": "BlockChannelList",
+                "type": "List[BlockChannelStruct]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1295,
+                "label": "BlockApplicationList",
+                "type": "List[AppInfoStruct]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1295,
+                "label": "BlockContentTimeWindow",
+                "type": "List[TimeWindowStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1295,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1295,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1295,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1295,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1295,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1295,
+                "name": "UpdatePin",
+                "label": "Update Pin"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1295,
+                "name": "ResetPin",
+                "label": "Reset Pin"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1295,
+                "name": "Enable",
+                "label": "Enable"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1295,
+                "name": "Disable",
+                "label": "Disable"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1295,
+                "name": "AddBonusTime",
+                "label": "Add Bonus Time"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1295,
+                "name": "SetScreenDailyTime",
+                "label": "Set Screen Daily Time"
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1295,
+                "name": "BlockUnratedContent",
+                "label": "Block Unrated Content"
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1295,
+                "name": "UnblockUnratedContent",
+                "label": "Unblock Unrated Content"
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1295,
+                "name": "SetOnDemandRatingThreshold",
+                "label": "Set On Demand Rating Threshold"
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1295,
+                "name": "SetScheduledContentRatingThreshold",
+                "label": "Set Scheduled Content Rating Threshold"
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 1295,
+                "name": "AddBlockChannels",
+                "label": "Add Block Channels"
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 1295,
+                "name": "RemoveBlockChannels",
+                "label": "Remove Block Channels"
+            },
+            "13": {
+                "id": 13,
+                "cluster_id": 1295,
+                "name": "AddBlockApplications",
+                "label": "Add Block Applications"
+            },
+            "14": {
+                "id": 14,
+                "cluster_id": 1295,
+                "name": "RemoveBlockApplications",
+                "label": "Remove Block Applications"
+            },
+            "15": {
+                "id": 15,
+                "cluster_id": 1295,
+                "name": "SetBlockContentTimeWindow",
+                "label": "Set Block Content Time Window"
+            },
+            "16": {
+                "id": 16,
+                "cluster_id": 1295,
+                "name": "RemoveBlockContentTimeWindow",
+                "label": "Remove Block Content Time Window"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "ST",
+                "label": "Screen Time"
+            },
+            "1": {
+                "bit": 1,
+                "code": "PM",
+                "label": "Pin Management"
+            },
+            "2": {
+                "bit": 2,
+                "code": "BU",
+                "label": "Block Unrated"
+            },
+            "3": {
+                "bit": 3,
+                "code": "OCR",
+                "label": "On Demand Content Rating"
+            },
+            "4": {
+                "bit": 4,
+                "code": "SCR",
+                "label": "Scheduled Content Rating"
+            },
+            "5": {
+                "bit": 5,
+                "code": "BC",
+                "label": "Block Channels"
+            },
+            "6": {
+                "bit": 6,
+                "code": "BA",
+                "label": "Block Applications"
+            },
+            "7": {
+                "bit": 7,
+                "code": "BTW",
+                "label": "Block Content Time Window"
+            }
+        }
+    },
+    "1296": {
+        "id": 1296,
+        "label": "ContentAppObserver",
+        "attributes": {
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1296,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1296,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1296,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1296,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1296,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1296,
+                "name": "ContentAppMessage",
+                "label": "Content App Message"
+            }
+        },
+        "features": {}
+    },
+    "1360": {
+        "id": 1360,
+        "label": "ZoneManagement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1360,
+                "label": "MaxUserDefinedZones",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1360,
+                "label": "MaxZones",
+                "type": "uint8",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1360,
+                "label": "Zones",
+                "type": "List[ZoneInformationStruct]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1360,
+                "label": "Triggers",
+                "type": "List[ZoneTriggerControlStruct]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1360,
+                "label": "SensitivityMax",
+                "type": "uint8",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1360,
+                "label": "Sensitivity",
+                "type": "Optional[uint8]",
+                "writable": true
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1360,
+                "label": "TwoDCartesianMax",
+                "type": "Optional[TwoDCartesianVertexStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1360,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1360,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1360,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1360,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1360,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1360,
+                "name": "CreateTwoDCartesianZone",
+                "label": "Create Two Dcartesian Zone"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1360,
+                "name": "UpdateTwoDCartesianZone",
+                "label": "Update Two Dcartesian Zone"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1360,
+                "name": "RemoveZone",
+                "label": "Remove Zone"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1360,
+                "name": "CreateOrUpdateTrigger",
+                "label": "Create Or Update Trigger"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1360,
+                "name": "RemoveTrigger",
+                "label": "Remove Trigger"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "TWODCART",
+                "label": "Two Dimensional Cartesian Zone"
+            },
+            "1": {
+                "bit": 1,
+                "code": "PERZONESENS",
+                "label": "Per Zone Sensitivity"
+            },
+            "2": {
+                "bit": 2,
+                "code": "USERDEFINED",
+                "label": "User Defined"
+            },
+            "3": {
+                "bit": 3,
+                "code": "FOCUSZONES",
+                "label": "Focus Zones"
+            }
+        }
+    },
+    "1361": {
+        "id": 1361,
+        "label": "CameraAvStreamManagement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1361,
+                "label": "MaxConcurrentEncoders",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1361,
+                "label": "MaxEncodedPixelRate",
+                "type": "Optional[uint32]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1361,
+                "label": "VideoSensorParams",
+                "type": "Optional[VideoSensorParamsStruct]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1361,
+                "label": "NightVisionUsesInfrared",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1361,
+                "label": "MinViewportResolution",
+                "type": "Optional[VideoResolutionStruct]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1361,
+                "label": "RateDistortionTradeOffPoints",
+                "type": "List[RateDistortionTradeOffPointsStruct]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1361,
+                "label": "MaxContentBufferSize",
+                "type": "uint32",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1361,
+                "label": "MicrophoneCapabilities",
+                "type": "Optional[AudioCapabilitiesStruct]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1361,
+                "label": "SpeakerCapabilities",
+                "type": "Optional[AudioCapabilitiesStruct]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1361,
+                "label": "TwoWayTalkSupport",
+                "type": "Optional[TwoWayTalkSupportTypeEnum]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1361,
+                "label": "SnapshotCapabilities",
+                "type": "List[SnapshotCapabilitiesStruct]",
+                "writable": false
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 1361,
+                "label": "MaxNetworkBandwidth",
+                "type": "uint32",
+                "writable": false
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 1361,
+                "label": "CurrentFrameRate",
+                "type": "Optional[uint16]",
+                "writable": false
+            },
+            "13": {
+                "id": 13,
+                "cluster_id": 1361,
+                "label": "HdrModeEnabled",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "14": {
+                "id": 14,
+                "cluster_id": 1361,
+                "label": "SupportedStreamUsages",
+                "type": "List[StreamUsageEnum]",
+                "writable": false
+            },
+            "15": {
+                "id": 15,
+                "cluster_id": 1361,
+                "label": "AllocatedVideoStreams",
+                "type": "List[VideoStreamStruct]",
+                "writable": false
+            },
+            "16": {
+                "id": 16,
+                "cluster_id": 1361,
+                "label": "AllocatedAudioStreams",
+                "type": "List[AudioStreamStruct]",
+                "writable": false
+            },
+            "17": {
+                "id": 17,
+                "cluster_id": 1361,
+                "label": "AllocatedSnapshotStreams",
+                "type": "List[SnapshotStreamStruct]",
+                "writable": false
+            },
+            "18": {
+                "id": 18,
+                "cluster_id": 1361,
+                "label": "StreamUsagePriorities",
+                "type": "List[StreamUsageEnum]",
+                "writable": false
+            },
+            "19": {
+                "id": 19,
+                "cluster_id": 1361,
+                "label": "SoftRecordingPrivacyModeEnabled",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "20": {
+                "id": 20,
+                "cluster_id": 1361,
+                "label": "SoftLivestreamPrivacyModeEnabled",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "21": {
+                "id": 21,
+                "cluster_id": 1361,
+                "label": "HardPrivacyModeOn",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "22": {
+                "id": 22,
+                "cluster_id": 1361,
+                "label": "NightVision",
+                "type": "Optional[TriStateAutoEnum]",
+                "writable": true
+            },
+            "23": {
+                "id": 23,
+                "cluster_id": 1361,
+                "label": "NightVisionIllum",
+                "type": "Optional[TriStateAutoEnum]",
+                "writable": true
+            },
+            "24": {
+                "id": 24,
+                "cluster_id": 1361,
+                "label": "Viewport",
+                "type": "Optional[ViewportStruct]",
+                "writable": true
+            },
+            "25": {
+                "id": 25,
+                "cluster_id": 1361,
+                "label": "SpeakerMuted",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "26": {
+                "id": 26,
+                "cluster_id": 1361,
+                "label": "SpeakerVolumeLevel",
+                "type": "Optional[uint8]",
+                "writable": true
+            },
+            "27": {
+                "id": 27,
+                "cluster_id": 1361,
+                "label": "SpeakerMaxLevel",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "28": {
+                "id": 28,
+                "cluster_id": 1361,
+                "label": "SpeakerMinLevel",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "29": {
+                "id": 29,
+                "cluster_id": 1361,
+                "label": "MicrophoneMuted",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "30": {
+                "id": 30,
+                "cluster_id": 1361,
+                "label": "MicrophoneVolumeLevel",
+                "type": "Optional[uint8]",
+                "writable": true
+            },
+            "31": {
+                "id": 31,
+                "cluster_id": 1361,
+                "label": "MicrophoneMaxLevel",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "32": {
+                "id": 32,
+                "cluster_id": 1361,
+                "label": "MicrophoneMinLevel",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "33": {
+                "id": 33,
+                "cluster_id": 1361,
+                "label": "MicrophoneAgcEnabled",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "34": {
+                "id": 34,
+                "cluster_id": 1361,
+                "label": "ImageRotation",
+                "type": "Optional[uint16]",
+                "writable": true
+            },
+            "35": {
+                "id": 35,
+                "cluster_id": 1361,
+                "label": "ImageFlipHorizontal",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "36": {
+                "id": 36,
+                "cluster_id": 1361,
+                "label": "ImageFlipVertical",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "37": {
+                "id": 37,
+                "cluster_id": 1361,
+                "label": "LocalVideoRecordingEnabled",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "38": {
+                "id": 38,
+                "cluster_id": 1361,
+                "label": "LocalSnapshotRecordingEnabled",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "39": {
+                "id": 39,
+                "cluster_id": 1361,
+                "label": "StatusLightEnabled",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "40": {
+                "id": 40,
+                "cluster_id": 1361,
+                "label": "StatusLightBrightness",
+                "type": "Optional[ThreeLevelAutoEnum]",
+                "writable": true
+            },
+            "41": {
+                "id": 41,
+                "cluster_id": 1361,
+                "label": "ImageRotationDiscreteAngles",
+                "type": "Optional[uint16]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1361,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1361,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1361,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1361,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1361,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1361,
+                "name": "AudioStreamAllocate",
+                "label": "Audio Stream Allocate"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1361,
+                "name": "AudioStreamDeallocate",
+                "label": "Audio Stream Deallocate"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1361,
+                "name": "VideoStreamAllocate",
+                "label": "Video Stream Allocate"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1361,
+                "name": "VideoStreamModify",
+                "label": "Video Stream Modify"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1361,
+                "name": "VideoStreamDeallocate",
+                "label": "Video Stream Deallocate"
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1361,
+                "name": "SnapshotStreamAllocate",
+                "label": "Snapshot Stream Allocate"
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1361,
+                "name": "SnapshotStreamModify",
+                "label": "Snapshot Stream Modify"
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1361,
+                "name": "SnapshotStreamDeallocate",
+                "label": "Snapshot Stream Deallocate"
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 1361,
+                "name": "SetStreamPriorities",
+                "label": "Set Stream Priorities"
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 1361,
+                "name": "CaptureSnapshot",
+                "label": "Capture Snapshot"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "ADO",
+                "label": "Audio"
+            },
+            "1": {
+                "bit": 1,
+                "code": "VDO",
+                "label": "Video"
+            },
+            "2": {
+                "bit": 2,
+                "code": "SNP",
+                "label": "Snapshot"
+            },
+            "3": {
+                "bit": 3,
+                "code": "PRIV",
+                "label": "Privacy"
+            },
+            "4": {
+                "bit": 4,
+                "code": "SPKR",
+                "label": "Speaker"
+            },
+            "5": {
+                "bit": 5,
+                "code": "ICTL",
+                "label": "Image Control"
+            },
+            "6": {
+                "bit": 6,
+                "code": "WMARK",
+                "label": "Watermark"
+            },
+            "7": {
+                "bit": 7,
+                "code": "OSD",
+                "label": "On Screen Display"
+            },
+            "8": {
+                "bit": 8,
+                "code": "STOR",
+                "label": "Local Storage"
+            },
+            "9": {
+                "bit": 9,
+                "code": "HDR",
+                "label": "High Dynamic Range"
+            },
+            "10": {
+                "bit": 10,
+                "code": "NV",
+                "label": "Night Vision"
+            }
+        }
+    },
+    "1362": {
+        "id": 1362,
+        "label": "CameraAvSettingsUserLevelManagement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1362,
+                "label": "MptzPosition",
+                "type": "Optional[MPTZStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1362,
+                "label": "MaxPresets",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1362,
+                "label": "MptzPresets",
+                "type": "List[MPTZPresetStruct]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1362,
+                "label": "DptzStreams",
+                "type": "List[DPTZStruct]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1362,
+                "label": "ZoomMax",
+                "type": "Optional[uint8]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1362,
+                "label": "TiltMin",
+                "type": "Optional[int16]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1362,
+                "label": "TiltMax",
+                "type": "Optional[int16]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1362,
+                "label": "PanMin",
+                "type": "Optional[int16]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1362,
+                "label": "PanMax",
+                "type": "Optional[int16]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1362,
+                "label": "MovementState",
+                "type": "Optional[PhysicalMovementEnum]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1362,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1362,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1362,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1362,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1362,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1362,
+                "name": "MptzSetPosition",
+                "label": "Mptz Set Position"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1362,
+                "name": "MptzRelativeMove",
+                "label": "Mptz Relative Move"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1362,
+                "name": "MptzMoveToPreset",
+                "label": "Mptz Move To Preset"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1362,
+                "name": "MptzSavePreset",
+                "label": "Mptz Save Preset"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1362,
+                "name": "MptzRemovePreset",
+                "label": "Mptz Remove Preset"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1362,
+                "name": "DptzSetViewport",
+                "label": "Dptz Set Viewport"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1362,
+                "name": "DptzRelativeMove",
+                "label": "Dptz Relative Move"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "DPTZ",
+                "label": "Digital Ptz"
+            },
+            "1": {
+                "bit": 1,
+                "code": "MPAN",
+                "label": "Mechanical Pan"
+            },
+            "2": {
+                "bit": 2,
+                "code": "MTILT",
+                "label": "Mechanical Tilt"
+            },
+            "3": {
+                "bit": 3,
+                "code": "MZOOM",
+                "label": "Mechanical Zoom"
+            },
+            "4": {
+                "bit": 4,
+                "code": "MPRESETS",
+                "label": "Mechanical Presets"
+            }
+        }
+    },
+    "1363": {
+        "id": 1363,
+        "label": "WebRtcTransportProvider",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1363,
+                "label": "CurrentSessions",
+                "type": "List[WebRtcTransportDefinitions.WebRTCSessionStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1363,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1363,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1363,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1363,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1363,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1363,
+                "name": "SolicitOffer",
+                "label": "Solicit Offer"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1363,
+                "name": "ProvideOffer",
+                "label": "Provide Offer"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1363,
+                "name": "ProvideAnswer",
+                "label": "Provide Answer"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1363,
+                "name": "ProvideIceCandidates",
+                "label": "Provide Ice Candidates"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1363,
+                "name": "EndSession",
+                "label": "End Session"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "METADATA",
+                "label": "Metadata"
+            }
+        }
+    },
+    "1364": {
+        "id": 1364,
+        "label": "WebRtcTransportRequestor",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1364,
+                "label": "CurrentSessions",
+                "type": "List[WebRtcTransportDefinitions.WebRTCSessionStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1364,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1364,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1364,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1364,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1364,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1364,
+                "name": "Offer",
+                "label": "Offer"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1364,
+                "name": "Answer",
+                "label": "Answer"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1364,
+                "name": "IceCandidates",
+                "label": "Ice Candidates"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1364,
+                "name": "End",
+                "label": "End"
+            }
+        },
+        "features": {}
+    },
+    "1365": {
+        "id": 1365,
+        "label": "PushAvStreamTransport",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1365,
+                "label": "SupportedFormats",
+                "type": "List[SupportedFormatStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1365,
+                "label": "CurrentConnections",
+                "type": "List[TransportConfigurationStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1365,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1365,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1365,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1365,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1365,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1365,
+                "name": "AllocatePushTransport",
+                "label": "Allocate Push Transport"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1365,
+                "name": "DeallocatePushTransport",
+                "label": "Deallocate Push Transport"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1365,
+                "name": "ModifyPushTransport",
+                "label": "Modify Push Transport"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1365,
+                "name": "SetTransportStatus",
+                "label": "Set Transport Status"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1365,
+                "name": "ManuallyTriggerTransport",
+                "label": "Manually Trigger Transport"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1365,
+                "name": "FindTransport",
+                "label": "Find Transport"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "PERZONESENS",
+                "label": "Per Zone Sensitivity"
+            },
+            "1": {
+                "bit": 1,
+                "code": "METADATA",
+                "label": "Metadata"
+            }
+        }
+    },
+    "1366": {
+        "id": 1366,
+        "label": "Chime",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1366,
+                "label": "InstalledChimeSounds",
+                "type": "List[ChimeSoundStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1366,
+                "label": "SelectedChime",
+                "type": "uint8",
+                "writable": true
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1366,
+                "label": "Enabled",
+                "type": "bool",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1366,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1366,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1366,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1366,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1366,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1366,
+                "name": "PlayChimeSound",
+                "label": "Play Chime Sound"
+            }
+        },
+        "features": {}
+    },
+    "1792": {
+        "id": 1792,
+        "label": "CommodityTariff",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1792,
+                "label": "TariffInfo",
+                "type": "Nullable[TariffInformationStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1792,
+                "label": "TariffUnit",
+                "type": "Nullable[TariffUnitEnum]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1792,
+                "label": "StartDate",
+                "type": "Nullable[epoch-s]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1792,
+                "label": "DayEntries",
+                "type": "List[DayEntryStruct]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1792,
+                "label": "DayPatterns",
+                "type": "List[DayPatternStruct]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1792,
+                "label": "CalendarPeriods",
+                "type": "List[CalendarPeriodStruct]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1792,
+                "label": "IndividualDays",
+                "type": "List[DayStruct]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1792,
+                "label": "CurrentDay",
+                "type": "Nullable[DayStruct]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1792,
+                "label": "NextDay",
+                "type": "Nullable[DayStruct]",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1792,
+                "label": "CurrentDayEntry",
+                "type": "Nullable[DayEntryStruct]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1792,
+                "label": "CurrentDayEntryDate",
+                "type": "Nullable[epoch-s]",
+                "writable": false
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 1792,
+                "label": "NextDayEntry",
+                "type": "Nullable[DayEntryStruct]",
+                "writable": false
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 1792,
+                "label": "NextDayEntryDate",
+                "type": "Nullable[epoch-s]",
+                "writable": false
+            },
+            "13": {
+                "id": 13,
+                "cluster_id": 1792,
+                "label": "TariffComponents",
+                "type": "List[TariffComponentStruct]",
+                "writable": false
+            },
+            "14": {
+                "id": 14,
+                "cluster_id": 1792,
+                "label": "TariffPeriods",
+                "type": "List[TariffPeriodStruct]",
+                "writable": false
+            },
+            "15": {
+                "id": 15,
+                "cluster_id": 1792,
+                "label": "CurrentTariffComponents",
+                "type": "List[TariffComponentStruct]",
+                "writable": false
+            },
+            "16": {
+                "id": 16,
+                "cluster_id": 1792,
+                "label": "NextTariffComponents",
+                "type": "List[TariffComponentStruct]",
+                "writable": false
+            },
+            "17": {
+                "id": 17,
+                "cluster_id": 1792,
+                "label": "DefaultRandomizationOffset",
+                "type": "Optional[Nullable[int16]]",
+                "writable": false
+            },
+            "18": {
+                "id": 18,
+                "cluster_id": 1792,
+                "label": "DefaultRandomizationType",
+                "type": "Optional[Nullable[DayEntryRandomizationTypeEnum]]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1792,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1792,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1792,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1792,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1792,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1792,
+                "name": "GetTariffComponent",
+                "label": "Get Tariff Component"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1792,
+                "name": "GetDayEntry",
+                "label": "Get Day Entry"
+            }
+        },
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "PRICE",
+                "label": "Pricing"
+            },
+            "1": {
+                "bit": 1,
+                "code": "FCRED",
+                "label": "Friendly Credit"
+            },
+            "2": {
+                "bit": 2,
+                "code": "AUXLD",
+                "label": "Auxiliary Load"
+            },
+            "3": {
+                "bit": 3,
+                "code": "PEAKP",
+                "label": "Peak Period"
+            },
+            "4": {
+                "bit": 4,
+                "code": "PWRTHLD",
+                "label": "Power Threshold"
+            },
+            "5": {
+                "bit": 5,
+                "code": "RNDM",
+                "label": "Randomization"
+            }
+        }
+    },
+    "1872": {
+        "id": 1872,
+        "label": "EcosystemInformation",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1872,
+                "label": "DeviceDirectory",
+                "type": "List[EcosystemDeviceStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1872,
+                "label": "LocationDirectory",
+                "type": "List[EcosystemLocationStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1872,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1872,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1872,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1872,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1872,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "1873": {
+        "id": 1873,
+        "label": "CommissionerControl",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1873,
+                "label": "SupportedDeviceCategories",
+                "type": "SupportedDeviceCategoryBitmap",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1873,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1873,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1873,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1873,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1873,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1873,
+                "name": "RequestCommissioningApproval",
+                "label": "Request Commissioning Approval"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1873,
+                "name": "CommissionNode",
+                "label": "Commission Node"
+            }
+        },
+        "features": {}
+    },
+    "1874": {
+        "id": 1874,
+        "label": "JointFabricDatastore",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1874,
+                "label": "AnchorRootCa",
+                "type": "bytes",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1874,
+                "label": "AnchorNodeId",
+                "type": "node-id",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1874,
+                "label": "AnchorVendorId",
+                "type": "vendor-id",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1874,
+                "label": "FriendlyName",
+                "type": "string",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1874,
+                "label": "GroupKeySetList",
+                "type": "List[DatastoreGroupKeySetStruct]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1874,
+                "label": "GroupList",
+                "type": "List[DatastoreGroupInformationEntryStruct]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1874,
+                "label": "NodeList",
+                "type": "List[DatastoreNodeInformationEntryStruct]",
+                "writable": false
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1874,
+                "label": "AdminList",
+                "type": "List[DatastoreAdministratorInformationEntryStruct]",
+                "writable": false
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1874,
+                "label": "Status",
+                "type": "DatastoreStatusEntryStruct",
+                "writable": false
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1874,
+                "label": "EndpointGroupIdList",
+                "type": "List[DatastoreEndpointGroupIDEntryStruct]",
+                "writable": false
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1874,
+                "label": "EndpointBindingList",
+                "type": "List[DatastoreEndpointBindingEntryStruct]",
+                "writable": false
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 1874,
+                "label": "NodeKeySetList",
+                "type": "List[DatastoreNodeKeySetEntryStruct]",
+                "writable": false
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 1874,
+                "label": "NodeAclList",
+                "type": "List[DatastoreACLEntryStruct]",
+                "writable": false
+            },
+            "13": {
+                "id": 13,
+                "cluster_id": 1874,
+                "label": "NodeEndpointList",
+                "type": "List[DatastoreEndpointEntryStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1874,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1874,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1874,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1874,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1874,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1874,
+                "name": "AddKeySet",
+                "label": "Add Key Set"
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 1874,
+                "name": "UpdateKeySet",
+                "label": "Update Key Set"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1874,
+                "name": "RemoveKeySet",
+                "label": "Remove Key Set"
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 1874,
+                "name": "AddGroup",
+                "label": "Add Group"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1874,
+                "name": "UpdateGroup",
+                "label": "Update Group"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1874,
+                "name": "RemoveGroup",
+                "label": "Remove Group"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 1874,
+                "name": "AddAdmin",
+                "label": "Add Admin"
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1874,
+                "name": "UpdateAdmin",
+                "label": "Update Admin"
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1874,
+                "name": "RemoveAdmin",
+                "label": "Remove Admin"
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 1874,
+                "name": "AddPendingNode",
+                "label": "Add Pending Node"
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 1874,
+                "name": "RefreshNode",
+                "label": "Refresh Node"
+            },
+            "11": {
+                "id": 11,
+                "cluster_id": 1874,
+                "name": "UpdateNode",
+                "label": "Update Node"
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 1874,
+                "name": "RemoveNode",
+                "label": "Remove Node"
+            },
+            "13": {
+                "id": 13,
+                "cluster_id": 1874,
+                "name": "UpdateEndpointForNode",
+                "label": "Update Endpoint For Node"
+            },
+            "14": {
+                "id": 14,
+                "cluster_id": 1874,
+                "name": "AddGroupIdToEndpointForNode",
+                "label": "Add Group Id To Endpoint For Node"
+            },
+            "15": {
+                "id": 15,
+                "cluster_id": 1874,
+                "name": "RemoveGroupIdFromEndpointForNode",
+                "label": "Remove Group Id From Endpoint For Node"
+            },
+            "16": {
+                "id": 16,
+                "cluster_id": 1874,
+                "name": "AddBindingToEndpointForNode",
+                "label": "Add Binding To Endpoint For Node"
+            },
+            "17": {
+                "id": 17,
+                "cluster_id": 1874,
+                "name": "RemoveBindingFromEndpointForNode",
+                "label": "Remove Binding From Endpoint For Node"
+            },
+            "18": {
+                "id": 18,
+                "cluster_id": 1874,
+                "name": "AddAclToNode",
+                "label": "Add Acl To Node"
+            },
+            "19": {
+                "id": 19,
+                "cluster_id": 1874,
+                "name": "RemoveAclFromNode",
+                "label": "Remove Acl From Node"
+            }
+        },
+        "features": {}
+    },
+    "1875": {
+        "id": 1875,
+        "label": "JointFabricAdministrator",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1875,
+                "label": "AdministratorFabricIndex",
+                "type": "Nullable[fabric-idx]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 1875,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 1875,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 1875,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 1875,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 1875,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 1875,
+                "name": "IcaccsrRequest",
+                "label": "Icaccsr Request"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 1875,
+                "name": "AddIcac",
+                "label": "Add Icac"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 1875,
+                "name": "OpenJointCommissioningWindow",
+                "label": "Open Joint Commissioning Window"
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 1875,
+                "name": "TransferAnchorRequest",
+                "label": "Transfer Anchor Request"
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 1875,
+                "name": "TransferAnchorComplete",
+                "label": "Transfer Anchor Complete"
+            },
+            "8": {
+                "id": 8,
+                "cluster_id": 1875,
+                "name": "AnnounceJointFabricAdministrator",
+                "label": "Announce Joint Fabric Administrator"
+            }
+        },
+        "features": {}
+    },
+    "2049": {
+        "id": 2049,
+        "label": "TlsCertificateManagement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 2049,
+                "label": "MaxRootCertificates",
+                "type": "uint8",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 2049,
+                "label": "ProvisionedRootCertificates",
+                "type": "List[TLSCertStruct]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 2049,
+                "label": "MaxClientCertificates",
+                "type": "uint8",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 2049,
+                "label": "ProvisionedClientCertificates",
+                "type": "List[TLSClientCertificateDetailStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 2049,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 2049,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 2049,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 2049,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 2049,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 2049,
+                "name": "ProvisionRootCertificate",
+                "label": "Provision Root Certificate"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 2049,
+                "name": "FindRootCertificate",
+                "label": "Find Root Certificate"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 2049,
+                "name": "LookupRootCertificate",
+                "label": "Lookup Root Certificate"
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 2049,
+                "name": "RemoveRootCertificate",
+                "label": "Remove Root Certificate"
+            },
+            "7": {
+                "id": 7,
+                "cluster_id": 2049,
+                "name": "ClientCsr",
+                "label": "Client Csr"
+            },
+            "9": {
+                "id": 9,
+                "cluster_id": 2049,
+                "name": "ProvisionClientCertificate",
+                "label": "Provision Client Certificate"
+            },
+            "10": {
+                "id": 10,
+                "cluster_id": 2049,
+                "name": "FindClientCertificate",
+                "label": "Find Client Certificate"
+            },
+            "12": {
+                "id": 12,
+                "cluster_id": 2049,
+                "name": "LookupClientCertificate",
+                "label": "Lookup Client Certificate"
+            },
+            "14": {
+                "id": 14,
+                "cluster_id": 2049,
+                "name": "RemoveClientCertificate",
+                "label": "Remove Client Certificate"
+            }
+        },
+        "features": {}
+    },
+    "2050": {
+        "id": 2050,
+        "label": "TlsClientManagement",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 2050,
+                "label": "MaxProvisioned",
+                "type": "uint8",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 2050,
+                "label": "ProvisionedEndpoints",
+                "type": "List[TLSEndpointStruct]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 2050,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 2050,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 2050,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 2050,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 2050,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 2050,
+                "name": "ProvisionEndpoint",
+                "label": "Provision Endpoint"
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 2050,
+                "name": "FindEndpoint",
+                "label": "Find Endpoint"
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 2050,
+                "name": "RemoveEndpoint",
+                "label": "Remove Endpoint"
+            }
+        },
+        "features": {}
+    },
+    "2820": {
+        "id": 2820,
+        "label": "DraftElectricalMeasurementCluster",
+        "attributes": {
+            "1285": {
+                "id": 1285,
+                "cluster_id": 2820,
+                "label": "RmsVoltage",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "1288": {
+                "id": 1288,
+                "cluster_id": 2820,
+                "label": "RmsCurrent",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "1291": {
+                "id": 1291,
+                "cluster_id": 2820,
+                "label": "ActivePower",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "1536": {
+                "id": 1536,
+                "cluster_id": 2820,
+                "label": "AcVoltageMultiplier",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "1537": {
+                "id": 1537,
+                "cluster_id": 2820,
+                "label": "AcVoltageDivisor",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "1538": {
+                "id": 1538,
+                "cluster_id": 2820,
+                "label": "AcCurrentMultiplier",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "1539": {
+                "id": 1539,
+                "cluster_id": 2820,
+                "label": "AcCurrentDivisor",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "1540": {
+                "id": 1540,
+                "cluster_id": 2820,
+                "label": "AcPowerMultiplier",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "1541": {
+                "id": 1541,
+                "cluster_id": 2820,
+                "label": "AcPowerDivisor",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 2820,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 2820,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 2820,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 2820,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 2820,
+                "label": "ClusterRevision",
+                "type": "uint16",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "2822": {
+        "id": 2822,
+        "label": "MeterIdentification",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 2822,
+                "label": "MeterType",
+                "type": "Nullable[MeterTypeEnum]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 2822,
+                "label": "PointOfDelivery",
+                "type": "Nullable[string]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 2822,
+                "label": "MeterSerialNumber",
+                "type": "Nullable[string]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 2822,
+                "label": "ProtocolVersion",
+                "type": "Optional[Nullable[string]]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 2822,
+                "label": "PowerThreshold",
+                "type": "Optional[Nullable[PowerThresholdStruct]]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 2822,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 2822,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 2822,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 2822,
+                "label": "FeatureMap",
+                "type": "FeatureMap",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 2822,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {
+            "0": {
+                "bit": 0,
+                "code": "PWRTHLD",
+                "label": "Power Threshold"
+            }
+        }
+    },
+    "2823": {
+        "id": 2823,
+        "label": "CommodityMetering",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 2823,
+                "label": "MeteredQuantity",
+                "type": "List[MeteredQuantityStruct]",
+                "writable": false
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 2823,
+                "label": "MeteredQuantityTimestamp",
+                "type": "Nullable[epoch-s]",
+                "writable": false
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 2823,
+                "label": "TariffUnit",
+                "type": "Nullable[TariffUnitEnum]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 2823,
+                "label": "MaximumMeteredQuantities",
+                "type": "Nullable[uint16]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 2823,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 2823,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 2823,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 2823,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 2823,
+                "label": "ClusterRevision",
+                "type": "ClusterRevision",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "302775297": {
+        "id": 302775297,
+        "label": "HeimanCluster",
+        "attributes": {
+            "16": {
+                "id": 16,
+                "cluster_id": 302775297,
+                "label": "TamperAlarm",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "17": {
+                "id": 17,
+                "cluster_id": 302775297,
+                "label": "PreheatingState",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "18": {
+                "id": 18,
+                "cluster_id": 302775297,
+                "label": "NoDisturbingState",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "19": {
+                "id": 19,
+                "cluster_id": 302775297,
+                "label": "SensorType",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "20": {
+                "id": 20,
+                "cluster_id": 302775297,
+                "label": "SirenActive",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "21": {
+                "id": 21,
+                "cluster_id": 302775297,
+                "label": "AlarmMute",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "22": {
+                "id": 22,
+                "cluster_id": 302775297,
+                "label": "LowPowerMode",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 302775297,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 302775297,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 302775297,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 302775297,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 302775297,
+                "label": "ClusterRevision",
+                "type": "uint16",
+                "writable": false
+            }
+        },
+        "commands": {
+            "0": {
+                "id": 0,
+                "cluster_id": 302775297,
+                "name": "mutingSensor",
+                "label": "Muting Sensor"
+            }
+        },
+        "features": {}
+    },
+    "305134641": {
+        "id": 305134641,
+        "label": "InovelliCluster",
+        "attributes": {
+            "65528": {
+                "id": 65528,
+                "cluster_id": 305134641,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 305134641,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 305134641,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 305134641,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 305134641,
+                "label": "ClusterRevision",
+                "type": "uint16",
+                "writable": false
+            },
+            "305070177": {
+                "id": 305070177,
+                "cluster_id": 305134641,
+                "label": "LedIndicatorIntensityOn",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "305070178": {
+                "id": 305070178,
+                "cluster_id": 305134641,
+                "label": "LedIndicatorIntensityOff",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "305070342": {
+                "id": 305070342,
+                "cluster_id": 305134641,
+                "label": "ClearNotificationWithConfigDoubleTap",
+                "type": "Optional[bool]",
+                "writable": true
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "308149265": {
+        "id": 308149265,
+        "label": "NeoCluster",
+        "attributes": {
+            "65528": {
+                "id": 65528,
+                "cluster_id": 308149265,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 308149265,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 308149265,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 308149265,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 308149265,
+                "label": "ClusterRevision",
+                "type": "uint16",
+                "writable": false
+            },
+            "308084769": {
+                "id": 308084769,
+                "cluster_id": 308149265,
+                "label": "WattAccumulated",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "308084770": {
+                "id": 308084770,
+                "cluster_id": 308149265,
+                "label": "Current",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "308084771": {
+                "id": 308084771,
+                "cluster_id": 308149265,
+                "label": "Watt",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "308084772": {
+                "id": 308084772,
+                "cluster_id": 308149265,
+                "label": "Voltage",
+                "type": "Optional[unknown]",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "319486977": {
+        "id": 319486977,
+        "label": "EveCluster",
+        "attributes": {
+            "65528": {
+                "id": 65528,
+                "cluster_id": 319486977,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 319486977,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 319486977,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 319486977,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 319486977,
+                "label": "ClusterRevision",
+                "type": "uint16",
+                "writable": false
+            },
+            "319422464": {
+                "id": 319422464,
+                "cluster_id": 319486977,
+                "label": "GetConfig",
+                "type": "Optional[bytes]",
+                "writable": false
+            },
+            "319422465": {
+                "id": 319422465,
+                "cluster_id": 319486977,
+                "label": "SetConfig",
+                "type": "Optional[bytes]",
+                "writable": true
+            },
+            "319422466": {
+                "id": 319422466,
+                "cluster_id": 319486977,
+                "label": "LoggingMetadata",
+                "type": "Optional[bytes]",
+                "writable": false
+            },
+            "319422467": {
+                "id": 319422467,
+                "cluster_id": 319486977,
+                "label": "LoggingData",
+                "type": "Optional[bytes]",
+                "writable": false
+            },
+            "319422470": {
+                "id": 319422470,
+                "cluster_id": 319486977,
+                "label": "TimesOpened",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "319422471": {
+                "id": 319422471,
+                "cluster_id": 319486977,
+                "label": "LastEventTime",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "319422472": {
+                "id": 319422472,
+                "cluster_id": 319486977,
+                "label": "Voltage",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "319422473": {
+                "id": 319422473,
+                "cluster_id": 319486977,
+                "label": "Current",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "319422474": {
+                "id": 319422474,
+                "cluster_id": 319486977,
+                "label": "Watt",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "319422475": {
+                "id": 319422475,
+                "cluster_id": 319486977,
+                "label": "WattAccumulated",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "319422476": {
+                "id": 319422476,
+                "cluster_id": 319486977,
+                "label": "StatusFault",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "319422477": {
+                "id": 319422477,
+                "cluster_id": 319486977,
+                "label": "MotionSensitivity",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "319422478": {
+                "id": 319422478,
+                "cluster_id": 319486977,
+                "label": "WattAccumulatedControlPoint",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "319422480": {
+                "id": 319422480,
+                "cluster_id": 319486977,
+                "label": "ObstructionDetected",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "319422481": {
+                "id": 319422481,
+                "cluster_id": 319486977,
+                "label": "ChildLock",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "319422482": {
+                "id": 319422482,
+                "cluster_id": 319486977,
+                "label": "Rloc16",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "319422483": {
+                "id": 319422483,
+                "cluster_id": 319486977,
+                "label": "Altitude",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "319422484": {
+                "id": 319422484,
+                "cluster_id": 319486977,
+                "label": "Pressure",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "319422485": {
+                "id": 319422485,
+                "cluster_id": 319486977,
+                "label": "WeatherTrend",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "319422487": {
+                "id": 319422487,
+                "cluster_id": 319486977,
+                "label": "WindowOpenMode",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "319422488": {
+                "id": 319422488,
+                "cluster_id": 319486977,
+                "label": "ValvePosition",
+                "type": "Optional[unknown]",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "319683586": {
+        "id": 319683586,
+        "label": "ThirdRealityMeteringCluster",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 319683586,
+                "label": "CurrentSummationDelivered",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "769": {
+                "id": 769,
+                "cluster_id": 319683586,
+                "label": "Multiplier",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "770": {
+                "id": 770,
+                "cluster_id": 319683586,
+                "label": "Divisor",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "1024": {
+                "id": 1024,
+                "cluster_id": 319683586,
+                "label": "InstantaneousDemand",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 319683586,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 319683586,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 319683586,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 319683586,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 319683586,
+                "label": "ClusterRevision",
+                "type": "uint16",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "322239491": {
+        "id": 322239491,
+        "label": "TclDehumidifierCluster",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 322239491,
+                "label": "Mode",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 322239491,
+                "label": "TargetHumidity",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "2": {
+                "id": 2,
+                "cluster_id": 322239491,
+                "label": "CurrentHumidity",
+                "type": "Optional[unknown]",
+                "writable": false
+            },
+            "3": {
+                "id": 3,
+                "cluster_id": 322239491,
+                "label": "WaterBucketFull",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "4": {
+                "id": 4,
+                "cluster_id": 322239491,
+                "label": "FilterAlert",
+                "type": "Optional[bool]",
+                "writable": false
+            },
+            "5": {
+                "id": 5,
+                "cluster_id": 322239491,
+                "label": "ErrorCodes",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "6": {
+                "id": 6,
+                "cluster_id": 322239491,
+                "label": "FeatureSet",
+                "type": "Optional[string]",
+                "writable": false
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 322239491,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 322239491,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 322239491,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 322239491,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 322239491,
+                "label": "ClusterRevision",
+                "type": "uint16",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    },
+    "355793920": {
+        "id": 355793920,
+        "label": "WagoCluster",
+        "attributes": {
+            "0": {
+                "id": 0,
+                "cluster_id": 355793920,
+                "label": "DirectlyConnected",
+                "type": "Optional[bool]",
+                "writable": true
+            },
+            "1": {
+                "id": 1,
+                "cluster_id": 355793920,
+                "label": "SwitchType",
+                "type": "Optional[unknown]",
+                "writable": true
+            },
+            "65528": {
+                "id": 65528,
+                "cluster_id": 355793920,
+                "label": "GeneratedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65529": {
+                "id": 65529,
+                "cluster_id": 355793920,
+                "label": "AcceptedCommandList",
+                "type": "List[command-id]",
+                "writable": false
+            },
+            "65531": {
+                "id": 65531,
+                "cluster_id": 355793920,
+                "label": "AttributeList",
+                "type": "List[attrib-id]",
+                "writable": false
+            },
+            "65532": {
+                "id": 65532,
+                "cluster_id": 355793920,
+                "label": "FeatureMap",
+                "type": "map32",
+                "writable": false
+            },
+            "65533": {
+                "id": 65533,
+                "cluster_id": 355793920,
+                "label": "ClusterRevision",
+                "type": "uint16",
+                "writable": false
+            }
+        },
+        "commands": {},
+        "features": {}
+    }
+};
+
+export const semantic_tag_namespaces: Record<number, SemanticTagNamespaceDescription> = {
+    "1": {
+        "id": 1,
+        "label": "Common Closure",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Opening"
+            },
+            "1": {
+                "id": 1,
+                "label": "Closing"
+            },
+            "2": {
+                "id": 2,
+                "label": "Stop"
+            }
+        }
+    },
+    "2": {
+        "id": 2,
+        "label": "Common Compass Direction",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Northward"
+            },
+            "1": {
+                "id": 1,
+                "label": "North Eastward"
+            },
+            "2": {
+                "id": 2,
+                "label": "Eastward"
+            },
+            "3": {
+                "id": 3,
+                "label": "South Eastward"
+            },
+            "4": {
+                "id": 4,
+                "label": "Southward"
+            },
+            "5": {
+                "id": 5,
+                "label": "South Westward"
+            },
+            "6": {
+                "id": 6,
+                "label": "Westward"
+            },
+            "7": {
+                "id": 7,
+                "label": "North Westward"
+            }
+        }
+    },
+    "3": {
+        "id": 3,
+        "label": "Common Compass Location",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "North"
+            },
+            "1": {
+                "id": 1,
+                "label": "North East"
+            },
+            "2": {
+                "id": 2,
+                "label": "East"
+            },
+            "3": {
+                "id": 3,
+                "label": "South East"
+            },
+            "4": {
+                "id": 4,
+                "label": "South"
+            },
+            "5": {
+                "id": 5,
+                "label": "South West"
+            },
+            "6": {
+                "id": 6,
+                "label": "West"
+            },
+            "7": {
+                "id": 7,
+                "label": "North West"
+            }
+        }
+    },
+    "4": {
+        "id": 4,
+        "label": "Common Direction",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Upward"
+            },
+            "1": {
+                "id": 1,
+                "label": "Downward"
+            },
+            "2": {
+                "id": 2,
+                "label": "Leftward"
+            },
+            "3": {
+                "id": 3,
+                "label": "Rightward"
+            },
+            "4": {
+                "id": 4,
+                "label": "Forward"
+            },
+            "5": {
+                "id": 5,
+                "label": "Backward"
+            }
+        }
+    },
+    "5": {
+        "id": 5,
+        "label": "Common Level",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Low"
+            },
+            "1": {
+                "id": 1,
+                "label": "Medium"
+            },
+            "2": {
+                "id": 2,
+                "label": "High"
+            }
+        }
+    },
+    "6": {
+        "id": 6,
+        "label": "Common Location",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Indoor"
+            },
+            "1": {
+                "id": 1,
+                "label": "Outdoor"
+            },
+            "2": {
+                "id": 2,
+                "label": "Inside"
+            },
+            "3": {
+                "id": 3,
+                "label": "Outside"
+            },
+            "4": {
+                "id": 4,
+                "label": "Zone"
+            }
+        }
+    },
+    "7": {
+        "id": 7,
+        "label": "Common Number",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Zero"
+            },
+            "1": {
+                "id": 1,
+                "label": "One"
+            },
+            "2": {
+                "id": 2,
+                "label": "Two"
+            },
+            "3": {
+                "id": 3,
+                "label": "Three"
+            },
+            "4": {
+                "id": 4,
+                "label": "Four"
+            },
+            "5": {
+                "id": 5,
+                "label": "Five"
+            },
+            "6": {
+                "id": 6,
+                "label": "Six"
+            },
+            "7": {
+                "id": 7,
+                "label": "Seven"
+            },
+            "8": {
+                "id": 8,
+                "label": "Eight"
+            },
+            "9": {
+                "id": 9,
+                "label": "Nine"
+            },
+            "10": {
+                "id": 10,
+                "label": "Ten"
+            },
+            "11": {
+                "id": 11,
+                "label": "Eleven"
+            },
+            "12": {
+                "id": 12,
+                "label": "Twelve"
+            },
+            "13": {
+                "id": 13,
+                "label": "Thirteen"
+            },
+            "14": {
+                "id": 14,
+                "label": "Fourteen"
+            },
+            "15": {
+                "id": 15,
+                "label": "Fifteen"
+            },
+            "16": {
+                "id": 16,
+                "label": "Sixteen"
+            },
+            "17": {
+                "id": 17,
+                "label": "Seventeen"
+            },
+            "18": {
+                "id": 18,
+                "label": "Eighteen"
+            },
+            "19": {
+                "id": 19,
+                "label": "Nineteen"
+            },
+            "20": {
+                "id": 20,
+                "label": "Twenty"
+            },
+            "21": {
+                "id": 21,
+                "label": "Twenty One"
+            },
+            "22": {
+                "id": 22,
+                "label": "Twenty Two"
+            },
+            "23": {
+                "id": 23,
+                "label": "Twenty Three"
+            },
+            "24": {
+                "id": 24,
+                "label": "Twenty Four"
+            },
+            "25": {
+                "id": 25,
+                "label": "Twenty Five"
+            },
+            "26": {
+                "id": 26,
+                "label": "Twenty Six"
+            },
+            "27": {
+                "id": 27,
+                "label": "Twenty Seven"
+            },
+            "28": {
+                "id": 28,
+                "label": "Twenty Eight"
+            },
+            "29": {
+                "id": 29,
+                "label": "Twenty Nine"
+            },
+            "30": {
+                "id": 30,
+                "label": "Thirty"
+            }
+        }
+    },
+    "8": {
+        "id": 8,
+        "label": "Common Position",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Left"
+            },
+            "1": {
+                "id": 1,
+                "label": "Right"
+            },
+            "2": {
+                "id": 2,
+                "label": "Top"
+            },
+            "3": {
+                "id": 3,
+                "label": "Bottom"
+            },
+            "4": {
+                "id": 4,
+                "label": "Middle"
+            },
+            "5": {
+                "id": 5,
+                "label": "Row"
+            },
+            "6": {
+                "id": 6,
+                "label": "Column"
+            }
+        }
+    },
+    "10": {
+        "id": 10,
+        "label": "Electrical Measurement",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Dc"
+            },
+            "1": {
+                "id": 1,
+                "label": "Ac"
+            },
+            "2": {
+                "id": 2,
+                "label": "Acphase1"
+            },
+            "3": {
+                "id": 3,
+                "label": "Acphase2"
+            },
+            "4": {
+                "id": 4,
+                "label": "Acphase3"
+            }
+        }
+    },
+    "11": {
+        "id": 11,
+        "label": "Commodity Tariff Chronology",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Current"
+            },
+            "1": {
+                "id": 1,
+                "label": "Previous"
+            },
+            "2": {
+                "id": 2,
+                "label": "Upcoming"
+            }
+        }
+    },
+    "13": {
+        "id": 13,
+        "label": "Commodity Tariff Commodity",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Electrical Energy"
+            }
+        }
+    },
+    "14": {
+        "id": 14,
+        "label": "Laundry",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Normal"
+            },
+            "1": {
+                "id": 1,
+                "label": "Light Dry"
+            },
+            "2": {
+                "id": 2,
+                "label": "Extra Dry"
+            },
+            "3": {
+                "id": 3,
+                "label": "No Dry"
+            }
+        }
+    },
+    "15": {
+        "id": 15,
+        "label": "Power Source",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Unknown"
+            },
+            "1": {
+                "id": 1,
+                "label": "Grid"
+            },
+            "2": {
+                "id": 2,
+                "label": "Solar"
+            },
+            "3": {
+                "id": 3,
+                "label": "Battery"
+            },
+            "4": {
+                "id": 4,
+                "label": "Ev"
+            }
+        }
+    },
+    "16": {
+        "id": 16,
+        "label": "Common Area Namespace",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Aisle"
+            },
+            "1": {
+                "id": 1,
+                "label": "Attic"
+            },
+            "2": {
+                "id": 2,
+                "label": "Back Door"
+            },
+            "3": {
+                "id": 3,
+                "label": "Back Yard"
+            },
+            "4": {
+                "id": 4,
+                "label": "Balcony"
+            },
+            "5": {
+                "id": 5,
+                "label": "Ballroom"
+            },
+            "6": {
+                "id": 6,
+                "label": "Bathroom"
+            },
+            "7": {
+                "id": 7,
+                "label": "Bedroom"
+            },
+            "8": {
+                "id": 8,
+                "label": "Border"
+            },
+            "9": {
+                "id": 9,
+                "label": "Boxroom"
+            },
+            "10": {
+                "id": 10,
+                "label": "Breakfast Room"
+            },
+            "11": {
+                "id": 11,
+                "label": "Carport"
+            },
+            "12": {
+                "id": 12,
+                "label": "Cellar"
+            },
+            "13": {
+                "id": 13,
+                "label": "Cloakroom"
+            },
+            "14": {
+                "id": 14,
+                "label": "Closet"
+            },
+            "15": {
+                "id": 15,
+                "label": "Conservatory"
+            },
+            "16": {
+                "id": 16,
+                "label": "Corridor"
+            },
+            "17": {
+                "id": 17,
+                "label": "Craft Room"
+            },
+            "18": {
+                "id": 18,
+                "label": "Cupboard"
+            },
+            "19": {
+                "id": 19,
+                "label": "Deck"
+            },
+            "20": {
+                "id": 20,
+                "label": "Den"
+            },
+            "21": {
+                "id": 21,
+                "label": "Dining"
+            },
+            "22": {
+                "id": 22,
+                "label": "Drawing Room"
+            },
+            "23": {
+                "id": 23,
+                "label": "Dressing Room"
+            },
+            "24": {
+                "id": 24,
+                "label": "Driveway"
+            },
+            "25": {
+                "id": 25,
+                "label": "Elevator"
+            },
+            "26": {
+                "id": 26,
+                "label": "Ensuite"
+            },
+            "27": {
+                "id": 27,
+                "label": "Entrance"
+            },
+            "28": {
+                "id": 28,
+                "label": "Entryway"
+            },
+            "29": {
+                "id": 29,
+                "label": "Family Room"
+            },
+            "30": {
+                "id": 30,
+                "label": "Foyer"
+            },
+            "31": {
+                "id": 31,
+                "label": "Front Door"
+            },
+            "32": {
+                "id": 32,
+                "label": "Front Yard"
+            },
+            "33": {
+                "id": 33,
+                "label": "Game Room"
+            },
+            "34": {
+                "id": 34,
+                "label": "Garage"
+            },
+            "35": {
+                "id": 35,
+                "label": "Garage Door"
+            },
+            "36": {
+                "id": 36,
+                "label": "Garden"
+            },
+            "37": {
+                "id": 37,
+                "label": "Garden Door"
+            },
+            "38": {
+                "id": 38,
+                "label": "Guest Bathroom"
+            },
+            "39": {
+                "id": 39,
+                "label": "Guest Bedroom"
+            },
+            "40": {
+                "id": 40,
+                "label": "Reserved28"
+            },
+            "41": {
+                "id": 41,
+                "label": "Guest Room"
+            },
+            "42": {
+                "id": 42,
+                "label": "Gym"
+            },
+            "43": {
+                "id": 43,
+                "label": "Hallway"
+            },
+            "44": {
+                "id": 44,
+                "label": "Hearth Room"
+            },
+            "45": {
+                "id": 45,
+                "label": "Kids Room"
+            },
+            "46": {
+                "id": 46,
+                "label": "Kids Bedroom"
+            },
+            "47": {
+                "id": 47,
+                "label": "Kitchen"
+            },
+            "48": {
+                "id": 48,
+                "label": "Reserved30"
+            },
+            "49": {
+                "id": 49,
+                "label": "Laundry Room"
+            },
+            "50": {
+                "id": 50,
+                "label": "Lawn"
+            },
+            "51": {
+                "id": 51,
+                "label": "Library"
+            },
+            "52": {
+                "id": 52,
+                "label": "Living Room"
+            },
+            "53": {
+                "id": 53,
+                "label": "Lounge"
+            },
+            "54": {
+                "id": 54,
+                "label": "Media Tv Room"
+            },
+            "55": {
+                "id": 55,
+                "label": "Mud Room"
+            },
+            "56": {
+                "id": 56,
+                "label": "Music Room"
+            },
+            "57": {
+                "id": 57,
+                "label": "Nursery"
+            },
+            "58": {
+                "id": 58,
+                "label": "Office"
+            },
+            "59": {
+                "id": 59,
+                "label": "Outdoor Kitchen"
+            },
+            "60": {
+                "id": 60,
+                "label": "Outside"
+            },
+            "61": {
+                "id": 61,
+                "label": "Pantry"
+            },
+            "62": {
+                "id": 62,
+                "label": "Parking Lot"
+            },
+            "63": {
+                "id": 63,
+                "label": "Parlor"
+            },
+            "64": {
+                "id": 64,
+                "label": "Patio"
+            },
+            "65": {
+                "id": 65,
+                "label": "Play Room"
+            },
+            "66": {
+                "id": 66,
+                "label": "Pool Room"
+            },
+            "67": {
+                "id": 67,
+                "label": "Porch"
+            },
+            "68": {
+                "id": 68,
+                "label": "Primary Bathroom"
+            },
+            "69": {
+                "id": 69,
+                "label": "Primary Bedroom"
+            },
+            "70": {
+                "id": 70,
+                "label": "Ramp"
+            },
+            "71": {
+                "id": 71,
+                "label": "Reception Room"
+            },
+            "72": {
+                "id": 72,
+                "label": "Recreation Room"
+            },
+            "73": {
+                "id": 73,
+                "label": "Reserved49"
+            },
+            "74": {
+                "id": 74,
+                "label": "Roof"
+            },
+            "75": {
+                "id": 75,
+                "label": "Sauna"
+            },
+            "76": {
+                "id": 76,
+                "label": "Scullery"
+            },
+            "77": {
+                "id": 77,
+                "label": "Sewing Room"
+            },
+            "78": {
+                "id": 78,
+                "label": "Shed"
+            },
+            "79": {
+                "id": 79,
+                "label": "Side Door"
+            },
+            "80": {
+                "id": 80,
+                "label": "Side Yard"
+            },
+            "81": {
+                "id": 81,
+                "label": "Sitting Room"
+            },
+            "82": {
+                "id": 82,
+                "label": "Snug"
+            },
+            "83": {
+                "id": 83,
+                "label": "Spa"
+            },
+            "84": {
+                "id": 84,
+                "label": "Staircase"
+            },
+            "85": {
+                "id": 85,
+                "label": "Steam Room"
+            },
+            "86": {
+                "id": 86,
+                "label": "Storage Room"
+            },
+            "87": {
+                "id": 87,
+                "label": "Studio"
+            },
+            "88": {
+                "id": 88,
+                "label": "Study"
+            },
+            "89": {
+                "id": 89,
+                "label": "Sun Room"
+            },
+            "90": {
+                "id": 90,
+                "label": "Swimming Pool"
+            },
+            "91": {
+                "id": 91,
+                "label": "Terrace"
+            },
+            "92": {
+                "id": 92,
+                "label": "Utility Room"
+            },
+            "93": {
+                "id": 93,
+                "label": "Ward"
+            },
+            "94": {
+                "id": 94,
+                "label": "Workshop"
+            },
+            "95": {
+                "id": 95,
+                "label": "Toilet"
+            }
+        }
+    },
+    "17": {
+        "id": 17,
+        "label": "Common Landmark Namespace",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Air Conditioner"
+            },
+            "1": {
+                "id": 1,
+                "label": "Air Purifier"
+            },
+            "2": {
+                "id": 2,
+                "label": "Back Door"
+            },
+            "3": {
+                "id": 3,
+                "label": "Bar Stool"
+            },
+            "4": {
+                "id": 4,
+                "label": "Bath Mat"
+            },
+            "5": {
+                "id": 5,
+                "label": "Bathtub"
+            },
+            "6": {
+                "id": 6,
+                "label": "Bed"
+            },
+            "7": {
+                "id": 7,
+                "label": "Bookshelf"
+            },
+            "8": {
+                "id": 8,
+                "label": "Chair"
+            },
+            "9": {
+                "id": 9,
+                "label": "Christmas Tree"
+            },
+            "10": {
+                "id": 10,
+                "label": "Coat Rack"
+            },
+            "11": {
+                "id": 11,
+                "label": "Coffee Table"
+            },
+            "12": {
+                "id": 12,
+                "label": "Cooking Range"
+            },
+            "13": {
+                "id": 13,
+                "label": "Couch"
+            },
+            "14": {
+                "id": 14,
+                "label": "Countertop"
+            },
+            "15": {
+                "id": 15,
+                "label": "Cradle"
+            },
+            "16": {
+                "id": 16,
+                "label": "Crib"
+            },
+            "17": {
+                "id": 17,
+                "label": "Desk"
+            },
+            "18": {
+                "id": 18,
+                "label": "Dining Table"
+            },
+            "19": {
+                "id": 19,
+                "label": "Dishwasher"
+            },
+            "20": {
+                "id": 20,
+                "label": "Door"
+            },
+            "21": {
+                "id": 21,
+                "label": "Dresser"
+            },
+            "22": {
+                "id": 22,
+                "label": "Laundry Dryer"
+            },
+            "23": {
+                "id": 23,
+                "label": "Fan"
+            },
+            "24": {
+                "id": 24,
+                "label": "Fireplace"
+            },
+            "25": {
+                "id": 25,
+                "label": "Freezer"
+            },
+            "26": {
+                "id": 26,
+                "label": "Front Door"
+            },
+            "27": {
+                "id": 27,
+                "label": "High Chair"
+            },
+            "28": {
+                "id": 28,
+                "label": "Kitchen Island"
+            },
+            "29": {
+                "id": 29,
+                "label": "Lamp"
+            },
+            "30": {
+                "id": 30,
+                "label": "Litter Box"
+            },
+            "31": {
+                "id": 31,
+                "label": "Mirror"
+            },
+            "32": {
+                "id": 32,
+                "label": "Nightstand"
+            },
+            "33": {
+                "id": 33,
+                "label": "Oven"
+            },
+            "34": {
+                "id": 34,
+                "label": "Pet Bed"
+            },
+            "35": {
+                "id": 35,
+                "label": "Pet Bowl"
+            },
+            "36": {
+                "id": 36,
+                "label": "Pet Crate"
+            },
+            "37": {
+                "id": 37,
+                "label": "Refrigerator"
+            },
+            "38": {
+                "id": 38,
+                "label": "Scratching Post"
+            },
+            "39": {
+                "id": 39,
+                "label": "Shoe Rack"
+            },
+            "40": {
+                "id": 40,
+                "label": "Shower"
+            },
+            "41": {
+                "id": 41,
+                "label": "Side Door"
+            },
+            "42": {
+                "id": 42,
+                "label": "Sink"
+            },
+            "43": {
+                "id": 43,
+                "label": "Sofa"
+            },
+            "44": {
+                "id": 44,
+                "label": "Stove"
+            },
+            "45": {
+                "id": 45,
+                "label": "Table"
+            },
+            "46": {
+                "id": 46,
+                "label": "Toilet"
+            },
+            "47": {
+                "id": 47,
+                "label": "Trash Can"
+            },
+            "48": {
+                "id": 48,
+                "label": "Laundry Washer"
+            },
+            "49": {
+                "id": 49,
+                "label": "Window"
+            },
+            "50": {
+                "id": 50,
+                "label": "Wine Cooler"
+            }
+        }
+    },
+    "18": {
+        "id": 18,
+        "label": "Common Relative Position",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Under"
+            },
+            "1": {
+                "id": 1,
+                "label": "Next To"
+            },
+            "2": {
+                "id": 2,
+                "label": "Around"
+            },
+            "3": {
+                "id": 3,
+                "label": "On"
+            },
+            "4": {
+                "id": 4,
+                "label": "Above"
+            },
+            "5": {
+                "id": 5,
+                "label": "Front Of"
+            },
+            "6": {
+                "id": 6,
+                "label": "Behind"
+            }
+        }
+    },
+    "19": {
+        "id": 19,
+        "label": "Commodity Tariff Flow",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Import"
+            },
+            "1": {
+                "id": 1,
+                "label": "Export"
+            }
+        }
+    },
+    "65": {
+        "id": 65,
+        "label": "Refrigerator",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Refrigerator"
+            },
+            "1": {
+                "id": 1,
+                "label": "Freezer"
+            }
+        }
+    },
+    "66": {
+        "id": 66,
+        "label": "Room Air Conditioner",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Evaporator"
+            },
+            "1": {
+                "id": 1,
+                "label": "Condenser"
+            }
+        }
+    },
+    "67": {
+        "id": 67,
+        "label": "Switches",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "On"
+            },
+            "1": {
+                "id": 1,
+                "label": "Off"
+            },
+            "2": {
+                "id": 2,
+                "label": "Toggle"
+            },
+            "3": {
+                "id": 3,
+                "label": "Up"
+            },
+            "4": {
+                "id": 4,
+                "label": "Down"
+            },
+            "5": {
+                "id": 5,
+                "label": "Next"
+            },
+            "6": {
+                "id": 6,
+                "label": "Previous"
+            },
+            "7": {
+                "id": 7,
+                "label": "Enter Ok Select"
+            },
+            "8": {
+                "id": 8,
+                "label": "Custom"
+            },
+            "9": {
+                "id": 9,
+                "label": "Open"
+            },
+            "10": {
+                "id": 10,
+                "label": "Close"
+            },
+            "11": {
+                "id": 11,
+                "label": "Stop"
+            }
+        }
+    },
+    "68": {
+        "id": 68,
+        "label": "Closure",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Covering"
+            },
+            "1": {
+                "id": 1,
+                "label": "Window"
+            },
+            "2": {
+                "id": 2,
+                "label": "Barrier"
+            },
+            "3": {
+                "id": 3,
+                "label": "Cabinet"
+            },
+            "4": {
+                "id": 4,
+                "label": "Gate"
+            },
+            "5": {
+                "id": 5,
+                "label": "Garage Door"
+            },
+            "6": {
+                "id": 6,
+                "label": "Door"
+            }
+        }
+    },
+    "69": {
+        "id": 69,
+        "label": "Closure Panel",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Lift"
+            },
+            "1": {
+                "id": 1,
+                "label": "Tilt"
+            },
+            "2": {
+                "id": 2,
+                "label": "Sliding"
+            },
+            "3": {
+                "id": 3,
+                "label": "Rotate"
+            }
+        }
+    },
+    "70": {
+        "id": 70,
+        "label": "Closure Covering",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Blind"
+            },
+            "1": {
+                "id": 1,
+                "label": "Awning"
+            },
+            "2": {
+                "id": 2,
+                "label": "Shutter"
+            },
+            "3": {
+                "id": 3,
+                "label": "Venetian"
+            },
+            "4": {
+                "id": 4,
+                "label": "Curtain"
+            }
+        }
+    },
+    "71": {
+        "id": 71,
+        "label": "Closure Window",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Roof"
+            },
+            "1": {
+                "id": 1,
+                "label": "Facade"
+            }
+        }
+    },
+    "72": {
+        "id": 72,
+        "label": "Closure Cabinet",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Cabinet Door"
+            },
+            "1": {
+                "id": 1,
+                "label": "Drawer"
+            },
+            "2": {
+                "id": 2,
+                "label": "Flap"
+            }
+        }
+    },
+    "73": {
+        "id": 73,
+        "label": "Identified Object",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Unknown"
+            },
+            "1": {
+                "id": 1,
+                "label": "Adult"
+            },
+            "2": {
+                "id": 2,
+                "label": "Child"
+            },
+            "3": {
+                "id": 3,
+                "label": "Person"
+            },
+            "4": {
+                "id": 4,
+                "label": "Rvc"
+            },
+            "5": {
+                "id": 5,
+                "label": "Pet"
+            },
+            "6": {
+                "id": 6,
+                "label": "Dog"
+            },
+            "7": {
+                "id": 7,
+                "label": "Cat"
+            },
+            "8": {
+                "id": 8,
+                "label": "Animal"
+            },
+            "9": {
+                "id": 9,
+                "label": "Car"
+            },
+            "10": {
+                "id": 10,
+                "label": "Vehicle"
+            },
+            "11": {
+                "id": 11,
+                "label": "Package"
+            },
+            "12": {
+                "id": 12,
+                "label": "Clothes"
+            }
+        }
+    },
+    "74": {
+        "id": 74,
+        "label": "Identified Sound",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Unknown"
+            },
+            "1": {
+                "id": 1,
+                "label": "Object Fall"
+            },
+            "2": {
+                "id": 2,
+                "label": "Snoring"
+            },
+            "3": {
+                "id": 3,
+                "label": "Coughing"
+            },
+            "4": {
+                "id": 4,
+                "label": "Barking"
+            },
+            "5": {
+                "id": 5,
+                "label": "Shattering"
+            },
+            "6": {
+                "id": 6,
+                "label": "Baby Crying"
+            },
+            "7": {
+                "id": 7,
+                "label": "Utility Alarm"
+            },
+            "8": {
+                "id": 8,
+                "label": "Urgent Shouting"
+            },
+            "9": {
+                "id": 9,
+                "label": "Doorbell"
+            },
+            "10": {
+                "id": 10,
+                "label": "Knocking"
+            },
+            "11": {
+                "id": 11,
+                "label": "Urgent Siren"
+            },
+            "12": {
+                "id": 12,
+                "label": "Faucet Running"
+            },
+            "13": {
+                "id": 13,
+                "label": "Kettle Boiling"
+            },
+            "14": {
+                "id": 14,
+                "label": "Fan Dryer"
+            },
+            "15": {
+                "id": 15,
+                "label": "Clapping"
+            },
+            "16": {
+                "id": 16,
+                "label": "Finger Snapping"
+            },
+            "17": {
+                "id": 17,
+                "label": "Meowing"
+            },
+            "18": {
+                "id": 18,
+                "label": "Laughing"
+            },
+            "19": {
+                "id": 19,
+                "label": "Glass Breaking"
+            },
+            "20": {
+                "id": 20,
+                "label": "Door Knocking"
+            },
+            "21": {
+                "id": 21,
+                "label": "Person Talking"
+            }
+        }
+    },
+    "75": {
+        "id": 75,
+        "label": "Identified Human Activity",
+        "tags": {
+            "0": {
+                "id": 0,
+                "label": "Unknown"
+            },
+            "1": {
+                "id": 1,
+                "label": "Fall"
+            },
+            "2": {
+                "id": 2,
+                "label": "Sleeping"
+            },
+            "3": {
+                "id": 3,
+                "label": "Walking"
+            },
+            "4": {
+                "id": 4,
+                "label": "Workout"
+            },
+            "5": {
+                "id": 5,
+                "label": "Sitting"
+            },
+            "6": {
+                "id": 6,
+                "label": "Standing"
+            },
+            "7": {
+                "id": 7,
+                "label": "Dancing"
+            },
+            "8": {
+                "id": 8,
+                "label": "Package Delivery"
+            },
+            "9": {
+                "id": 9,
+                "label": "Package Retrieval"
+            }
+        }
+    }
+};

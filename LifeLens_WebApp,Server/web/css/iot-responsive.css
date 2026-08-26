@@ -1,0 +1,11 @@
+/* Keep every device control inside the MY DEVICES card. */
+.matter-devices{min-width:0;max-width:100%;overflow:hidden}
+.matter-device{display:grid;grid-template-columns:minmax(0,1fr) auto;width:100%;min-width:0;max-width:100%;overflow:hidden}
+.matter-device>div:first-child{min-width:0;overflow-wrap:anywhere}
+.matter-actions{min-width:0;justify-self:end}
+.light-controls{grid-column:1/-1;display:grid;min-width:0;max-width:100%;overflow:hidden}
+.brightness-control{width:100%;max-width:100%;grid-template-columns:38px minmax(0,1fr) 38px}
+.brightness-control input{display:block;width:100%;min-width:0;max-width:100%}
+.light-controls.disabled{opacity:.42}.light-controls.disabled input,.light-controls.disabled button{cursor:not-allowed;filter:grayscale(1)}
+.color-control{min-width:0;flex-wrap:wrap}.color-swatches{min-width:0;max-width:100%;flex-wrap:wrap}
+@media(max-width:390px){.matter-device{grid-template-columns:minmax(0,1fr)}.matter-actions{justify-self:start}.color-control{align-items:flex-start;flex-direction:column;gap:7px}.brightness-control{grid-template-columns:34px minmax(0,1fr) 34px;gap:7px}.swatch{width:19px;height:19px}}

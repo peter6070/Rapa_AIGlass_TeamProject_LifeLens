@@ -1,0 +1,9 @@
+/* One background layer only. Prevent horizontal dragging from controls. */
+html,body{width:100%;max-width:100%;overflow-x:clip!important;background:transparent!important}
+.shell{width:100%;max-width:100%;overflow-x:clip;background:transparent!important;box-shadow:none!important}
+.app-background{background:linear-gradient(135deg,#f7d4d0,#fff6f3,#f1c8c3)!important}
+.matter-device{min-width:0}
+.light-controls{flex:0 0 100%;width:auto;min-width:0}
+.brightness-control{grid-template-columns:42px minmax(0,1fr) 40px;min-width:0}
+.brightness-control input{min-width:0;max-width:100%}
+@media(max-width:360px){.brightness-control{grid-template-columns:38px minmax(0,1fr) 36px;gap:7px}}

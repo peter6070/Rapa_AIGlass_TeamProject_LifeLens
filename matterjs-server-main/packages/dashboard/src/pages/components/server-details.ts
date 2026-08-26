@@ -1,0 +1,205 @@
+/**
+ * @license
+ * Copyright 2025-2026 Open Home Foundation
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import "@material/web/button/filled-button";
+import "@material/web/button/outlined-button";
+import "@material/web/button/text-button";
+import "@material/web/divider/divider";
+import "@material/web/iconbutton/icon-button";
+import "@material/web/list/list";
+import "@material/web/list/list-item";
+import { consume } from "@lit/context";
+import { MatterClient } from "@matter-server/ws-client";
+import { mdiFile, mdiPencil, mdiPlus } from "@mdi/js";
+import { LitElement, css, html, nothing } from "lit";
+import { customElement, state } from "lit/decorators.js";
+import { clientContext, tickContext } from "../../client/client-context.js";
+import { showAlertDialog, showPromptDialog } from "../../components/dialog-box/show-dialog-box.js";
+import { showCommissionNodeDialog } from "../../components/dialogs/commission-node-dialog/show-commission-node-dialog.js";
+import { showFabricLabelDialog } from "../../components/dialogs/fabric-label-dialog/show-fabric-label-dialog.js";
+import "../../components/ha-svg-icon";
+import { handleAsync } from "../../util/async-handler.js";
+
+/** `get_fabric_label` was introduced in WebSocket schema 12. */
+const FABRIC_LABEL_MIN_SCHEMA = 12;
+
+@customElement("server-details")
+export class ServerDetails extends LitElement {
+    @consume({ context: clientContext })
+    public client?: MatterClient;
+
+    @consume({ context: tickContext, subscribe: true })
+    protected _tick = 0;
+
+    @state()
+    private _fabricLabel?: string | null;
+
+    protected override firstUpdated() {
+        if (this.#supportsFabricLabel()) {
+            this.#refreshFabricLabel();
+        }
+    }
+
+    #supportsFabricLabel(): boolean {
+        return (this.client?.serverInfo?.schema_version ?? 0) >= FABRIC_LABEL_MIN_SCHEMA;
+    }
+
+    #refreshFabricLabel(): void {
+        // Only reached while connected (the connected view mounts this component, and re-mounts on
+        // reconnect), so no explicit offline guard/re-hook is needed; a rare failure just logs.
+        this.client!.getFabricLabel()
+            .then(label => (this._fabricLabel = label))
+            .catch(err => console.error("Failed to load fabric label", err));
+    }
+
+    protected override render() {
+        if (!this.client) return html``;
+
+        return html`
+      <md-list>
+        <md-list-item>
+            <div slot="headline">
+                <b>Open Home Foundation Matter Server ${this.client.isProduction ? "" : `(${this.client.serverBaseAddress})`}</b>
+                ${this.client.connection.connected ? nothing : html` <span class="status">OFFLINE</span> `}
+      </div>
+        </md-list-item>
+        <md-list-item>
+          <div slot="supporting-text">
+            <div class="left">Matter Server Version: </div>${this.client.serverInfo.sdk_version}
+          </div>
+          <div slot="supporting-text">
+            <div class="left">FabricId: </div>${this.client.serverInfo.fabric_id}
+          </div>
+          <div slot="supporting-text">
+            <div class="left">Compressed FabricId: </div>${this.client.serverInfo.compressed_fabric_id}
+          </div>
+          <div slot="supporting-text">
+            <div class="left">Schema Version: </div>${this.client.serverInfo.schema_version}
+          </div>
+          ${
+              this.#supportsFabricLabel()
+                  ? html` <div slot="supporting-text">
+                        <div class="left">Fabric Label:</div>
+                        ${this._fabricLabel === undefined ? "…" : this._fabricLabel || "—"}
+                        <md-icon-button
+                            class="edit-fabric-label"
+                            title="Edit fabric label"
+                            @click=${this._editFabricLabel}
+                        >
+                            <ha-svg-icon .path=${mdiPencil}></ha-svg-icon>
+                        </md-icon-button>
+                    </div>`
+                  : nothing
+          }
+          <div slot="supporting-text">
+            <div class="left">Node count: </div>${Object.keys(this.client.nodes).length}
+          </div>
+        </md-list-item>
+        <md-list-item>
+          <div class="btn-row">
+            <md-outlined-button @click=${this._commissionNode}>Commission node<ha-svg-icon slot="icon" .path=${mdiPlus}></ha-svg-icon></md-outlined-button>
+            <md-outlined-button @click=${handleAsync(() => this._uploadDiagnosticsDumpFile())}>Import node<ha-svg-icon slot="icon" .path=${mdiFile}></ha-svg-icon></md-outlined-button>
+          </div>
+        </md-list-item>
+      </md-list>
+      <!-- hidden file element for the upload diagnostics -->
+      <input
+        @change=${this._onFileInput}
+        type="file"
+        id="fileElem"
+        accept=".json"
+        style="display:none" />
+      </div>
+  `;
+    }
+
+    private _commissionNode() {
+        showCommissionNodeDialog();
+    }
+
+    private _editFabricLabel() {
+        showFabricLabelDialog(this.client!, this._fabricLabel ?? "", () => this.#refreshFabricLabel()).catch(err =>
+            showAlertDialog({ title: "Failed to open fabric label editor", text: err.message }),
+        );
+    }
+
+    private async _uploadDiagnosticsDumpFile() {
+        if (
+            !(await showPromptDialog({
+                title: "Add test node",
+                text: "Do you want to add a test node from a diagnostics dump ?",
+                confirmText: "Select file",
+            }))
+        ) {
+            return;
+        }
+        const fileElem = this.shadowRoot!.getElementById("fileElem") as HTMLInputElement;
+        fileElem.click();
+    }
+
+    private _onFileInput = (event: Event) => {
+        const fileElem = event.target as HTMLInputElement;
+        if (fileElem.files!.length > 0) {
+            const selectedFile = fileElem.files![0];
+            const reader = new FileReader();
+            reader.readAsText(selectedFile, "UTF-8");
+            reader.onload = async () => {
+                try {
+                    await this.client?.importTestNode(reader.result?.toString() ?? "");
+                } catch (err: any) {
+                    showAlertDialog({
+                        title: "Failed to import test node",
+                        text: err.message,
+                    });
+                } finally {
+                    fileElem.value = "";
+                }
+            };
+        }
+        event.preventDefault();
+    };
+
+    static override styles = css`
+        .btn-row {
+            --md-outlined-button-container-shape: 0px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn-row md-outlined-button {
+            max-width: 100%;
+        }
+
+        .left {
+            min-width: 120px;
+            display: inline-block;
+        }
+
+        .edit-fabric-label {
+            --md-icon-button-icon-size: 18px;
+            width: 28px;
+            height: 28px;
+            vertical-align: middle;
+        }
+
+        @media (min-width: 600px) {
+            .left {
+                min-width: 160px;
+            }
+        }
+
+        .whitespace {
+            height: 15px;
+        }
+
+        .status {
+            color: var(--danger-color);
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+    `;
+}

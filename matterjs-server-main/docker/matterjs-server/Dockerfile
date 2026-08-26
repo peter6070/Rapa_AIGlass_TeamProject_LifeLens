@@ -1,0 +1,97 @@
+FROM node:24-trixie-slim
+
+# Set shell
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+WORKDIR /app
+
+# Version of matter-server to install from npm
+ARG MATTERJS_SERVER_VERSION
+
+# Install required system dependencies
+# Runtime dependencies:
+# - iputils-ping: Required for node ping functionality
+# - curl: For health checks and general utility
+# - bluez: Bluetooth stack for BLE commissioning
+# Build dependencies (removed after npm install):
+# - python3: Required by node-gyp for native module compilation
+# - make, gcc, g++: C/C++ toolchain for native module compilation
+# - libbluetooth-dev, libudev-dev: Headers for native BLE/udev bindings
+# - libcap2-bin: provides setcap to grant ping CAP_NET_RAW (purged afterwards)
+RUN \
+    set -x \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        iputils-ping \
+        curl \
+        python3 \
+        make \
+        gcc \
+        g++ \
+        bluez \
+        libbluetooth-dev \
+        libudev-dev \
+        libcap2-bin \
+    # ping_node runs as the non-root user; CAP_NET_RAW on the binary lets it open
+    # an ICMP socket regardless of the host's net.ipv4.ping_group_range.
+    && setcap cap_net_raw+ep "$(command -v ping)" \
+    # Install matter-server from npm and optimize image size
+    && set -x \
+    && npm install --foreground-scripts "matter-server@${MATTERJS_SERVER_VERSION}" \
+    # Remove build dependencies (no longer needed after native modules are compiled)
+    && apt-get purge -y --auto-remove \
+        python3 \
+        make \
+        gcc \
+        g++ \
+        libbluetooth-dev \
+        libudev-dev \
+        libcap2-bin \
+    && rm -rf \
+        /var/lib/apt/lists/* \
+        /usr/src/* \
+    # Remove corepack (not needed at runtime)
+    && npm uninstall -g corepack \
+    # Clean npm cache
+    && npm cache clean --force \
+    # Remove CJS builds from Matter packages (we use ESM only)
+    && find ./node_modules -type d -name "cjs" \
+        -path "*/@matter/*" -exec rm -rf {} + 2>/dev/null || true \
+    && find ./node_modules -type d -name "cjs" \
+        -path "*/@project-chip/*" -exec rm -rf {} + 2>/dev/null || true \
+    # Remove development/documentation files
+    && find ./node_modules -type d -name ".github" -exec rm -rf {} + 2>/dev/null || true \
+    && find ./node_modules -type d -name ".vscode" -exec rm -rf {} + 2>/dev/null || true \
+    && find ./node_modules -type d -name "docs" -exec rm -rf {} + 2>/dev/null || true \
+    && find ./node_modules -name "*.md" -delete 2>/dev/null || true \
+    && find ./node_modules -name "LICENSE*" -delete 2>/dev/null || true \
+    && find ./node_modules -name "CHANGELOG*" -delete 2>/dev/null || true \
+    # Clean temp directories
+    && rm -rf /tmp/* /var/tmp/* /root/.npm /root/.cache \
+    # Initialize data volume with user permissions
+    && mkdir /data \
+    && chown 1000:1000 /data
+
+# Environment variables with defaults (all CLI options can be set via env vars)
+# See docs/docker.md for full list of available environment variables
+ENV LOG_LEVEL=info
+ENV STORAGE_PATH=/data
+
+# Data volume for persistent storage
+VOLUME ["/data"]
+
+# WebSocket API port
+EXPOSE 5580
+
+# Healthcheck script honours LISTEN_ADDRESS / PORT so it still works when the
+# server is bound to a non-localhost address. See script for limitations.
+COPY --chmod=0755 healthcheck.sh /usr/local/bin/healthcheck.sh
+
+# Health check - verify the server is responding
+HEALTHCHECK --interval=60s --timeout=10s --start-period=900s --start-interval=5s --retries=6 \
+    CMD ["/usr/local/bin/healthcheck.sh"]
+
+# Run the matter server directly (all config via environment variables)
+USER 1000:1000
+ENTRYPOINT ["node", "--enable-source-maps", "/app/node_modules/matter-server/dist/esm/MatterServer.js"]
+CMD []

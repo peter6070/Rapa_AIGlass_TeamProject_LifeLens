@@ -1,0 +1,36 @@
+/**
+ * @license
+ * Copyright 2025-2026 Open Home Foundation
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
+ * Cluster-specific command panels.
+ * Import this file to register all cluster command components.
+ */
+
+// Registry exports
+export {
+    getClusterCommandsTag,
+    hasClusterCommands,
+    registerClusterCommands,
+    rendersClusterCommandsWhenOffline,
+    type ClusterCommandsRegistration,
+} from "./registry.js";
+
+// Base class for creating new cluster commands
+export { BaseClusterCommands } from "./base-cluster-commands.js";
+
+// Cluster command components (auto-register on import)
+import "./clusters/access-control-commands.js";
+import "./clusters/avsum-commands.js";
+import "./clusters/basic-information-commands.js";
+import "./clusters/binding-commands.js";
+import "./clusters/chime-commands.js";
+import "./clusters/closure-control-commands.js";
+import "./clusters/commodity-tariff-commands.js";
+import "./clusters/icd-management-commands.js";
+import "./clusters/level-control-commands.js";
+import "./clusters/meter-identification-commands.js";
+import "./clusters/on-off-commands.js";
+import "./clusters/thermostat-commands.js";
