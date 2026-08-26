@@ -13,7 +13,11 @@ let lastTwoFingerTapAt = 0;
 let twoFingerTapStartedAt = 0;
 let isTwoFingerTap = false;
 window.scrollTo(0, 0);
-let deviceId = query.get('device_id') || localStorage.getItem('kimchi-device-id') || crypto.randomUUID();
+const genUuid = () => (crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+  const r = Math.random() * 16 | 0;
+  return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+}));
+let deviceId = query.get('device_id') || localStorage.getItem('kimchi-device-id') || genUuid();
 localStorage.setItem('kimchi-device-id', deviceId);
 const sharedLifeLogId = (() => {
   try { return window.NativeBridge?.getSharedLifeLogId?.() || 'lifelens-shared'; }
