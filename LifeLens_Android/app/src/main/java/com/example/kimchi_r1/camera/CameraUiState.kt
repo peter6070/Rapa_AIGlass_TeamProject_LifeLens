@@ -53,6 +53,8 @@ data class CameraUiState(
     val iotShortcutAction: String? = null,
     val iotShortcutSequence: Long = 0,
     val videoFrame: Bitmap? = null,
+    /** True when MediaCodec renders the live stream directly into the preview Surface. */
+    val usesSurfacePreview: Boolean = false,
     val isPreviewVisible: Boolean = true,
 ) {
   /** A session exists and is connected (or connecting); a stream can be started. */

@@ -22,12 +22,19 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Matrix
+import android.graphics.Paint
+import android.graphics.RectF
+import android.os.Handler
+import android.os.HandlerThread
 import android.location.Location
 import android.location.LocationManager
 import android.location.Geocoder
 import android.util.Log
 import android.view.Surface
+import android.view.PixelCopy
 import androidx.exifinterface.media.ExifInterface
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
@@ -80,6 +87,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
+import kotlin.math.roundToInt
 
 class CameraViewModel(
     application: Application,
@@ -91,9 +101,12 @@ class CameraViewModel(
     private const val FRAME_RATE = 30
     private const val KEYFRAME_WAIT_STEP_MS = 25L
     private const val KEYFRAME_WAIT_MAX_MS = 500L
-    // Bitmap conversion allocates a full RGBA frame. 15 fps keeps the live view responsive while
-    // leaving CPU time for MediaPipe and prevents the frame collector from building up latency.
-    private const val RAW_FRAME_INTERVAL_MS = 66L
+    // HIGH/30 remains enabled. 30ms accepts each 33ms source frame while conflate drops stale work.
+    private const val RAW_FRAME_INTERVAL_MS = 30L
+    private const val SURFACE_SAMPLE_INTERVAL_MS = 83L
+    private const val SURFACE_SAMPLE_MAX_SIDE = 480
+    private const val WEB_PREVIEW_INTERVAL_MS = 200L
+    private const val DECODER_START_TIMEOUT_MS = 4_000L
     private const val AUTO_SESSION_RETRY_MS = 3_000L
     private const val STREAM_RECOVERY_DELAY_MS = 1_500L
     private const val MAX_STREAM_RECOVERY_ATTEMPTS = 3
@@ -132,6 +145,8 @@ class CameraViewModel(
             Thread(task, "LifeLens-photo-worker").apply { priority = Thread.MIN_PRIORITY }
           }
           .asCoroutineDispatcher()
+  private val pixelCopyThread = HandlerThread("LifeLens-preview-sampler").apply { start() }
+  private val pixelCopyHandler = Handler(pixelCopyThread.looper)
 
   // Guards decoder create/teardown so a frame can't bind a new decoder to a Surface that
   // setSurface(null) just released — the @Volatile refs alone can't fix that check-then-act.
@@ -140,7 +155,12 @@ class CameraViewModel(
   // @Volatile: single refs shared by the frame-collector and main threads, nulled at teardown.
   @Volatile private var hevcDecoder: HevcDecoder? = null
   @Volatile private var decoderSurface: Surface? = null
+  @Volatile private var isCompressedStream = false
+  @Volatile private var forceRawPreview = false
+  @Volatile private var decoderFallbackRequested = false
   private val i420FrameConverter = OpenCvI420FrameConverter()
+  private val rawPreviewPaint =
+      Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply { isDither = true }
   private val handGestureRecognizer =
       HandGestureRecognizer(
           application,
@@ -148,6 +168,7 @@ class CameraViewModel(
           onLeftPinch = ::onLeftPinch,
       )
   private var lastRawFrameAtMs = 0L
+  private var lastWebPreviewAtMs = 0L
   private var lastAutoSessionAttemptAtMs = 0L
   private var streamRecoveryAttempts = 0
   private val gestureShortcutLock = Any()
@@ -168,6 +189,8 @@ class CameraViewModel(
   private var videoJob: Job? = null
   private var streamStateJob: Job? = null
   private var streamErrorJob: Job? = null
+  private var surfaceSamplingJob: Job? = null
+  private var decoderWatchdogJob: Job? = null
 
   /** Every shortcut is one-shot: a stable fist arms it, then a stable target gesture fires it. */
   private fun onHandGesture(label: String, confidence: Int) {
@@ -289,12 +312,91 @@ class CameraViewModel(
 
   // MARK: - Surface
 
-  fun setSurface(surface: Surface?) {
+  fun setSurface(surface: Surface?, width: Int, height: Int) {
+    surfaceSamplingJob?.cancel()
+    surfaceSamplingJob = null
+    decoderWatchdogJob?.cancel()
+    decoderWatchdogJob = null
     synchronized(decoderLock) {
       decoderSurface = surface
       if (surface == null) {
         hevcDecoder?.stop()
         hevcDecoder = null
+      }
+    }
+    if (surface != null && isCompressedStream) {
+      startSurfaceSampling(surface, width, height)
+      decoderWatchdogJob =
+          viewModelScope.launch {
+            delay(DECODER_START_TIMEOUT_MS)
+            if (!_uiState.value.hasReceivedFirstFrame && decoderSurface === surface) {
+              onDecoderFatal(IllegalStateException("HEVC preview produced no frame"))
+            }
+          }
+    }
+  }
+
+  /** Samples a small latest-only Surface copy for MediaPipe and the web debug preview. */
+  private fun startSurfaceSampling(surface: Surface, width: Int, height: Int) {
+    if (width <= 0 || height <= 0) return
+    surfaceSamplingJob =
+        viewModelScope.launch(Dispatchers.Default) {
+          while (decoderSurface === surface && surface.isValid) {
+            val bitmap = copySurfaceFrame(surface, width, height)
+            if (bitmap != null) {
+              handGestureRecognizer.analyze(bitmap)
+              val now = System.currentTimeMillis()
+              if (now - lastWebPreviewAtMs >= WEB_PREVIEW_INTERVAL_MS) {
+                lastWebPreviewAtMs = now
+                _uiState.update { it.copy(videoFrame = bitmap) }
+              }
+            }
+            delay(SURFACE_SAMPLE_INTERVAL_MS)
+          }
+        }
+  }
+
+  private suspend fun copySurfaceFrame(surface: Surface, width: Int, height: Int): Bitmap? {
+    val scale = minOf(1f, SURFACE_SAMPLE_MAX_SIDE.toFloat() / maxOf(width, height))
+    val sampleWidth = (width * scale).roundToInt().coerceAtLeast(2)
+    val sampleHeight = (height * scale).roundToInt().coerceAtLeast(2)
+    val bitmap = Bitmap.createBitmap(sampleWidth, sampleHeight, Bitmap.Config.ARGB_8888)
+    return suspendCancellableCoroutine { continuation ->
+      try {
+        PixelCopy.request(
+            surface,
+            bitmap,
+            { result ->
+              if (continuation.isActive) {
+                continuation.resume(if (result == PixelCopy.SUCCESS) bitmap else null)
+              }
+            },
+            pixelCopyHandler,
+        )
+      } catch (_: Throwable) {
+        if (continuation.isActive) continuation.resume(null)
+      }
+    }
+  }
+
+  private fun onDecoderFrameRendered() {
+    if (!_uiState.value.hasReceivedFirstFrame) {
+      decoderWatchdogJob?.cancel()
+      decoderWatchdogJob = null
+      _uiState.update { it.copy(hasReceivedFirstFrame = true) }
+    }
+  }
+
+  private fun onDecoderFatal(error: Throwable) {
+    if (forceRawPreview || decoderFallbackRequested) return
+    decoderFallbackRequested = true
+    Log.e(TAG, "Low-latency HEVC preview failed; reconnecting with raw fallback", error)
+    viewModelScope.launch {
+      forceRawPreview = true
+      val current = camera
+      if (current != null) {
+        _uiState.update { it.copy(streamState = StreamState.STOPPING) }
+        current.stop()
       }
     }
   }
@@ -462,6 +564,18 @@ class CameraViewModel(
   private fun beginStream() {
     val current = session ?: return
     if (stream != null) return
+    // Compressed HIGH/30 avoids the transport latency of full I420 frames. HevcDecoder preserves
+    // each DAT access unit intact; a codec startup failure still reconnects through optimized raw.
+    val useCompressedPreview = !forceRawPreview
+    isCompressedStream = useCompressedPreview
+    decoderFallbackRequested = false
+    _uiState.update {
+      it.copy(
+          usesSurfacePreview = true,
+          videoFrame = null,
+          hasReceivedFirstFrame = false,
+      )
+    }
     // Foreground service keeps the stream/recording alive while backgrounded.
     StreamingService.start(getApplication())
     current
@@ -469,9 +583,9 @@ class CameraViewModel(
             StreamConfiguration(
                 videoQuality = VideoQuality.HIGH,
                 frameRate = FRAME_RATE,
-                // Raw I420 frames avoid an extra HEVC decode / Surface capture path and feed
-                // OpenCV + MediaPipe directly for stable real-time hand recognition.
-                compressVideo = false,
+                // HEVC keeps HIGH/30 transport compact; MediaCodec renders it straight to Surface.
+                // If the phone rejects this codec, onDecoderFatal reconnects once with raw I420.
+                compressVideo = useCompressedPreview,
             )
         )
         .onSuccess { addedCamera ->
@@ -570,7 +684,11 @@ class CameraViewModel(
       val surface = decoderSurface
       if (hevcDecoder == null && surface != null) {
         hevcDecoder =
-            HevcDecoder().also { decoder ->
+            HevcDecoder(
+                    onFrameRendered = ::onDecoderFrameRendered,
+                    onFatalError = ::onDecoderFatal,
+                )
+                .also { decoder ->
               decoder.start(width, height, surface)
               csdCollector.complete()?.let { decoder.decodeFrame(it, 0) }
             }
@@ -579,9 +697,6 @@ class CameraViewModel(
       hevcDecoder?.decodeFrame(byteArray, presentationTimeUs)
     }
 
-    if (!videoFrame.isCodecConfig && !_uiState.value.hasReceivedFirstFrame) {
-      _uiState.update { it.copy(hasReceivedFirstFrame = true) }
-    }
   }
 
   /** Processes DAT's raw I420 buffer directly. This replaces unstable HEVC Surface snapshots. */
@@ -591,15 +706,49 @@ class CameraViewModel(
     lastRawFrameAtMs = now
 
     val buffer = videoFrame.buffer
-    val data = ByteArray(buffer.remaining())
-    val originalPosition = buffer.position()
-    buffer.get(data)
-    buffer.position(originalPosition)
-    val bitmap = i420FrameConverter.toBitmap(data, videoFrame.width, videoFrame.height) ?: return
-    _uiState.update {
-      it.copy(videoFrame = bitmap, hasReceivedFirstFrame = true)
+    val bitmap = i420FrameConverter.toBitmap(buffer, videoFrame.width, videoFrame.height) ?: return
+    renderRawFrame(bitmap)
+    if (!_uiState.value.hasReceivedFirstFrame) {
+      _uiState.update { it.copy(hasReceivedFirstFrame = true) }
+    }
+    if (now - lastWebPreviewAtMs >= WEB_PREVIEW_INTERVAL_MS) {
+      lastWebPreviewAtMs = now
+      _uiState.update { it.copy(videoFrame = bitmap) }
     }
     handGestureRecognizer.analyze(bitmap)
+  }
+
+  /** Draws the newest raw frame straight to Surface; no frame-rate Compose recomposition. */
+  private fun renderRawFrame(bitmap: Bitmap) {
+    val surface = decoderSurface ?: return
+    if (!surface.isValid) return
+    var canvas: Canvas? = null
+    try {
+      canvas = surface.lockHardwareCanvas()
+      val scale = maxOf(
+          canvas.width.toFloat() / bitmap.width,
+          canvas.height.toFloat() / bitmap.height,
+      )
+      val targetWidth = bitmap.width * scale
+      val targetHeight = bitmap.height * scale
+      val left = (canvas.width - targetWidth) / 2f
+      val top = (canvas.height - targetHeight) / 2f
+      canvas.drawColor(Color.BLACK)
+      canvas.drawBitmap(
+          bitmap,
+          null,
+          RectF(left, top, left + targetWidth, top + targetHeight),
+          rawPreviewPaint,
+      )
+    } catch (error: Throwable) {
+      Log.w(TAG, "Raw preview Surface draw skipped: ${error.message}")
+    } finally {
+      if (canvas != null) {
+        try {
+          surface.unlockCanvasAndPost(canvas)
+        } catch (_: Throwable) {}
+      }
+    }
   }
 
   private fun onStreamTerminated() {
@@ -628,10 +777,15 @@ class CameraViewModel(
     streamStateJob = null
     streamErrorJob?.cancel()
     streamErrorJob = null
+    surfaceSamplingJob?.cancel()
+    surfaceSamplingJob = null
+    decoderWatchdogJob?.cancel()
+    decoderWatchdogJob = null
     synchronized(decoderLock) {
       hevcDecoder?.stop()
       hevcDecoder = null
     }
+    isCompressedStream = false
     csdCollector.reset()
     StreamingService.stop(getApplication())
     // STOPPED is restartable, so only stop() detaches the capability; without it the next
@@ -647,6 +801,7 @@ class CameraViewModel(
           gestureName = "분석 대기 중",
           gestureConfidence = 0,
           videoFrame = null,
+          usesSurfacePreview = false,
       )
     }
   }
@@ -924,9 +1079,11 @@ class CameraViewModel(
 
   override fun onCleared() {
     super.onCleared()
+    clearStreamResources()
+    i420FrameConverter.close()
     handGestureRecognizer.close()
     gestureSpeechFeedback.close()
-    clearStreamResources()
+    pixelCopyThread.quitSafely()
     session?.stop()
     cleanupSession()
     audioInputHandler.cleanup()

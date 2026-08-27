@@ -28,15 +28,16 @@ import java.nio.ByteBuffer
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit
 
-class HevcDecoder {
+class HevcDecoder(
+    private val onFrameRendered: () -> Unit = {},
+    private val onFatalError: (Throwable) -> Unit = {},
+) {
 
   companion object {
     private const val TAG = "HevcDecoder"
     // A large queue makes a live preview faithfully play stale frames. Keep only a short runway;
     // when decoding falls behind enqueuePrivate drops the oldest NAL instead of adding latency.
     private const val DATA_QUEUE_CAPACITY = 12
-    // Hardware HEVC decoders that corrupt this stream into fragments/trash; the SDK's own decoder
-    // skips them too. Prefer a software decoder instead (see createHevcDecoder).
     private val BLOCKED_DECODERS = setOf("OMX.Exynos.hevc.dec", "c2.mtk.hevc.decoder")
   }
 
@@ -69,6 +70,7 @@ class HevcDecoder {
   @Volatile private var active = false
   @Volatile private var firstInputFrame = true
   @Volatile private var receivedKeyframe = false
+  @Volatile private var dropUntilKeyframe = false
   @Volatile private var outputSurface: Surface? = null
 
   fun start(width: Int, height: Int, surface: Surface) {
@@ -79,6 +81,7 @@ class HevcDecoder {
           format.setInteger(MediaFormat.KEY_FRAME_RATE, 30)
           format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1)
           format.setInteger(MediaFormat.KEY_BIT_RATE, 750000)
+          format.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, width * height)
           format.setInteger(MediaFormat.KEY_PRIORITY, 0)
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             format.setInteger(MediaFormat.KEY_LOW_LATENCY, 1)
@@ -88,53 +91,47 @@ class HevcDecoder {
       ensureCodecsCreated()
     } catch (e: Exception) {
       Log.e(TAG, "Failed to create HEVC decoder: ${e.message}", e)
+      onFatalError(e)
     }
   }
 
   fun decodeFrame(data: ByteArray, presentationTimeUs: Long) {
     if (data.isEmpty()) return
 
-    // Replicate SDK VideoDecoder.enqueue(buffer, presentationTimeUs) exactly:
-    // parse NAL units, cache config, activate on keyframe, feed each NAL separately.
-    val buffer = ByteBuffer.wrap(data)
-    val writableByteArray = data.copyOf()
+    // A DAT VideoFrame is one complete Annex-B access unit. Scan only to derive flags; splitting
+    // NAL units before MediaCodec destroys frame boundaries on vendor hardware decoders.
+    var hasKeyFrame = false
+    var hasConfig = false
+    var hasVcl = false
     var index = 0
     val prefixFlags = BooleanArray(3)
 
-    index = findNalUnit(writableByteArray, index, data.size, prefixFlags)
+    index = findNalUnit(data, index, data.size, prefixFlags)
     while (index < data.size) {
-      val unitType = getH265NalUnitType(writableByteArray, index)
-      val isKeyFrame = isIrapNalType(unitType)
-      val isConfigFrame = unitType == 32 || unitType == 33 || unitType == 34
-
-      if (isConfigFrame) {
-        cachedVideoCodec = cloneByteBuffer(buffer)
-      } else if (isKeyFrame) {
-        if (!active) {
-          active = true
-          cachedVideoCodec?.let { cachedConfig -> enqueuePublic(cachedConfig) }
-        }
-        if (!receivedKeyframe) {
-          receivedKeyframe = true
-        }
-      }
-
-      val nextIndex = findNalUnit(writableByteArray, index + 1, data.size, prefixFlags)
-      val endIndex = if (nextIndex > index) nextIndex else data.size
-      // Feed this NAL exactly once. The previous implementation cloned the complete frame for
-      // every NAL and then queued from the NAL offset to the end, duplicating decode work.
-      val nal = ByteBuffer.wrap(writableByteArray.copyOfRange(index, endIndex))
-      enqueuePrivate(
-          DecoderFrame(
-              data = nal,
-              presentationTimeUs = presentationTimeUs,
-              isKeyFrame = isKeyFrame,
-              isConfigFrame = isConfigFrame,
-          ),
-      )
-
-      index = nextIndex
+      val unitType = getH265NalUnitType(data, index)
+      hasKeyFrame = hasKeyFrame || isIrapNalType(unitType)
+      hasConfig = hasConfig || unitType in 32..34
+      hasVcl = hasVcl || unitType in 0..31
+      index = findNalUnit(data, index + 1, data.size, prefixFlags)
     }
+
+    val configOnly = hasConfig && !hasVcl
+    if (configOnly) cachedVideoCodec = ByteBuffer.wrap(data.copyOf())
+    if (hasKeyFrame) {
+      if (!active) {
+        active = true
+        cachedVideoCodec?.let(::enqueuePublic)
+      }
+      receivedKeyframe = true
+    }
+    enqueuePrivate(
+        DecoderFrame(
+            data = ByteBuffer.wrap(data),
+            presentationTimeUs = presentationTimeUs,
+            isKeyFrame = hasKeyFrame,
+            isConfigFrame = configOnly,
+        )
+    )
   }
 
   fun stop() {
@@ -151,6 +148,7 @@ class HevcDecoder {
     decoderThread = null
     firstInputFrame = true
     receivedKeyframe = false
+    dropUntilKeyframe = false
     cachedVideoCodec = null
     outputSurface = null
   }
@@ -158,47 +156,24 @@ class HevcDecoder {
   // Mirrors SDK VideoDecoder's public enqueue(ByteBuffer) — recursive entry for cached config
   private fun enqueuePublic(buffer: ByteBuffer) {
     val readable = buffer.duplicate().apply { rewind() }
-    val writableByteArray = ByteArray(readable.remaining()).also(readable::get)
-    var index = 0
-    val prefixFlags = BooleanArray(3)
-    index = findNalUnit(writableByteArray, index, buffer.limit(), prefixFlags)
-    while (index < buffer.limit()) {
-      val unitType = getH265NalUnitType(writableByteArray, index)
-      val isKeyFrame = isIrapNalType(unitType)
-      val isConfigFrame = unitType == 32 || unitType == 33 || unitType == 34
-      if (isConfigFrame) {
-        cachedVideoCodec = cloneByteBuffer(buffer)
-      } else if (isKeyFrame) {
-        if (!receivedKeyframe) {
-          receivedKeyframe = true
-        }
-      }
-      val nextIndex = findNalUnit(writableByteArray, index + 1, writableByteArray.size, prefixFlags)
-      val endIndex = if (nextIndex > index) nextIndex else writableByteArray.size
-      enqueuePrivate(
-          DecoderFrame(
-              data = ByteBuffer.wrap(writableByteArray.copyOfRange(index, endIndex)),
-              presentationTimeUs = 0,
-              isKeyFrame = isKeyFrame,
-              isConfigFrame = isConfigFrame,
-          ),
-      )
-      index = nextIndex
-    }
+    enqueuePrivate(DecoderFrame(data = readable, isConfigFrame = true))
   }
 
   // Mirrors SDK VideoDecoder's private enqueue(VideoFrame)
   private fun enqueuePrivate(frame: DecoderFrame) {
     if (!active) return
     if (!frame.isConfigFrame && !receivedKeyframe) return
+    if (dropUntilKeyframe && !frame.isKeyFrame && !frame.isConfigFrame) return
+    if (frame.isKeyFrame) dropUntilKeyframe = false
     if (firstInputFrame) {
       firstInputFrame = false
       activateDecoder()
     }
     if (!incomingDataQueue.offer(frame)) {
-      if (frame.isKeyFrame) incomingDataQueue.clear() else incomingDataQueue.poll()
-      incomingDataQueue.offer(frame)
-      Log.w(TAG, "Decoder behind; dropped oldest NAL to keep preview live")
+      incomingDataQueue.clear()
+      dropUntilKeyframe = !frame.isKeyFrame
+      if (frame.isKeyFrame || frame.isConfigFrame) incomingDataQueue.offer(frame)
+      Log.w(TAG, "Decoder behind; waiting for a fresh keyframe")
     }
   }
 
@@ -208,26 +183,24 @@ class HevcDecoder {
     }
   }
 
-  // Prefer a software HEVC decoder
+  // Complete access units allow a compatible hardware decoder to provide the lowest latency.
   private fun createHevcDecoder(): MediaCodec {
     val mime = MediaFormat.MIMETYPE_VIDEO_HEVC
-    val softwareName =
-        MediaCodecList(MediaCodecList.ALL_CODECS)
-            .codecInfos
-            .firstOrNull { info ->
-              !info.isEncoder &&
-                  info.isSoftwareOnly &&
-                  info.name !in BLOCKED_DECODERS &&
-                  info.supportedTypes.any { it.equals(mime, ignoreCase = true) }
-            }
-            ?.name
-    return if (softwareName != null) {
-      Log.d(TAG, "Using software HEVC decoder: $softwareName")
-      MediaCodec.createByCodecName(softwareName)
-    } else {
-      Log.w(TAG, "No software HEVC decoder found; using platform default")
-      MediaCodec.createDecoderByType(mime)
-    }
+    val candidates =
+        MediaCodecList(MediaCodecList.ALL_CODECS).codecInfos.filter { info ->
+          !info.isEncoder &&
+              !info.isAlias &&
+              info.name !in BLOCKED_DECODERS &&
+              info.supportedTypes.any { it.equals(mime, ignoreCase = true) }
+        }
+    val selected = candidates.firstOrNull { it.isHardwareAccelerated }
+        ?: candidates.firstOrNull { it.isSoftwareOnly }
+        ?: error("No compatible HEVC decoder")
+    Log.i(
+        TAG,
+        "Using ${if (selected.isHardwareAccelerated) "hardware" else "software"} HEVC decoder: ${selected.name}",
+    )
+    return MediaCodec.createByCodecName(selected.name)
   }
 
   private fun activateDecoder() {
@@ -257,6 +230,8 @@ class HevcDecoder {
 
               override fun onError(codec: MediaCodec, e: MediaCodec.CodecException) {
                 Log.e(TAG, "Codec error: ${e.message}")
+                active = false
+                onFatalError(e)
               }
 
               override fun onOutputFormatChanged(codec: MediaCodec, format: MediaFormat) {}
@@ -268,8 +243,10 @@ class HevcDecoder {
       }
     } catch (e: MediaCodec.CodecException) {
       Log.e(TAG, "Decoder activation codec exception: ${e.message}", e)
+      onFatalError(e)
     } catch (e: Throwable) {
       Log.e(TAG, "Decoder activation exception: ${e.message}", e)
+      onFatalError(e)
     }
   }
 
@@ -278,7 +255,9 @@ class HevcDecoder {
     var bufferQueued = false
     try {
       val inputBuffer = codec.getInputBuffer(index)
-      val frame = incomingDataQueue.poll(1, TimeUnit.SECONDS)
+      // Input/output callbacks share one thread. A tiny wait avoids a hot callback loop without
+      // holding decoded output for the previous one-second timeout.
+      val frame = incomingDataQueue.poll(2, TimeUnit.MILLISECONDS)
 
       if (frame == null || inputBuffer == null || !active) {
         codec.queueInputBuffer(index, 0, 0, 0, 0)
@@ -301,7 +280,10 @@ class HevcDecoder {
       bufferQueued = true
     } catch (e: Throwable) {
       Log.e(TAG, "Input buffer error: ${e.message}", e)
-      if (active) active = false
+      if (active) {
+        active = false
+        onFatalError(e)
+      }
     } finally {
       if (!bufferQueued) {
         try {
@@ -319,11 +301,16 @@ class HevcDecoder {
       }
       // Render directly to the Surface — the GPU handles YUV→RGB conversion.
       codec.releaseOutputBuffer(index, true)
+      onFrameRendered()
     } catch (e: Throwable) {
       Log.e(TAG, "Output buffer error: ${e.message}", e)
       try {
         codec.releaseOutputBuffer(index, false)
       } catch (_: Throwable) {}
+      if (active) {
+        active = false
+        onFatalError(e)
+      }
     }
   }
 

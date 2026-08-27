@@ -274,16 +274,25 @@ private fun PreviewBackground(
     isPreviewVisible: Boolean,
     hasActiveDevice: Boolean,
     isUpdateRequired: Boolean,
-    onSurfaceChanged: (android.view.Surface?) -> Unit,
+    onSurfaceChanged: (android.view.Surface?, Int, Int) -> Unit,
 ) {
   val liveDescription = stringResource(R.string.live_preview)
   Box(modifier = Modifier.fillMaxSize()) {
-    if (!isPreviewVisible && ui.isStreaming) {
+    if (!isPreviewVisible && ui.isStreaming && !ui.usesSurfacePreview) {
       Box(
           modifier = Modifier.fillMaxSize().background(Color.Black),
           contentAlignment = Alignment.Center,
       ) {
         Text("미리보기가 꺼져 있습니다", color = Color.White.copy(alpha = 0.75f), fontSize = 16.sp)
+      }
+    } else if (ui.usesSurfacePreview && ui.hasStream) {
+      AndroidExternalSurface(
+          modifier = Modifier.fillMaxSize().semantics { contentDescription = liveDescription }
+      ) {
+        onSurface { surface, width, height ->
+          onSurfaceChanged(surface, width, height)
+          surface.onDestroyed { onSurfaceChanged(null, 0, 0) }
+        }
       }
     } else if (ui.videoFrame != null) {
       Image(
@@ -299,9 +308,9 @@ private fun PreviewBackground(
       AndroidExternalSurface(
           modifier = Modifier.fillMaxSize().semantics { contentDescription = liveDescription }
       ) {
-        onSurface { surface, _, _ ->
-          onSurfaceChanged(surface)
-          surface.onDestroyed { onSurfaceChanged(null) }
+        onSurface { surface, width, height ->
+          onSurfaceChanged(surface, width, height)
+          surface.onDestroyed { onSurfaceChanged(null, 0, 0) }
         }
       }
     } else if (!ui.isBusy) {
@@ -310,6 +319,17 @@ private fun PreviewBackground(
           hasActiveDevice = hasActiveDevice,
           isUpdateRequired = isUpdateRequired,
       )
+    }
+
+    // Keep the compressed decoder Surface alive while hidden so gestures and stream latency do not
+    // reset; cover it visually instead of unmounting it.
+    if (!isPreviewVisible && ui.isStreaming && ui.usesSurfacePreview) {
+      Box(
+          modifier = Modifier.fillMaxSize().background(Color.Black),
+          contentAlignment = Alignment.Center,
+      ) {
+        Text("미리보기가 꺼져 있습니다", color = Color.White.copy(alpha = 0.75f), fontSize = 16.sp)
+      }
     }
 
     // Paused (device-initiated): the surface stays mounted (hasStream is true) so the last frame
