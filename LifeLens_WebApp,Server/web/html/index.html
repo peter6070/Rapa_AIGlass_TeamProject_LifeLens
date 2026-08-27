@@ -1859,6 +1859,16 @@ button.primary:disabled::after{display:none}
 .timeline>.empty{margin-left:-22px}
 .timeline:has(>.empty)::before{display:none}
 
+/* Keep the LifeLog panel stable. Only its body scrolls as live items arrive. */
+.lifelog-timeline-card{
+  height:clamp(320px,50dvh,500px);
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+}
+.lifelog-timeline-card>.panel-heading{flex:none}
+.lifelog-timeline-card>#records{flex:1;min-height:0;overflow-y:auto}
+
 .record{
   position:relative;
   padding:13px 15px;
@@ -3378,7 +3388,7 @@ const timelineGroups = (records = []) => {
     const date = new Date(record.spoken_at);
     const key = Number.isNaN(date.getTime()) ? record.spoken_at : `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}-${date.getHours()}-${date.getMinutes()}`;
     const time = Number.isNaN(date.getTime()) ? '기록 시각 없음' : date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
-    const group = groups.get(key) || { time, stamp: Number.isNaN(date.getTime()) ? 0 : date.getTime(), texts: [] };
+    const group = groups.get(key) || { key, time, stamp: Number.isNaN(date.getTime()) ? 0 : date.getTime(), texts: [] };
     group.texts.push(record.text);
     groups.set(key, group);
   });
@@ -3737,7 +3747,7 @@ async function lifeLog() {
   let calendarMonth = new Date(`${day}T12:00:00`);
   const dayLabel = (value) => new Date(`${value}T12:00:00`).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' });
   const toDay = (value) => `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}`;
-  content.innerHTML = `<section class="hero mini-hero" style="--i:0"><div class="hero-text"><span class="hero-kicker">DAILY MEMORY</span><h2>라이프로그</h2><p id="lifelog-date">${dayLabel(day)} · 대화 기록을 다시 살펴보세요.</p><div class="actions"><button class="primary" id="summarize">✦ 일기 작성</button><button class="glass-button" id="open-calendar">▦ 날짜 선택</button></div></div>${PAGE_ART.lifelog}</section><section class="card" style="--i:1"><div class="panel-heading"><div><span class="section-label" id="lifelog-section-label">STT TIMELINE</span><h2 id="lifelog-panel-title">대화 원문</h2></div><div class="log-toggle compact" role="tablist"><button class="active" data-log-view="records">대화 원문</button><button data-log-view="report">리포트 보기</button></div></div><div id="records" class="timeline">불러오는 중…</div></section><section class="photo-viewer" id="lifelog-photo-viewer" hidden><button class="photo-viewer-close" id="photo-viewer-close" aria-label="닫기">×</button><img id="photo-viewer-image" alt="라이프로그 사진"><p id="photo-viewer-meta"></p></section><dialog class="calendar-dialog" id="lifelog-calendar"><section class="calendar-sheet"><div class="calendar-heading"><div><span class="section-label">LIFELOG CALENDAR</span><h2 id="calendar-month"></h2></div><button class="calendar-close" id="calendar-close" aria-label="닫기">×</button></div><div class="calendar-weekdays"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span></div><div class="calendar-days" id="calendar-days"></div><div class="calendar-actions"><button class="glass-action" id="calendar-prev">이전 달</button><button class="primary" id="calendar-today">오늘</button><button class="glass-action" id="calendar-next">다음 달</button></div></section></dialog>`;
+  content.innerHTML = `<section class="hero mini-hero" style="--i:0"><div class="hero-text"><span class="hero-kicker">DAILY MEMORY</span><h2>라이프로그</h2><p id="lifelog-date">${dayLabel(day)} · 대화 기록을 다시 살펴보세요.</p><div class="actions"><button class="primary" id="summarize">✦ 일기 작성</button><button class="glass-button" id="open-calendar">▦ 날짜 선택</button></div></div>${PAGE_ART.lifelog}</section><section class="card lifelog-timeline-card" style="--i:1"><div class="panel-heading"><div><span class="section-label" id="lifelog-section-label">STT TIMELINE</span><h2 id="lifelog-panel-title">대화 원문</h2></div><div class="log-toggle compact" role="tablist"><button class="active" data-log-view="records">대화 원문</button><button data-log-view="report">리포트 보기</button></div></div><div id="records" class="timeline">불러오는 중…</div></section><section class="photo-viewer" id="lifelog-photo-viewer" hidden><button class="photo-viewer-close" id="photo-viewer-close" aria-label="닫기">×</button><img id="photo-viewer-image" alt="라이프로그 사진"><p id="photo-viewer-meta"></p></section><dialog class="calendar-dialog" id="lifelog-calendar"><section class="calendar-sheet"><div class="calendar-heading"><div><span class="section-label">LIFELOG CALENDAR</span><h2 id="calendar-month"></h2></div><button class="calendar-close" id="calendar-close" aria-label="닫기">×</button></div><div class="calendar-weekdays"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span></div><div class="calendar-days" id="calendar-days"></div><div class="calendar-actions"><button class="glass-action" id="calendar-prev">이전 달</button><button class="primary" id="calendar-today">오늘</button><button class="glass-action" id="calendar-next">다음 달</button></div></section></dialog>`;
   let currentLog = null;
   let logView = 'records';
   let isGenerating = false;
@@ -3763,6 +3773,23 @@ async function lifeLog() {
   const photoSource = (photo) => photo.loaded_url || photo.url || `data:image/jpeg;base64,${esc(photo.thumbnail || '')}`;
   const photoThumbnailSource = (photo) => photo.thumbnail ? `data:image/jpeg;base64,${esc(photo.thumbnail)}` : photoSource(photo);
   const photoThumb = (photo, index, kind = '') => `<button class="photo-thumb ${kind}" data-photo-index="${index}"><img src="${photoThumbnailSource(photo)}" alt="촬영 사진" loading="lazy" decoding="async"><span>${esc(photoLocation(photo))}</span></button>`;
+  const timelineItems = () => {
+    const groups = timelineGroups(currentLog?.records);
+    return [
+      ...groups.map((group) => ({ ...group, type: 'text', timelineKey: `text:${group.key}` })),
+      ...(currentLog?.photos || []).map((photo, index) => ({
+        type: 'photo',
+        photo,
+        index,
+        timelineKey: `photo:${photo.client_photo_id || photo.uri || photo.taken_at}`,
+        time: new Date(photo.taken_at).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+        stamp: new Date(photo.taken_at).getTime(),
+      })),
+    ].sort((a, b) => (a.stamp || 0) - (b.stamp || 0));
+  };
+  const timelineItemHtml = (item, order) => item.type === 'photo'
+    ? `<article class="record photo-timeline-record" data-timeline-key="${esc(item.timelineKey)}" style="--i:${order}"><time>${esc(item.time)}</time>${photoThumb(item.photo, item.index, 'timeline-photo')}</article>`
+    : `<article class="record" data-timeline-key="${esc(item.timelineKey)}" style="--i:${order}"><p>${item.texts.map((text) => esc(text)).join('<br>')}</p></article>`;
   const bindPhotoClicks = () => document.querySelectorAll('[data-photo-index]').forEach((button) => button.onclick = () => {
     const photo = currentLog?.photos?.[Number(button.dataset.photoIndex)];
     if (!photo) return;
@@ -3785,6 +3812,36 @@ async function lifeLog() {
     viewer.hidden = false;
     document.body.classList.add('photo-viewer-open');
   });
+  const appendTimelineChanges = () => {
+    const target = $('#records');
+    if (logView !== 'records' || !target || !currentLog) return;
+    const distanceFromBottom = target.scrollHeight - target.scrollTop - target.clientHeight;
+    const keepPinnedToBottom = distanceFromBottom < 72;
+    target.querySelector('.empty')?.remove();
+    target.querySelector('[data-live-partial]')?.remove();
+    const existingByKey = new Map(
+      [...target.querySelectorAll('[data-timeline-key]')]
+        .map((entry) => [entry.dataset.timelineKey, entry]),
+    );
+    timelineItems().forEach((item, order) => {
+      const existing = existingByKey.get(item.timelineKey);
+      if (!existing) {
+        target.insertAdjacentHTML('beforeend', timelineItemHtml(item, order));
+        return;
+      }
+      // More STT can be finalized inside the same minute group. Update only that article.
+      if (item.type === 'text') {
+        const paragraph = existing.querySelector('p');
+        const nextText = item.texts.join('\n');
+        if (paragraph?.innerText !== nextText) paragraph.innerHTML = item.texts.map((text) => esc(text)).join('<br>');
+      } else {
+        const button = existing.querySelector('[data-photo-index]');
+        if (button) button.dataset.photoIndex = String(item.index);
+      }
+    });
+    bindPhotoClicks();
+    if (keepPinnedToBottom) requestAnimationFrame(() => { target.scrollTop = target.scrollHeight; });
+  };
   const renderPanel = () => {
     const target = $('#records');
     const title = $('#lifelog-panel-title');
@@ -3805,9 +3862,8 @@ async function lifeLog() {
       // Live STT refreshes this list in place. Preserve the position selected by the user rather
       // than snapping it to the newest entry while they are reading older records.
       const previousScrollTop = target.scrollTop;
-      const groups = timelineGroups(currentLog?.records);
-      const items = [...groups.map((group) => ({ ...group, type: 'text' })), ...(currentLog?.photos || []).map((photo, index) => ({ type: 'photo', photo, index, time: new Date(photo.taken_at).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }), stamp: new Date(photo.taken_at).getTime() }))].sort((a, b) => (a.stamp || 0) - (b.stamp || 0));
-      target.innerHTML = items.length ? items.map((item, order) => item.type === 'photo' ? `<article class="record photo-timeline-record" style="--i:${order}"><time>${esc(item.time)}</time>${photoThumb(item.photo, item.index, 'timeline-photo')}</article>` : `<article class="record" style="--i:${order}"><p>${item.texts.map((text) => esc(text)).join('<br>')}</p></article>`).join('') : `<p class="empty">${EMPTY_ART}<span>아직 기록된 대화나 사진이 없습니다.</span></p>`;
+      const items = timelineItems();
+      target.innerHTML = items.length ? items.map(timelineItemHtml).join('') : `<p class="empty">${EMPTY_ART}<span>아직 기록된 대화나 사진이 없습니다.</span></p>`;
       bindPhotoClicks();
       requestAnimationFrame(() => { target.scrollTop = previousScrollTop; });
       return;
@@ -3923,7 +3979,7 @@ async function lifeLog() {
         ...currentLog,
         photos: [...photosById.values()].sort((a, b) => new Date(a.taken_at) - new Date(b.taken_at)),
       };
-      if (logView === 'records') renderPanel();
+      appendTimelineChanges();
     }
     const liveRecords = Array.isArray(vision.transcripts) ? vision.transcripts.map((record) => ({
       client_record_id: record.id,
@@ -3939,7 +3995,7 @@ async function lifeLog() {
     if (nextFinalizedSignature !== finalizedSignature) {
       finalizedSignature = nextFinalizedSignature;
       currentLog = { ...currentLog, records };
-      if (logView === 'records') renderPanel();
+      appendTimelineChanges();
     }
 
     // Partial recognition changes often. Update only this one DOM node, avoiding a complete
