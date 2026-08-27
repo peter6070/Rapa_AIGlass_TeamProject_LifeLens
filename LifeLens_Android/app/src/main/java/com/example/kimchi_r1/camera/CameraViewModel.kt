@@ -835,7 +835,6 @@ class CameraViewModel(
               _uiState.update { it.copy(isCapturingPhoto = false) }
               val uploaded = withContext(photoDispatcher) {
                 try {
-                  val locationName = resolveLocationName(capturedLocation)
                   LifeLogSyncer.syncPhoto(
                       getApplication(),
                       com.example.kimchi_r1.lifelog.PhotoRecord(
@@ -845,9 +844,15 @@ class CameraViewModel(
                           createdAtMillis = capturedAt,
                           latitude = capturedLocation?.latitude,
                           longitude = capturedLocation?.longitude,
-                          locationName = locationName,
+                          locationName = null,
                       ),
                       bitmap,
+                      onLocalSaved = {
+                        _uiState.update { state ->
+                          state.copy(photoRevision = state.photoRevision + 1)
+                        }
+                      },
+                      resolveLocationName = { resolveLocationName(capturedLocation) },
                   )
                 } finally {
                   bitmap.recycle()

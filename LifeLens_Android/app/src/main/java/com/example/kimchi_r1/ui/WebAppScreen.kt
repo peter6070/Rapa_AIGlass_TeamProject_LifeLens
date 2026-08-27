@@ -201,6 +201,7 @@ fun WebAppScreen(
     isMicrophoneOn: Boolean,
     latestTranscript: String,
     transcripts: List<SpeechRecord>,
+    photoRevision: Long = 0,
     previewFrame: android.graphics.Bitmap? = null,
     onToggleMicrophone: () -> Unit = {},
     onToggleSession: () -> Unit = {},
@@ -216,6 +217,7 @@ fun WebAppScreen(
         put("isSessionEnabled", isSessionEnabled)
         put("isMicrophoneOn", isMicrophoneOn)
         put("latestTranscript", latestTranscript)
+        put("photoRevision", photoRevision)
         put("transcripts", org.json.JSONArray().apply {
           transcripts.takeLast(50).forEach { record ->
             put(org.json.JSONObject().apply {

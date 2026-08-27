@@ -35,6 +35,8 @@ data class CameraUiState(
     val hasReceivedFirstFrame: Boolean = false,
     // Capture / recording intent.
     val isCapturingPhoto: Boolean = false,
+    /** Increments as soon as a capture is durable in the local LifeLog database. */
+    val photoRevision: Long = 0,
     val isRecording: Boolean = false,
     val recordingElapsedSeconds: Long = 0L,
     // Sound-in-video toggle (phone mic), locked once recording starts.

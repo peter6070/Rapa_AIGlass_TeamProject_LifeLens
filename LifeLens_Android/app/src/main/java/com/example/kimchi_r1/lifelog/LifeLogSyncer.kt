@@ -44,23 +44,34 @@ object LifeLogSyncer {
   }
 
   /** Saves the capture locally for immediate LifeLog display, then uploads it to the server. */
-  fun syncPhoto(context: Context, photo: PhotoRecord, bitmap: Bitmap): Boolean {
+  fun syncPhoto(
+      context: Context,
+      photo: PhotoRecord,
+      bitmap: Bitmap,
+      onLocalSaved: () -> Unit = {},
+      resolveLocationName: () -> String? = { photo.locationName },
+  ): Boolean {
     val image = compressedPhoto(bitmap)
-    persistLocalPhoto(context, photo, image)
+    if (persistLocalPhoto(context, photo, image)) onLocalSaved()
+    // Reverse geocoding and network upload may take seconds. They intentionally happen only after
+    // the local row exists and the WebView has been notified about the new capture.
+    val syncedPhoto =
+        if (!photo.locationName.isNullOrBlank()) photo
+        else photo.copy(locationName = resolveLocationName())
     val server = ServerSettings.url(context).trimEnd('/')
     if (server.isBlank()) {
-      queuePhoto(context, photo, image)
+      queuePhoto(context, syncedPhoto, image)
       return false
     }
     retryPendingPhotos(context)
-    if (uploadPhoto(server, photo, image)) return true
-    queuePhoto(context, photo, image)
+    if (uploadPhoto(server, syncedPhoto, image)) return true
+    queuePhoto(context, syncedPhoto, image)
     return false
   }
 
   /** Keeps a durable app-private JPEG and registers it in the local LifeLog database. */
-  private fun persistLocalPhoto(context: Context, photo: PhotoRecord, image: ByteArray) {
-    runCatching {
+  private fun persistLocalPhoto(context: Context, photo: PhotoRecord, image: ByteArray): Boolean =
+      runCatching {
       val directory = File(context.filesDir, "lifelog-photos").apply { mkdirs() }
       val imageFile = File(directory, "${photo.clientPhotoId}.jpg")
       imageFile.writeBytes(image)
@@ -73,8 +84,9 @@ object LifeLogSyncer {
       LifeLogRepository(context).use { repository ->
         repository.upsertPhoto(photo.copy(uri = uri.toString()))
       }
+      true
     }.onFailure { Log.e("LifeLogSync", "Could not save photo to local LifeLog", it) }
-  }
+        .getOrDefault(false)
 
   /** Retries failed uploads from app-private cache. Successful files are deleted immediately. */
   fun retryPendingPhotos(context: Context): Int {

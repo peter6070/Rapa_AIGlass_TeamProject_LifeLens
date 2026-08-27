@@ -105,6 +105,7 @@ fun CameraAccessScaffold(
             isMicrophoneOn = speechUiState.isListening,
             latestTranscript = speechUiState.partialText.ifBlank { speechUiState.transcripts.lastOrNull()?.text.orEmpty() },
             transcripts = speechUiState.transcripts,
+            photoRevision = cameraUiState.photoRevision,
             previewFrame = cameraUiState.videoFrame,
             onToggleMicrophone = {
               scope.launch {

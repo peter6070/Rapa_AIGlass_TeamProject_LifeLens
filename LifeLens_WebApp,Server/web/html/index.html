@@ -3742,6 +3742,10 @@ async function lifeLog() {
   let logView = 'records';
   let isGenerating = false;
   let loadRequestId = 0;
+  let lastPhotoRevision = 0;
+  try {
+    lastPhotoRevision = Number(JSON.parse(window.NativeBridge?.getVisionState?.() || '{}').photoRevision || 0);
+  } catch (_) {}
   const photoMeta = (photo) => {
     const time = new Date(photo.taken_at).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
     const location = photoLocation(photo);
@@ -3904,6 +3908,23 @@ async function lifeLog() {
   let finalizedSignature = '';
   window.handleNativeLifeLogUpdate = (vision) => {
     if (page !== 'lifelog' || !currentLog || day !== localDay()) return;
+    const nextPhotoRevision = Number(vision.photoRevision || 0);
+    if (nextPhotoRevision !== lastPhotoRevision) {
+      lastPhotoRevision = nextPhotoRevision;
+      const localPhotos = nativeLifeLogPhotos(day)
+        .filter((photo) => dayFromTimestamp(photo.taken_at) === day);
+      const photosById = new Map((currentLog.photos || [])
+        .map((photo) => [photo.client_photo_id, photo]));
+      localPhotos.forEach((photo) => {
+        const existing = photosById.get(photo.client_photo_id) || {};
+        photosById.set(photo.client_photo_id, { ...existing, ...photo });
+      });
+      currentLog = {
+        ...currentLog,
+        photos: [...photosById.values()].sort((a, b) => new Date(a.taken_at) - new Date(b.taken_at)),
+      };
+      if (logView === 'records') renderPanel();
+    }
     const liveRecords = Array.isArray(vision.transcripts) ? vision.transcripts.map((record) => ({
       client_record_id: record.id,
       text: record.text,
