@@ -4033,6 +4033,9 @@ function debug() {
     gestureSettings = { ...gestureSettings, ...JSON.parse(window.NativeBridge?.getGestureSettings?.() || '{}') };
   } catch (_) {}
   const gestureToggle = (key, title, description) => `<label class="gesture-setting-row"><span><b>${title}</b><small>${description}</small></span><input type="checkbox" data-gesture-setting="${key}" ${gestureSettings[key] ? 'checked' : ''}><i aria-hidden="true"></i></label>`;
+  let rawCompatibilityMode = false;
+  try { rawCompatibilityMode = window.NativeBridge?.isRawCompatibilityMode?.() === true; } catch (_) {}
+  document.querySelector('.stt-test-card')?.insertAdjacentHTML('beforebegin', `<section class="card gesture-settings-card" style="--i:5"><span class="section-label">CAMERA STREAM</span><h2>카메라 전송 방식</h2><p class="muted">화면 깨짐이 발생하는 기기에서는 비압축 호환 모드를 사용하세요.</p><div class="gesture-setting-list"><label class="gesture-setting-row"><span><b>비압축 호환 모드</b><small>끔: HEVC 저지연 · 켬: I420 안정성 우선</small></span><input type="checkbox" id="raw-compatibility-mode" ${rawCompatibilityMode ? 'checked' : ''}><i aria-hidden="true"></i></label></div><small class="muted" id="camera-stream-settings-result">변경하면 카메라 스트림이 자동으로 다시 연결됩니다.</small></section>`);
   document.querySelector('.stt-test-card')?.insertAdjacentHTML('beforebegin', `<section class="card gesture-settings-card" style="--i:5"><span class="section-label">GESTURE CONTROL</span><h2>제스처 기능 설정</h2><p class="muted">각 제스처 명령을 독립적으로 켜거나 끕니다.</p><div class="gesture-setting-list">${gestureToggle('pinch', '핀치 제스처', '왼손 핀치 촬영 기능')}${gestureToggle('power', 'ON/OFF 제스처', '조명 전원 전환 기능')}${gestureToggle('presentation', '다음/이전 제스처', 'PPT 페이지 이동 기능')}</div><small class="muted" id="gesture-settings-result">설정은 이 휴대폰에 저장됩니다.</small></section>`);
   // Leaving the Debug page discards these nodes; a late response must not reject.
   const setText = (selector, text) => { const node = $(selector); if (node) node.textContent = text; };
@@ -4096,6 +4099,14 @@ function debug() {
       setText('#gesture-settings-result', saved ? '설정이 저장되었습니다.' : '앱에서만 변경할 수 있습니다.');
     };
   });
+  const rawModeToggle = $('#raw-compatibility-mode');
+  if (rawModeToggle) rawModeToggle.onchange = () => {
+    const saved = window.NativeBridge?.setRawCompatibilityMode?.(rawModeToggle.checked) === true;
+    if (!saved) rawModeToggle.checked = !rawModeToggle.checked;
+    setText('#camera-stream-settings-result', saved
+      ? `${rawModeToggle.checked ? '비압축 호환' : 'HEVC 저지연'} 모드로 다시 연결 중…`
+      : 'Android 앱에서만 변경할 수 있습니다.');
+  };
   $('#save-ollama-server').onclick = async () => {
     const button = $('#save-ollama-server');
     const next = normalizeIotServer($('#ollama-server-input').value);
