@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.kimchi_r1.BuildConfig
+import com.example.kimchi_r1.camera.CameraStreamSettings
 import com.example.kimchi_r1.server.ServerSettings
 import com.example.kimchi_r1.lifelog.LifeLogRepository
 import com.example.kimchi_r1.lifelog.LifeLogSyncer
@@ -77,12 +78,14 @@ private class NativeBridge(
     private val onToggleSession: () -> Unit,
     private val onStartStream: () -> Unit,
     private val onOpenLiveVision: () -> Unit,
+    private val onRawCompatibilityModeChanged: (Boolean) -> Unit,
     private val visionState: () -> String,
     private val previewFrame: () -> android.graphics.Bitmap?,
 ) {
   private val lifeLogRepository = LifeLogRepository(context.applicationContext)
   private val gestureSpeechFeedback = GestureSpeechFeedback(context.applicationContext)
   private val gestureControlSettings = GestureControlSettings(context.applicationContext)
+  private val cameraStreamSettings = CameraStreamSettings(context.applicationContext)
   @JavascriptInterface fun getServerUrl(): String = ServerSettings.url(context)
   @JavascriptInterface fun getSharedLifeLogId(): String = ServerSettings.SHARED_LIFELOG_ID
   @JavascriptInterface fun saveServerUrl(value: String) = ServerSettings.saveUrl(context, value)
@@ -92,6 +95,15 @@ private class NativeBridge(
   @JavascriptInterface fun getGestureSettings(): String = gestureControlSettings.toJson()
   @JavascriptInterface fun setGestureEnabled(key: String, enabled: Boolean): Boolean =
       gestureControlSettings.setEnabled(key, enabled)
+  @JavascriptInterface fun isRawCompatibilityMode(): Boolean =
+      cameraStreamSettings.isRawCompatibilityMode()
+  @JavascriptInterface fun setRawCompatibilityMode(enabled: Boolean): Boolean = runCatching {
+    cameraStreamSettings.setRawCompatibilityMode(enabled)
+    android.os.Handler(android.os.Looper.getMainLooper()).post {
+      onRawCompatibilityModeChanged(enabled)
+    }
+    true
+  }.getOrDefault(false)
   @JavascriptInterface fun openPhotoViewer(photoUrl: String, localUri: String): Boolean = runCatching {
     android.os.Handler(android.os.Looper.getMainLooper()).post {
       context.startActivity(
@@ -207,6 +219,7 @@ fun WebAppScreen(
     onToggleSession: () -> Unit = {},
     onStartStream: () -> Unit = {},
     onOpenLiveVision: () -> Unit = {},
+    onRawCompatibilityModeChanged: (Boolean) -> Unit = {},
 ) {
   val context = LocalContext.current
   val currentVisionState = rememberUpdatedState(
@@ -234,6 +247,7 @@ fun WebAppScreen(
   val currentToggleSession = rememberUpdatedState(onToggleSession)
   val currentStartStream = rememberUpdatedState(onStartStream)
   val currentOpenLiveVision = rememberUpdatedState(onOpenLiveVision)
+  val currentRawCompatibilityModeChanged = rememberUpdatedState(onRawCompatibilityModeChanged)
   val bridge = remember(context) {
     NativeBridge(
         context,
@@ -241,6 +255,7 @@ fun WebAppScreen(
         { currentToggleSession.value.invoke() },
         { currentStartStream.value.invoke() },
         { currentOpenLiveVision.value.invoke() },
+        { enabled -> currentRawCompatibilityModeChanged.value.invoke(enabled) },
         { currentVisionState.value },
         { currentPreviewFrame.value },
     )

@@ -18,7 +18,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel as composeViewModel
 import com.example.kimchi_r1.camera.CameraViewModel
@@ -96,54 +98,64 @@ fun CameraAccessScaffold(
       if (!uiState.isRegistered) {
         HomeScreen(viewModel = viewModel)
       } else {
-        WebAppScreen(
-            page = "home",
-            gestureName = cameraUiState.gestureName,
-            gestureConfidence = cameraUiState.gestureConfidence,
-            isGestureActive = cameraUiState.isStreaming,
-            isSessionEnabled = isSessionEnabled,
-            isMicrophoneOn = speechUiState.isListening,
-            latestTranscript = speechUiState.partialText.ifBlank { speechUiState.transcripts.lastOrNull()?.text.orEmpty() },
-            transcripts = speechUiState.transcripts,
-            photoRevision = cameraUiState.photoRevision,
-            previewFrame = cameraUiState.videoFrame,
-            onToggleMicrophone = {
-              scope.launch {
-                if (speechUiState.isListening || onRequestRecordAudioPermission()) {
-                  speechViewModel.toggleListening()
+        // Keep Live Vision composed behind the web app. Its Surface is also the HEVC decoder and
+        // PixelCopy source for MediaPipe, so unmounting it when leaving Live Vision used to stop
+        // gesture recognition everywhere else in the app.
+        Box(
+            modifier =
+                Modifier.fillMaxSize()
+                    .zIndex(if (showLiveVision) 0f else 1f)
+                    .alpha(if (showLiveVision) 0f else 1f)
+        ) {
+          WebAppScreen(
+              page = "home",
+              gestureName = cameraUiState.gestureName,
+              gestureConfidence = cameraUiState.gestureConfidence,
+              isGestureActive = cameraUiState.isStreaming,
+              isSessionEnabled = isSessionEnabled,
+              isMicrophoneOn = speechUiState.isListening,
+              latestTranscript = speechUiState.partialText.ifBlank { speechUiState.transcripts.lastOrNull()?.text.orEmpty() },
+              transcripts = speechUiState.transcripts,
+              photoRevision = cameraUiState.photoRevision,
+              previewFrame = cameraUiState.videoFrame,
+              onToggleMicrophone = {
+                scope.launch {
+                  if (speechUiState.isListening || onRequestRecordAudioPermission()) {
+                    speechViewModel.toggleListening()
+                  }
                 }
-              }
-            },
-            onToggleSession = {
-              scope.launch {
-                if (isSessionEnabled) {
-                  if (speechUiState.isListening) speechViewModel.stopListening()
-                  cameraViewModel.toggleSessionEnabled()
-                  StreamingService.stop(context.applicationContext)
-                } else if (onRequestRecordAudioPermission()) {
-                  cameraViewModel.toggleSessionEnabled()
-                  speechViewModel.startListening()
+              },
+              onToggleSession = {
+                scope.launch {
+                  if (isSessionEnabled) {
+                    if (speechUiState.isListening) speechViewModel.stopListening()
+                    cameraViewModel.toggleSessionEnabled()
+                    StreamingService.stop(context.applicationContext)
+                  } else if (onRequestRecordAudioPermission()) {
+                    cameraViewModel.toggleSessionEnabled()
+                    speechViewModel.startListening()
+                  }
                 }
-              }
-            },
-            onStartStream = { cameraViewModel.startLifeLensSession() },
-            onOpenLiveVision = {
-              cameraViewModel.showPreview()
-              showLiveVision = true
-            },
-        )
-        // Keep the WebView alive below the native camera. Gesture shortcuts can then control
-        // Matter devices even while Live Vision is displayed full-screen.
-        if (showLiveVision) {
-          CameraScreen(
-              wearablesViewModel = viewModel,
-              onRequestWearablesPermission = onRequestWearablesPermission,
-              onRequestRecordAudioPermission = onRequestRecordAudioPermission,
-              cameraViewModel = cameraViewModel,
-              onClose = { showLiveVision = false },
-              onReconnect = cameraViewModel::startLifeLensSession,
+              },
+              onStartStream = { cameraViewModel.startLifeLensSession() },
+              onRawCompatibilityModeChanged = cameraViewModel::setRawCompatibilityMode,
+              onOpenLiveVision = {
+                cameraViewModel.showPreview()
+                showLiveVision = true
+              },
           )
         }
+        // This remains mounted for the whole registered app session. The web layer above is opaque
+        // outside Live Vision, so the camera feed stays invisible while its gesture sampling runs.
+        CameraScreen(
+            modifier = Modifier.fillMaxSize().zIndex(if (showLiveVision) 1f else 0f),
+            wearablesViewModel = viewModel,
+            onRequestWearablesPermission = onRequestWearablesPermission,
+            onRequestRecordAudioPermission = onRequestRecordAudioPermission,
+            cameraViewModel = cameraViewModel,
+            onClose = { showLiveVision = false },
+            onReconnect = cameraViewModel::startLifeLensSession,
+        )
       }
 
       if (!showLiveVision && cameraUiState.showCameraPermissionRedirectConfirm) {

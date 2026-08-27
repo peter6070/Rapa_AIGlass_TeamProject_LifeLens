@@ -135,6 +135,7 @@ class CameraViewModel(
   private val videoRecorder = VideoRecorder(application, viewModelScope)
   private val gestureSpeechFeedback = GestureSpeechFeedback(application)
   private val gestureControlSettings = GestureControlSettings(application)
+  private val cameraStreamSettings = CameraStreamSettings(application)
 
   // Per-frame work (byte copy, NAL parsing, MediaMuxer writes, decoder feed) runs at frame rate and
   // must stay off the main thread. A single-threaded dispatcher keeps frames serialized so the
@@ -156,6 +157,7 @@ class CameraViewModel(
   @Volatile private var hevcDecoder: HevcDecoder? = null
   @Volatile private var decoderSurface: Surface? = null
   @Volatile private var isCompressedStream = false
+  @Volatile private var preferRawPreview = cameraStreamSettings.isRawCompatibilityMode()
   @Volatile private var forceRawPreview = false
   @Volatile private var decoderFallbackRequested = false
   private val i420FrameConverter = OpenCvI420FrameConverter()
@@ -561,12 +563,30 @@ class CameraViewModel(
     _uiState.update { it.copy(isPreviewVisible = true) }
   }
 
+  /** Changes the transport and reconnects the active stream so the setting takes effect now. */
+  fun setRawCompatibilityMode(enabled: Boolean) {
+    if (preferRawPreview == enabled && !(forceRawPreview && !enabled)) return
+    cameraStreamSettings.setRawCompatibilityMode(enabled)
+    preferRawPreview = enabled
+    // A manual selection of HEVC must clear a previous automatic decoder fallback.
+    forceRawPreview = false
+    decoderFallbackRequested = false
+    val current = camera
+    if (current != null) {
+      Log.i(TAG, "Camera transport changed to ${if (enabled) "raw I420" else "HEVC"}; reconnecting")
+      _uiState.update { it.copy(streamState = StreamState.STOPPING) }
+      current.stop()
+    } else if (_isSessionEnabled.value && _uiState.value.isSessionActive) {
+      startStreaming()
+    }
+  }
+
   private fun beginStream() {
     val current = session ?: return
     if (stream != null) return
     // Compressed HIGH/30 avoids the transport latency of full I420 frames. HevcDecoder preserves
     // each DAT access unit intact; a codec startup failure still reconnects through optimized raw.
-    val useCompressedPreview = !forceRawPreview
+    val useCompressedPreview = !preferRawPreview && !forceRawPreview
     isCompressedStream = useCompressedPreview
     decoderFallbackRequested = false
     _uiState.update {
