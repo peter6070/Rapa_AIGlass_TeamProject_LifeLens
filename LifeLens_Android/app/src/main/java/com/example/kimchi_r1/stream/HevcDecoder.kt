@@ -183,7 +183,10 @@ class HevcDecoder(
     }
   }
 
-  // Complete access units allow a compatible hardware decoder to provide the lowest latency.
+  // DAT's live HEVC stream produces visible block corruption on several vendor OMX decoders
+  // (including OMX.qcom on the test phone) even though MediaCodec reports no error. Prefer the
+  // platform software decoder for correctness. The latest-only queue and complete access units
+  // still prevent the old software path from accumulating seconds of latency.
   private fun createHevcDecoder(): MediaCodec {
     val mime = MediaFormat.MIMETYPE_VIDEO_HEVC
     val candidates =
@@ -193,8 +196,11 @@ class HevcDecoder(
               info.name !in BLOCKED_DECODERS &&
               info.supportedTypes.any { it.equals(mime, ignoreCase = true) }
         }
-    val selected = candidates.firstOrNull { it.isHardwareAccelerated }
+    val selected =
+        candidates.firstOrNull { it.name == "c2.android.hevc.decoder" }
+        ?: candidates.firstOrNull { it.name == "OMX.google.hevc.decoder" }
         ?: candidates.firstOrNull { it.isSoftwareOnly }
+        ?: candidates.firstOrNull { it.isHardwareAccelerated }
         ?: error("No compatible HEVC decoder")
     Log.i(
         TAG,
