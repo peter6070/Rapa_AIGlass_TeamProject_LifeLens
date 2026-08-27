@@ -270,7 +270,7 @@ fun WebAppScreen(
 
   val url = remember(page, serverUrl, retryKey) {
     val deviceId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-    "${serverUrl.trimEnd('/')}/app/?page=$page&key=${java.net.URLEncoder.encode(BuildConfig.DEFAULT_RELAY_API_KEY, "UTF-8")}&device_id=${java.net.URLEncoder.encode(deviceId, "UTF-8")}"
+    "${serverUrl.trimEnd('/')}/app/?page=$page&key=${java.net.URLEncoder.encode(BuildConfig.DEFAULT_RELAY_API_KEY, "UTF-8")}&device_id=${java.net.URLEncoder.encode(deviceId, "UTF-8")}&reload=$retryKey"
   }
   AndroidView(
       modifier = Modifier.fillMaxSize().statusBarsPadding(),
@@ -279,7 +279,13 @@ fun WebAppScreen(
           WebAppBackNavigation.attach(this)
           settings.javaScriptEnabled = true
           settings.domStorageEnabled = true
-          settings.cacheMode = android.webkit.WebSettings.LOAD_NO_CACHE
+          // LOAD_NO_CACHE made every launch rebuild the full web UI (including
+          // its inline illustrations) from the network. Let WebView reuse a
+          // valid response, while the reload token still gives native retries a
+          // deterministic fresh URL.
+          settings.cacheMode = android.webkit.WebSettings.LOAD_DEFAULT
+          settings.offscreenPreRaster = true
+          setRendererPriorityPolicy(WebView.RENDERER_PRIORITY_IMPORTANT, false)
           webViewClient = object : WebViewClient() {
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
               if (request?.isForMainFrame == true) isReachable = false
@@ -292,10 +298,18 @@ fun WebAppScreen(
             }
           }
           addJavascriptInterface(bridge, "NativeBridge")
+          tag = url
           loadUrl(url)
         }
       },
-      update = { webView -> if (webView.url != url) webView.loadUrl(url) },
+      // The single-page web app changes its query string with history.replaceState.
+      // Reload only when the native app actually requests a different URL.
+      update = { webView ->
+        if (webView.tag != url) {
+          webView.tag = url
+          webView.loadUrl(url)
+        }
+      },
   )
 }
 

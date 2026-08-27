@@ -21,6 +21,7 @@ from typing import Generator
 
 import uvicorn
 from fastapi import Depends, FastAPI, Header, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -198,7 +199,7 @@ class LifeLogOut(BaseModel):
 
 
 class PageCopyIn(BaseModel):
-    page: str = Field(pattern="^(home|skills|debug|lifelog|iot)$")
+    page: str = Field(pattern="^(home|skills|stream|debug|lifelog|iot)$")
 
 
 class PageCopyOut(BaseModel):
@@ -408,6 +409,7 @@ async def generate_page_copy(page: str) -> PageCopyOut:
     contexts = {
         "home": "LifeLens 홈. Ray-Ban Meta 글래스와 대화를 통해 일상을 더 선명하게 돕는 시작 화면",
         "skills": "LifeLens 스킬. 글래스의 제스처, 라이프로그, IoT 기능을 발견하는 화면",
+        "stream": "LifeLens 스트림. 글래스 카메라와 마이크가 지금 무엇을 보고 듣는지 실시간으로 확인하는 화면",
         "debug": "LifeLens 디버그. 백엔드와 Matter 브릿지의 연결 상태를 차분하게 확인하는 화면",
         "lifelog": "LifeLens 라이프로그. 하루 대화 기록을 되돌아보고 의미를 정리하는 화면",
         "iot": "LifeLens IoT 제어. 조명과 플러그를 편안하고 즉시 제어하는 화면",
@@ -415,8 +417,9 @@ async def generate_page_copy(page: str) -> PageCopyOut:
     prompt = f'''당신은 LifeLens 모바일 앱의 한국어 카피라이터다.
 화면: {contexts[page]}
 매번 새롭지만 과장 없이 따뜻하고 간결한 Hero 문구를 작성하라.
-title은 줄바꿈 없이 하나의 자연스러운 한국어 구절로 18자 이내로 작성한다. 단어·어절을 나누지 않는다.
-body는 줄바꿈 없이 화면에서 최대 두 줄로 보일 수 있게 한 문장 32자 이내로 작성한다. 이모지, 따옴표, Markdown은 쓰지 않는다.
+title과 body는 반드시 위 화면의 기능을 가리켜야 한다. 다른 화면에 그대로 옮겨도 말이 되는 일반적인 문장은 금지한다.
+title은 줄바꿈 없이 하나의 자연스러운 한국어 구절로 13자 이내로 작성한다. 짧고 기억하기 쉬운 문장으로 쓰며, 단어·어절을 나누지 않는다.
+body는 줄바꿈 없이 화면에서 최대 두 줄로 보일 수 있게 한 문장 26자 이내로 작성한다. 이모지, 따옴표, Markdown은 쓰지 않는다.
 반드시 JSON만 반환한다.'''
     try:
         result = await asyncio.to_thread(ollama_request, json.dumps({
@@ -443,12 +446,26 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="LifeLens Relay", lifespan=lifespan)
+# The Debug screen can point the web app at a relay on another PC, which makes
+# those calls cross-origin. Same trusted-LAN posture as require_api_key.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.mount("/app/static", StaticFiles(directory=WEB_DIR), name="web-static")
 
 
 @app.get("/app/")
 def web_app() -> FileResponse:
-    return FileResponse(WEB_DIR / "html" / "index.html")
+    # The Android client keeps one WebView for the app lifetime. Always fetch the current HTML
+    # shell after a server restart; videos and images remain separately cacheable.
+    return FileResponse(
+        WEB_DIR / "html" / "index.html",
+        headers={"Cache-Control": "no-store, max-age=0"},
+    )
 
 
 @app.get("/health")

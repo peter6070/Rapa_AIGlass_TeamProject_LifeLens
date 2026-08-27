@@ -80,12 +80,17 @@ class CameraViewModel(
 
   companion object {
     private const val TAG = "CameraAccess:CameraViewModel"
-    private const val FRAME_RATE = 30
+    // The raw stream is also converted for MediaPipe. 24 fps keeps the preview smooth while
+    // avoiding needless radio and decoder work on the phone.
+    private const val FRAME_RATE = 24
     private const val KEYFRAME_WAIT_STEP_MS = 25L
     private const val KEYFRAME_WAIT_MAX_MS = 500L
-    // Bitmap conversion allocates a full RGBA frame. 15 fps keeps the live view responsive while
-    // leaving CPU time for MediaPipe and prevents the frame collector from building up latency.
-    private const val RAW_FRAME_INTERVAL_MS = 66L
+    // I420 -> RGBA conversion allocates a full bitmap. Eight samples per second still gives
+    // responsive gesture input, while leaving CPU time for WebView, STT, and the camera decoder.
+    private const val RAW_FRAME_INTERVAL_MS = 125L
+    // The preview does not need every gesture-analysis frame. This also limits Compose/WebView
+    // recomposition caused by publishing a new bitmap.
+    private const val PREVIEW_FRAME_INTERVAL_MS = 250L
     private const val AUTO_SESSION_RETRY_MS = 3_000L
     private const val STREAM_RECOVERY_DELAY_MS = 1_500L
     private const val MAX_STREAM_RECOVERY_ATTEMPTS = 3
@@ -128,6 +133,7 @@ class CameraViewModel(
         onHandGesture(label, confidence)
       }
   private var lastRawFrameAtMs = 0L
+  private var lastPreviewFrameAtMs = 0L
   private var lastAutoSessionAttemptAtMs = 0L
   private var streamRecoveryAttempts = 0
   private val gestureShortcutLock = Any()
@@ -533,8 +539,11 @@ class CameraViewModel(
     buffer.get(data)
     buffer.position(originalPosition)
     val bitmap = i420FrameConverter.toBitmap(data, videoFrame.width, videoFrame.height) ?: return
-    _uiState.update {
-      it.copy(videoFrame = bitmap, hasReceivedFirstFrame = true)
+    if (now - lastPreviewFrameAtMs >= PREVIEW_FRAME_INTERVAL_MS) {
+      lastPreviewFrameAtMs = now
+      _uiState.update {
+        it.copy(videoFrame = bitmap, hasReceivedFirstFrame = true)
+      }
     }
     handGestureRecognizer.analyze(bitmap)
   }

@@ -1,8 +1,5 @@
 package com.example.kimchi_r1.ui
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,7 +27,6 @@ import com.example.kimchi_r1.stream.StreamingService
 import com.example.kimchi_r1.wearables.WearablesViewModel
 import com.meta.wearable.dat.core.types.Permission
 import com.meta.wearable.dat.core.types.PermissionStatus
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,19 +39,11 @@ fun CameraAccessScaffold(
 ) {
   val context = LocalContext.current
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  var showSplash by remember { mutableStateOf(true) }
-
-  LaunchedEffect(Unit) {
-    delay(1700)
-    showSplash = false
-  }
-
   // Do not instantiate CameraViewModel before Wearables.initialize() completed.
   if (!uiState.canRegister) {
     Surface(modifier = modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
       Box(Modifier.fillMaxSize()) {
         HomeScreen(viewModel = viewModel)
-        AnimatedVisibility(visible = showSplash, enter = fadeIn(), exit = fadeOut()) { AnimatedSplashScreen() }
       }
     }
     return
@@ -159,14 +147,6 @@ fun CameraAccessScaffold(
               TextButton(onClick = { cameraViewModel.cancelCameraPermissionRedirect() }) { Text("나중에") }
             },
         )
-      }
-
-      AnimatedVisibility(
-          visible = showSplash,
-          enter = fadeIn(),
-          exit = fadeOut(),
-      ) {
-        AnimatedSplashScreen()
       }
     }
   }
