@@ -39,6 +39,7 @@ import com.example.kimchi_r1.lifelog.LifeLogRepository
 import com.example.kimchi_r1.lifelog.LifeLogSyncer
 import com.example.kimchi_r1.lifelog.SpeechRecord
 import com.example.kimchi_r1.speech.GestureSpeechFeedback
+import com.example.kimchi_r1.vision.GestureControlSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.HttpURLConnection
@@ -81,12 +82,16 @@ private class NativeBridge(
 ) {
   private val lifeLogRepository = LifeLogRepository(context.applicationContext)
   private val gestureSpeechFeedback = GestureSpeechFeedback(context.applicationContext)
+  private val gestureControlSettings = GestureControlSettings(context.applicationContext)
   @JavascriptInterface fun getServerUrl(): String = ServerSettings.url(context)
   @JavascriptInterface fun getSharedLifeLogId(): String = ServerSettings.SHARED_LIFELOG_ID
   @JavascriptInterface fun saveServerUrl(value: String) = ServerSettings.saveUrl(context, value)
   @JavascriptInterface fun refreshWebApp() = WebAppBackNavigation.refreshWebApp()
   @JavascriptInterface fun speakGestureFeedback(text: String) = gestureSpeechFeedback.speak(text)
   @JavascriptInterface fun cancelGestureFeedback() = gestureSpeechFeedback.cancel()
+  @JavascriptInterface fun getGestureSettings(): String = gestureControlSettings.toJson()
+  @JavascriptInterface fun setGestureEnabled(key: String, enabled: Boolean): Boolean =
+      gestureControlSettings.setEnabled(key, enabled)
   @JavascriptInterface fun openPhotoViewer(photoUrl: String, localUri: String): Boolean = runCatching {
     android.os.Handler(android.os.Looper.getMainLooper()).post {
       context.startActivity(
@@ -145,6 +150,7 @@ private class NativeBridge(
     }.getOrDefault("[]")
   }
   @JavascriptInterface fun getLifeLogPhotos(day: String): String = runCatching {
+    LifeLogSyncer.restorePendingPhotos(context)
     val photos = lifeLogRepository.photosOn(java.time.LocalDate.parse(day))
     org.json.JSONArray().apply {
       photos.forEach { photo ->

@@ -13,8 +13,10 @@ import com.google.mediapipe.tasks.vision.handlandmarker.HandLandmarkerResult
 class HandGestureRecognizer(
     context: Context,
     private val onResult: (label: String, confidence: Int) -> Unit,
+    private val onLeftPinch: (phase: LeftPinchPhase) -> Unit = {},
 ) {
   private var lastFrameTimeMs = 0L
+  private val leftPinchStateMachine = LeftPinchStateMachine()
   private val landmarker: HandLandmarker? =
       runCatching {
             HandLandmarker.createFromOptions(
@@ -44,13 +46,18 @@ class HandGestureRecognizer(
 
   fun close() = landmarker?.close()
 
-  private fun handleResult(result: HandLandmarkerResult, input: com.google.mediapipe.framework.image.MPImage) {
-    val hand = result.landmarks().firstOrNull { landmarks ->
-      val spanX = landmarks.maxOf { it.x() } - landmarks.minOf { it.x() }
-      val spanY = landmarks.maxOf { it.y() } - landmarks.minOf { it.y() }
-      maxOf(spanX, spanY) >= MIN_HAND_SPAN
-    }
+  @Suppress("UNUSED_PARAMETER")
+  private fun handleResult(
+      result: HandLandmarkerResult,
+      input: com.google.mediapipe.framework.image.MPImage,
+  ) {
+    val visibleHands =
+        result.landmarks().mapIndexedNotNull { index, landmarks ->
+          if (handSpan(landmarks) >= MIN_HAND_SPAN) index to landmarks else null
+        }
+    val hand = visibleHands.maxByOrNull { (_, landmarks) -> handSpan(landmarks) }?.second
     if (hand == null) {
+      leftPinchStateMachine.reset()
       onResult("손을 찾는 중", 0)
       return
     }
@@ -71,7 +78,36 @@ class HandGestureRecognizer(
           else -> "손바닥 펼침"
         }
     onResult(label, 85)
+
+    val leftHand =
+        visibleHands.firstOrNull { (index, _) ->
+          result.handedness().getOrNull(index)?.firstOrNull()?.let { handedness ->
+            handedness.score() >= MIN_HANDEDNESS_CONFIDENCE &&
+                handedness.categoryName().equals(LEFT_HAND_LABEL, ignoreCase = true)
+          } == true
+        }?.second
+    if (leftHand == null) {
+      leftPinchStateMachine.reset()
+      return
+    }
+    val palmSize = maxOf(distance(leftHand[0], leftHand[9]), distance(leftHand[5], leftHand[17]))
+    if (palmSize <= 0f) {
+      leftPinchStateMachine.reset()
+      return
+    }
+    onLeftPinch(
+        leftPinchStateMachine.update(distance(leftHand[4], leftHand[8]) / palmSize, result.timestampMs())
+    )
   }
+
+  private fun handSpan(hand: List<NormalizedLandmark>): Float {
+    val spanX = hand.maxOf { it.x() } - hand.minOf { it.x() }
+    val spanY = hand.maxOf { it.y() } - hand.minOf { it.y() }
+    return maxOf(spanX, spanY)
+  }
+
+  private fun distance(first: NormalizedLandmark, second: NormalizedLandmark): Float =
+      kotlin.math.hypot(first.x() - second.x(), first.y() - second.y())
 
   private fun isFingerExtended(hand: List<NormalizedLandmark>, tipIndex: Int, pipIndex: Int): Boolean {
     val wrist = hand[0]
@@ -86,6 +122,8 @@ class HandGestureRecognizer(
     const val MODEL_NAME = "hand_landmarker.task"
     const val FRAME_INTERVAL_MS = 66L
     const val MIN_HAND_SPAN = 0.16f
+    const val MIN_HANDEDNESS_CONFIDENCE = 0.6f
     const val EXTENDED_FINGER_RATIO = 1.18f
+    const val LEFT_HAND_LABEL = "Left"
   }
 }

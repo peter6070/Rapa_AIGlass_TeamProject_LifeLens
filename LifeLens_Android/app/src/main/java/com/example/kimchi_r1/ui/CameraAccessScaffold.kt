@@ -74,10 +74,22 @@ fun CameraAccessScaffold(
   val scope = rememberCoroutineScope()
   val snackbarHostState = remember { SnackbarHostState() }
   var showLiveVision by remember { mutableStateOf(false) }
-  LaunchedEffect(uiState.isRegistered, isSessionEnabled, cameraUiState.isStreaming) {
-    if (uiState.isRegistered && isSessionEnabled && cameraUiState.isStreaming && !speechUiState.isListening && onRequestRecordAudioPermission()) {
-      speechViewModel.startListening()
-    } else if ((!cameraUiState.isStreaming || !isSessionEnabled) && speechUiState.isListening) {
+  // Camera streaming and phone STT are one lifecycle. Including the microphone state in the keys
+  // repairs any drift caused by a recognizer interruption or a manual mic toggle: a glasses
+  // touch-pad PAUSE always stops STT, and STREAMING always brings it back.
+  LaunchedEffect(
+      uiState.isRegistered,
+      isSessionEnabled,
+      cameraUiState.isStreaming,
+      speechUiState.isListening,
+  ) {
+    val shouldListen = uiState.isRegistered && isSessionEnabled && cameraUiState.isStreaming
+    if (shouldListen && !speechUiState.isListening && onRequestRecordAudioPermission()) {
+      // Permission requests can suspend while the stream changes; re-check before starting STT.
+      if (cameraViewModel.uiState.value.isStreaming && cameraViewModel.isSessionEnabled.value) {
+        speechViewModel.startListening()
+      }
+    } else if (!shouldListen && speechUiState.isListening) {
       speechViewModel.stopListening()
     }
   }
