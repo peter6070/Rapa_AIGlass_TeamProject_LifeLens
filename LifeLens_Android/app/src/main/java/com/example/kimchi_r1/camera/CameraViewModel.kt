@@ -50,6 +50,7 @@ import com.meta.wearable.dat.core.types.Permission
 import com.meta.wearable.dat.core.types.PermissionStatus
 import com.example.kimchi_r1.R
 import com.example.kimchi_r1.lifelog.LifeLogSyncer
+import com.example.kimchi_r1.speech.GestureSpeechFeedback
 import com.example.kimchi_r1.stream.AudioInputHandler
 import com.example.kimchi_r1.stream.HevcDecoder
 import com.example.kimchi_r1.stream.HevcParameterSetCollector
@@ -57,21 +58,28 @@ import com.example.kimchi_r1.stream.RecordingResult
 import com.example.kimchi_r1.stream.StreamingService
 import com.example.kimchi_r1.stream.VideoRecorder
 import com.example.kimchi_r1.vision.HandGestureRecognizer
+import com.example.kimchi_r1.vision.GestureControlSettings
+import com.example.kimchi_r1.vision.LeftPinchPhase
 import com.example.kimchi_r1.vision.OpenCvI420FrameConverter
 import com.example.kimchi_r1.wearables.WearablesViewModel
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.util.Locale
+import java.util.concurrent.Executors
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExecutorCoroutineDispatcher
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 
 class CameraViewModel(
     application: Application,
@@ -97,6 +105,9 @@ class CameraViewModel(
     private const val GESTURE_STABLE_MS = 250L
     private const val GESTURE_SEQUENCE_WINDOW_MS = 2_000L
     private const val GESTURE_SHORTCUT_COOLDOWN_MS = 1_200L
+    private const val PINCH_CAPTURE_DELAY_MS = 1_000L
+    private const val TTS_COMPLETION_TIMEOUT_MS = 5_000L
+    private const val PHOTO_UPLOAD_MAX_SIDE = 1_600
   }
 
   private val deviceSelector: DeviceSelector = wearablesViewModel.deviceSelector
@@ -114,11 +125,18 @@ class CameraViewModel(
   // passthrough MP4 writer.
   private val audioInputHandler = AudioInputHandler(application)
   private val videoRecorder = VideoRecorder(application, viewModelScope)
+  private val gestureSpeechFeedback = GestureSpeechFeedback(application)
+  private val gestureControlSettings = GestureControlSettings(application)
 
   // Per-frame work (byte copy, NAL parsing, MediaMuxer writes, decoder feed) runs at frame rate and
   // must stay off the main thread. A single-threaded dispatcher keeps frames serialized so the
   // MediaMuxer/MediaCodec see in-order calls from one consistent thread.
   private val frameDispatcher = Dispatchers.Default.limitedParallelism(1)
+  private val photoDispatcher: ExecutorCoroutineDispatcher =
+      Executors.newSingleThreadExecutor { task ->
+            Thread(task, "LifeLens-photo-worker").apply { priority = Thread.MIN_PRIORITY }
+          }
+          .asCoroutineDispatcher()
 
   // Guards decoder create/teardown so a frame can't bind a new decoder to a Surface that
   // setSurface(null) just released — the @Volatile refs alone can't fix that check-then-act.
@@ -129,9 +147,11 @@ class CameraViewModel(
   @Volatile private var decoderSurface: Surface? = null
   private val i420FrameConverter = OpenCvI420FrameConverter()
   private val handGestureRecognizer =
-      HandGestureRecognizer(application) { label, confidence ->
-        onHandGesture(label, confidence)
-      }
+      HandGestureRecognizer(
+          application,
+          onResult = ::onHandGesture,
+          onLeftPinch = ::onLeftPinch,
+      )
   private var lastRawFrameAtMs = 0L
   private var lastPreviewFrameAtMs = 0L
   private var lastAutoSessionAttemptAtMs = 0L
@@ -141,6 +161,7 @@ class CameraViewModel(
   private var candidateSinceMs = 0L
   private var armedFistAtMs = 0L
   private var lastShortcutAtMs = 0L
+  private var pinchCaptureJob: Job? = null
 
   // Accumulates the stream's HEVC parameter sets (VPS/SPS/PPS) so a recording (or decoder) started
   // mid-stream can be primed with a complete format. The SDK emits the VPS once at stream start, so
@@ -170,17 +191,29 @@ class CameraViewModel(
       }
       when (label) {
         "주먹" -> if (armedFistAtMs == 0L) armedFistAtMs = now
-        "손바닥 펼침" -> if (armedFistAtMs != 0L && now - lastShortcutAtMs >= GESTURE_SHORTCUT_COOLDOWN_MS) {
+        "손바닥 펼침" -> if (
+            gestureControlSettings.isEnabled(GestureControlSettings.POWER) &&
+                armedFistAtMs != 0L &&
+                now - lastShortcutAtMs >= GESTURE_SHORTCUT_COOLDOWN_MS
+        ) {
           shortcut = "toggle_lights"
           armedFistAtMs = 0L
           lastShortcutAtMs = now
         }
-        "브이 · 다음" -> if (armedFistAtMs != 0L && now - lastShortcutAtMs >= GESTURE_SHORTCUT_COOLDOWN_MS) {
+        "브이 · 다음" -> if (
+            gestureControlSettings.isEnabled(GestureControlSettings.PRESENTATION) &&
+                armedFistAtMs != 0L &&
+                now - lastShortcutAtMs >= GESTURE_SHORTCUT_COOLDOWN_MS
+        ) {
           shortcut = "presentation_next"
           armedFistAtMs = 0L
           lastShortcutAtMs = now
         }
-        "브이 · 이전" -> if (armedFistAtMs != 0L && now - lastShortcutAtMs >= GESTURE_SHORTCUT_COOLDOWN_MS) {
+        "브이 · 이전" -> if (
+            gestureControlSettings.isEnabled(GestureControlSettings.PRESENTATION) &&
+                armedFistAtMs != 0L &&
+                now - lastShortcutAtMs >= GESTURE_SHORTCUT_COOLDOWN_MS
+        ) {
           shortcut = "presentation_previous"
           armedFistAtMs = 0L
           lastShortcutAtMs = now
@@ -200,6 +233,34 @@ class CameraViewModel(
           iotShortcutSequence = if (shortcut != null) it.iotShortcutSequence + 1 else it.iotShortcutSequence,
       )
     }
+  }
+
+  private fun onLeftPinch(phase: LeftPinchPhase) {
+    if (!gestureControlSettings.isEnabled(GestureControlSettings.PINCH)) return
+    val phaseLabel =
+        when (phase) {
+          LeftPinchPhase.ARMING -> "왼손 핀치 · 장전 중"
+          LeftPinchPhase.ARMED -> "왼손 핀치 · 장전됨"
+          LeftPinchPhase.CONTACTED -> "왼손 핀치 · 접촉"
+          LeftPinchPhase.RELEASED -> "왼손 핀치 · 해제"
+          LeftPinchPhase.IDLE -> return
+        }
+    _uiState.update { it.copy(gestureName = phaseLabel, gestureConfidence = 100) }
+    if (phase != LeftPinchPhase.RELEASED || pinchCaptureJob?.isActive == true) return
+    if (!_uiState.value.isStreaming || _uiState.value.isCapturingPhoto) return
+
+    pinchCaptureJob =
+        viewModelScope.launch {
+          try {
+            withTimeoutOrNull(TTS_COMPLETION_TIMEOUT_MS) {
+              gestureSpeechFeedback.speakAndAwait("사진으로 기록합니다")
+            }
+            delay(PINCH_CAPTURE_DELAY_MS)
+            if (gestureControlSettings.isEnabled(GestureControlSettings.PINCH)) capturePhoto()
+          } finally {
+            pinchCaptureJob = null
+          }
+        }
   }
 
   init {
@@ -452,7 +513,9 @@ class CameraViewModel(
   private fun setupStreamListeners(stream: Stream) {
     videoJob =
         viewModelScope.launch(frameDispatcher) {
-          stream.videoStream.collect { handleVideoFrame(it) }
+          // After a brief capture/transport stall, keep only the newest frame instead of replaying
+          // stale frames and making the live view appear to buffer.
+          stream.videoStream.conflate().collect { handleVideoFrame(it) }
         }
     streamStateJob = viewModelScope.launch {
       // state replays its current value (STOPPED) on subscribe, and we subscribe before start().
@@ -566,6 +629,8 @@ class CameraViewModel(
   }
 
   private fun clearStreamResources() {
+    pinchCaptureJob?.cancel()
+    pinchCaptureJob = null
     videoJob?.cancel()
     videoJob = null
     streamStateJob?.cancel()
@@ -617,26 +682,30 @@ class CameraViewModel(
           ?.onSuccess { photoData ->
             // Decode/rotate is CPU-bound and blocking; keep it off the main thread so capture
             // doesn't jank the UI. Resumes on main for the state update.
-            val bitmap = withContext(Dispatchers.Default) { decodePhoto(photoData) }
+            val bitmap = withContext(photoDispatcher) { decodePhoto(photoData) }
             if (bitmap != null) {
               // Captures are never written to the device gallery. Keep the stream visible and
               // upload this in-memory frame directly to the shared LifeLens server.
               _uiState.update { it.copy(isCapturingPhoto = false) }
-              val uploaded = withContext(Dispatchers.IO) {
-                val locationName = resolveLocationName(capturedLocation)
-                LifeLogSyncer.syncPhoto(
-                    getApplication(),
-                    com.example.kimchi_r1.lifelog.PhotoRecord(
-                        id = 0,
-                        clientPhotoId = java.util.UUID.randomUUID().toString(),
-                        uri = "",
-                        createdAtMillis = capturedAt,
-                        latitude = capturedLocation?.latitude,
-                        longitude = capturedLocation?.longitude,
-                        locationName = locationName,
-                    ),
-                    bitmap,
-                )
+              val uploaded = withContext(photoDispatcher) {
+                try {
+                  val locationName = resolveLocationName(capturedLocation)
+                  LifeLogSyncer.syncPhoto(
+                      getApplication(),
+                      com.example.kimchi_r1.lifelog.PhotoRecord(
+                          id = 0,
+                          clientPhotoId = java.util.UUID.randomUUID().toString(),
+                          uri = "",
+                          createdAtMillis = capturedAt,
+                          latitude = capturedLocation?.latitude,
+                          longitude = capturedLocation?.longitude,
+                          locationName = locationName,
+                      ),
+                      bitmap,
+                  )
+                } finally {
+                  bitmap.recycle()
+                }
               }
               Log.i(TAG, "Photo captured; uploadedToServer=$uploaded")
               if (!uploaded) {
@@ -734,9 +803,21 @@ class CameraViewModel(
 
   private fun decodePhoto(photo: PhotoData): Bitmap? =
       when (photo) {
-        is PhotoData.Bitmap -> photo.bitmap
+        is PhotoData.Bitmap -> scalePhotoForUpload(photo.bitmap)
         is PhotoData.HEIC -> decodeWithOrientation(photo.data)
       }
+
+  private fun scalePhotoForUpload(bitmap: Bitmap): Bitmap {
+    val longestSide = maxOf(bitmap.width, bitmap.height)
+    if (longestSide <= PHOTO_UPLOAD_MAX_SIDE) return bitmap
+    val scale = PHOTO_UPLOAD_MAX_SIDE.toFloat() / longestSide
+    return Bitmap.createScaledBitmap(
+        bitmap,
+        (bitmap.width * scale).toInt(),
+        (bitmap.height * scale).toInt(),
+        true,
+    )
+  }
 
   private fun lastKnownLocation(): Location? {
     val app = getApplication<Application>()
@@ -776,7 +857,24 @@ class CameraViewModel(
     val bytes = ByteArray(buffer.remaining())
     buffer.get(bytes)
 
-    val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+    // Decode close to upload size instead of materializing a full-resolution HEIC bitmap first.
+    // This avoids the large allocation/GC spike that used to stall raw live-frame conversion.
+    val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+    BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bounds)
+    var sampleSize = 1
+    while (
+        bounds.outWidth / sampleSize > PHOTO_UPLOAD_MAX_SIDE * 2 ||
+            bounds.outHeight / sampleSize > PHOTO_UPLOAD_MAX_SIDE * 2
+    ) {
+      sampleSize *= 2
+    }
+    val bitmap =
+        BitmapFactory.decodeByteArray(
+            bytes,
+            0,
+            bytes.size,
+            BitmapFactory.Options().apply { inSampleSize = sampleSize },
+        )
     if (bitmap == null || bitmap.width == 0 || bitmap.height == 0) {
       bitmap?.recycle()
       Log.e(TAG, "Failed to decode captured photo")
@@ -784,17 +882,22 @@ class CameraViewModel(
     }
 
     val matrix = exifOrientationMatrix(bytes)
-    if (matrix.isIdentity) return bitmap
-
-    // Rotating allocates a second full-size bitmap; recycle the source, and fall back to the
-    // unrotated image if the device is too low on memory to make the copy.
-    return try {
-      Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true).also {
-        bitmap.recycle()
-      }
-    } catch (e: OutOfMemoryError) {
-      Log.e(TAG, "Failed to rotate captured photo", e)
-      bitmap
+    val oriented =
+        if (matrix.isIdentity) {
+          bitmap
+        } else {
+          // Rotating allocates a second bitmap; fall back to the unrotated image on low memory.
+          try {
+            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true).also {
+              bitmap.recycle()
+            }
+          } catch (e: OutOfMemoryError) {
+            Log.e(TAG, "Failed to rotate captured photo", e)
+            bitmap
+          }
+        }
+    return scalePhotoForUpload(oriented).also { scaled ->
+      if (scaled !== oriented) oriented.recycle()
     }
   }
 
@@ -831,11 +934,13 @@ class CameraViewModel(
   override fun onCleared() {
     super.onCleared()
     handGestureRecognizer.close()
+    gestureSpeechFeedback.close()
     clearStreamResources()
     session?.stop()
     cleanupSession()
     audioInputHandler.cleanup()
     videoRecorder.close()
+    photoDispatcher.close()
   }
 
   class Factory(

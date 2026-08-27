@@ -56,7 +56,22 @@ class LifeLogRepository(context: Context) : SQLiteOpenHelper(context, "kimchi_li
 
   fun insertPhoto(uri: String, timestamp: Long, latitude: Double?, longitude: Double?): PhotoRecord {
     val record = PhotoRecord(0, UUID.randomUUID().toString(), uri, timestamp, latitude, longitude)
-    val values = ContentValues().apply { put("client_photo_id", record.clientPhotoId); put("uri", uri); put("created_at", timestamp); if (latitude != null) put("latitude", latitude); if (longitude != null) put("longitude", longitude) }
+    return upsertPhoto(record)
+  }
+
+  fun upsertPhoto(record: PhotoRecord): PhotoRecord {
+    val existing = readableDatabase.query("photo_records", arrayOf("id"), "client_photo_id = ?", arrayOf(record.clientPhotoId), null, null, null).use { cursor -> if (cursor.moveToFirst()) cursor.getLong(0) else null }
+    val values = ContentValues().apply {
+      put("client_photo_id", record.clientPhotoId)
+      put("uri", record.uri)
+      put("created_at", record.createdAtMillis)
+      if (record.latitude != null) put("latitude", record.latitude) else putNull("latitude")
+      if (record.longitude != null) put("longitude", record.longitude) else putNull("longitude")
+    }
+    if (existing != null) {
+      writableDatabase.update("photo_records", values, "id = ?", arrayOf(existing.toString()))
+      return record.copy(id = existing)
+    }
     return record.copy(id = writableDatabase.insertOrThrow("photo_records", null, values))
   }
 

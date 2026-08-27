@@ -2932,6 +2932,17 @@ body[data-page="iot"] .matter-actions button{
       @keyframes android-exit-right { to { opacity: .01; transform: translate3d(12px, 0, 0); } }
       @keyframes android-nav-pulse { 0%, 100% { opacity: .55; transform: scaleX(.82); } 50% { opacity: 1; transform: scaleX(1); } }
     }
+
+    .gesture-setting-list { display:grid; gap:10px; margin:16px 0 12px; }
+    .gesture-setting-row { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:13px 14px; border:1px solid rgba(71,91,111,.09); border-radius:17px; background:rgba(255,255,255,.68); cursor:pointer; }
+    .gesture-setting-row > span { display:grid; gap:4px; min-width:0; }
+    .gesture-setting-row b { color:var(--ink); font-size:13px; }
+    .gesture-setting-row small { color:var(--muted); font-size:11px; line-height:1.4; }
+    .gesture-setting-row input { position:absolute; opacity:0; pointer-events:none; }
+    .gesture-setting-row i { position:relative; width:46px; height:26px; flex:none; border-radius:999px; background:#cbd7df; transition:background .2s ease; }
+    .gesture-setting-row i::after { content:""; position:absolute; width:20px; height:20px; left:3px; top:3px; border-radius:50%; background:#fff; box-shadow:0 2px 7px rgba(38,61,78,.22); transition:transform .2s ease; }
+    .gesture-setting-row input:checked + i { background:var(--accent); }
+    .gesture-setting-row input:checked + i::after { transform:translateX(20px); }
   </style>
 </head>
 <body data-page="intro">
@@ -3930,6 +3941,12 @@ async function lifeLog() {
 
 function debug() {
   content.innerHTML = `<section class="hero mini-hero" style="--i:0"><div class="hero-text"><span class="hero-kicker">DIAGNOSTICS</span><h2>연결 상태</h2><p>백엔드·Ollama·Matter 브릿지 서버를 점검하고 주소를 바꿉니다.</p></div>${PAGE_ART.debug}</section><button class="card skill featured" id="debug-live" style="--i:1"><span class="icon">${ICONS.stream}</span><div><span class="badge live">LIVE</span><h2>Live Vision</h2><p>글래스 카메라 스트림과 손 제스처를 실시간으로 확인합니다.</p></div><em>→</em></button><section class="card connection-card" style="--i:2"><span class="section-label">BACKEND SERVER</span><h2>LifeLens 백엔드 서버</h2><div class="connection-row"><span class="connection-dot checking" id="backend-dot"></span><p class="muted" id="debug-state">연결 상태 확인 중…</p></div><div class="iot-server-form"><input id="backend-server-input" inputmode="url" autocomplete="off" value="${esc(displayServerAddress(backendServer))}" placeholder="${esc(location.host)} (비우면 현재 주소)"><button class="primary" id="save-backend-server">연결</button></div></section><section class="card connection-card" style="--i:3"><span class="section-label">OLLAMA SERVER</span><h2>Ollama 서버</h2><p class="muted" id="ollama-state">설정 불러오는 중…</p><div class="iot-server-form"><input id="ollama-server-input" inputmode="url" autocomplete="off" value="127.0.0.1:11434" placeholder="127.0.0.1:11434"><button class="primary" id="save-ollama-server">저장</button></div></section><section class="card connection-card" style="--i:4"><span class="section-label">MATTER BRIDGE SERVER</span><h2>IoT 제어 브릿지</h2><div class="connection-row"><span class="connection-dot checking" id="matter-dot"></span><p class="muted" id="matter-state">연결 상태 확인 중…</p></div><div class="iot-server-form"><input id="iot-server-input" inputmode="url" autocomplete="off" value="${esc(displayServerAddress(iotServer))}" placeholder="192.168.3.80:5580"><button class="primary" id="save-iot-server">저장</button></div></section><section class="card stt-test-card" style="--i:5"><span class="section-label">STT TEST</span><h2>STT 기록 테스트</h2><p class="muted">실제 STT처럼 현재 시각의 로컬 라이프로그 타임라인에 추가합니다.</p><textarea id="manual-stt-input" maxlength="4000" placeholder="테스트할 대화 내용을 입력하세요."></textarea><div class="stt-test-actions"><button class="control-button" id="submit-manual-stt">타임라인 추가</button><small class="muted" id="manual-stt-result"></small></div></section>`;
+  let gestureSettings = { pinch: false, power: true, presentation: true };
+  try {
+    gestureSettings = { ...gestureSettings, ...JSON.parse(window.NativeBridge?.getGestureSettings?.() || '{}') };
+  } catch (_) {}
+  const gestureToggle = (key, title, description) => `<label class="gesture-setting-row"><span><b>${title}</b><small>${description}</small></span><input type="checkbox" data-gesture-setting="${key}" ${gestureSettings[key] ? 'checked' : ''}><i aria-hidden="true"></i></label>`;
+  document.querySelector('.stt-test-card')?.insertAdjacentHTML('beforebegin', `<section class="card gesture-settings-card" style="--i:5"><span class="section-label">GESTURE CONTROL</span><h2>제스처 기능 설정</h2><p class="muted">각 제스처 명령을 독립적으로 켜거나 끕니다.</p><div class="gesture-setting-list">${gestureToggle('pinch', '핀치 제스처', '왼손 핀치 촬영 기능')}${gestureToggle('power', 'ON/OFF 제스처', '조명 전원 전환 기능')}${gestureToggle('presentation', '다음/이전 제스처', 'PPT 페이지 이동 기능')}</div><small class="muted" id="gesture-settings-result">설정은 이 휴대폰에 저장됩니다.</small></section>`);
   // Leaving the Debug page discards these nodes; a late response must not reject.
   const setText = (selector, text) => { const node = $(selector); if (node) node.textContent = text; };
   const setDot = (selector, state) => { const node = $(selector); if (node) node.className = `connection-dot ${state}`; };
@@ -3985,6 +4002,13 @@ function debug() {
     setText('#ollama-state', `일기 ${settings.ollama_model} · 사진 ${settings.ollama_vision_model}`);
   }).catch(() => setText('#ollama-state', '설정을 불러오지 못했습니다.'));
   checkMatterBridge();
+  document.querySelectorAll('[data-gesture-setting]').forEach((toggle) => {
+    toggle.onchange = () => {
+      const saved = window.NativeBridge?.setGestureEnabled?.(toggle.dataset.gestureSetting, toggle.checked) === true;
+      if (!saved) toggle.checked = !toggle.checked;
+      setText('#gesture-settings-result', saved ? '설정이 저장되었습니다.' : '앱에서만 변경할 수 있습니다.');
+    };
+  });
   $('#save-ollama-server').onclick = async () => {
     const button = $('#save-ollama-server');
     const next = normalizeIotServer($('#ollama-server-input').value);
