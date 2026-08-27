@@ -2,7 +2,9 @@ const query = new URLSearchParams(location.search);
 const key = query.get('key') || localStorage.getItem('kimchi-key') || '';
 const content = document.querySelector('#content');
 const $ = (selector) => document.querySelector(selector);
-let page = query.get('page') || 'home';
+let initialRequestedPage = query.get('page') || 'home';
+if (initialRequestedPage === 'intro') initialRequestedPage = 'home';
+let page = 'intro';
 const pageHistory = [];
 let isNavigating = false;
 const matterVisualState = new Map();
@@ -281,24 +283,33 @@ const renderSpeechTimeline = (target, vision) => {
 };
 function refreshVisionState() {
   try {
-    const bridge = window.NativeBridge;
-    if (!bridge?.getVisionState) return;
-    const vision = JSON.parse(bridge.getVisionState());
+    // Avoid a native bridge round trip while the current page has no live data.
     const gesture = document.querySelector('#gesture-name');
     const confidence = document.querySelector('#gesture-confidence');
     const session = document.querySelector('#session-toggle');
     const sessionState = document.querySelector('#session-state');
     const transcript = document.querySelector('#speech-caption');
-    if (gesture) gesture.textContent = vision.isGestureActive ? vision.gestureName : '연결 대기 중';
-    if (confidence) confidence.textContent = vision.isGestureActive ? `인식 신뢰도 ${vision.gestureConfidence}%` : '글래스 스트림 연결 시 자동 시작';
+    if (!gesture && !confidence && !session && !sessionState && !transcript) return;
+
+    const bridge = window.NativeBridge;
+    if (!bridge?.getVisionState) return;
+    const vision = JSON.parse(bridge.getVisionState());
+    const gestureText = vision.isGestureActive ? vision.gestureName : '연결 대기 중';
+    const confidenceText = vision.isGestureActive ? `인식 신뢰도 ${vision.gestureConfidence}%` : '글래스 스트림 연결 시 자동 시작';
+    if (gesture && gesture.textContent !== gestureText) gesture.textContent = gestureText;
+    if (confidence && confidence.textContent !== confidenceText) confidence.textContent = confidenceText;
     const streamReady = vision.isGestureActive;
     if (session) {
-      session.disabled = !streamReady;
-      session.textContent = !streamReady ? '연결 대기' : (vision.isSessionEnabled ? '세션 끄기' : '세션 켜기');
+      const disabled = !streamReady;
+      const sessionText = !streamReady ? '연결 대기' : (vision.isSessionEnabled ? '세션 끄기' : '세션 켜기');
+      if (session.disabled !== disabled) session.disabled = disabled;
+      if (session.textContent !== sessionText) session.textContent = sessionText;
     }
     if (sessionState) {
-      sessionState.textContent = !streamReady ? '대기 중 · 글래스 스트림 연결 필요' : (vision.isSessionEnabled ? (vision.isMicrophoneOn ? '켜져있음 · 카메라 · STT 기록 중' : '켜져있음 · 마이크 준비 중') : '꺼져있음 · 카메라 · STT 대기');
-      sessionState.className = `control-state ${streamReady && vision.isSessionEnabled && vision.isMicrophoneOn ? 'on' : 'off'}`;
+      const stateText = !streamReady ? '대기 중 · 글래스 스트림 연결 필요' : (vision.isSessionEnabled ? (vision.isMicrophoneOn ? '켜져있음 · 카메라 · STT 기록 중' : '켜져있음 · 마이크 준비 중') : '꺼져있음 · 카메라 · STT 대기');
+      const stateClass = `control-state ${streamReady && vision.isSessionEnabled && vision.isMicrophoneOn ? 'on' : 'off'}`;
+      if (sessionState.textContent !== stateText) sessionState.textContent = stateText;
+      if (sessionState.className !== stateClass) sessionState.className = stateClass;
     }
     if (transcript) renderSpeechTimeline(transcript, vision);
   } catch (_) {}
@@ -318,17 +329,15 @@ function setPage(next, rememberPage = true) {
   history.replaceState({}, '', `?${params.toString()}`);
   const rank = { home: 0, skills: 1, lifelog: 2, iot: 2, debug: 3 };
   const forward = (rank[next] ?? 0) >= (rank[page] ?? 0);
-  content.classList.remove('page-enter-left', 'page-enter-right');
-  content.classList.add(forward ? 'page-exit-left' : 'page-exit-right');
-  window.setTimeout(() => {
-    page = next;
-    document.querySelectorAll('.bottom button').forEach((button) => button.classList.toggle('active', button.dataset.page === next));
-    window.scrollTo(0, 0);
-    render();
-    content.classList.remove('page-exit-left', 'page-exit-right');
+  content.classList.remove('page-exit-left', 'page-exit-right', 'page-enter-left', 'page-enter-right');
+  page = next;
+  document.querySelectorAll('.bottom button').forEach((button) => button.classList.toggle('active', button.dataset.page === next));
+  window.scrollTo(0, 0);
+  render();
+  requestAnimationFrame(() => {
     content.classList.add(forward ? 'page-enter-right' : 'page-enter-left');
-    window.setTimeout(() => { content.classList.remove('page-enter-left', 'page-enter-right'); isNavigating = false; }, 260);
-  }, 180);
+    window.setTimeout(() => { content.classList.remove('page-enter-left', 'page-enter-right'); isNavigating = false; }, 200);
+  });
 }
 window.handleNativeBack = () => {
   const previous = pageHistory.pop();
@@ -419,25 +428,6 @@ async function lifeLog() {
   let logView = 'records';
   let isGenerating = false;
   let loadRequestId = 0;
-  const originalPhotoUrls = new Map();
-  const preloadOriginalPhotos = async (photos = []) => {
-    const activeIds = new Set(photos.map((photo) => photo.client_photo_id));
-    originalPhotoUrls.forEach((url, id) => {
-      if (!activeIds.has(id)) { URL.revokeObjectURL(url); originalPhotoUrls.delete(id); }
-    });
-    await Promise.allSettled(photos.filter((photo) => photo.url).map(async (photo) => {
-      if (originalPhotoUrls.has(photo.client_photo_id)) {
-        photo.loaded_url = originalPhotoUrls.get(photo.client_photo_id);
-        return;
-      }
-      const response = await fetch(photo.url, { cache: 'force-cache' });
-      if (!response.ok) throw new Error(`사진 불러오기 실패: ${response.status}`);
-      const url = URL.createObjectURL(await response.blob());
-      originalPhotoUrls.set(photo.client_photo_id, url);
-      photo.loaded_url = url;
-    }));
-    photos.forEach((photo) => { photo.loaded_url ||= originalPhotoUrls.get(photo.client_photo_id) || ''; });
-  };
   const photoMeta = (photo) => {
     const time = new Date(photo.taken_at).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
     const location = photoLocation(photo);
@@ -449,8 +439,10 @@ async function lifeLog() {
       ? `${Number(photo.latitude).toFixed(5)}, ${Number(photo.longitude).toFixed(5)}`
       : '위치 정보 없음';
   };
-  const photoSource = (photo) => photo.loaded_url || (photo.url ? esc(photo.url) : `data:image/jpeg;base64,${esc(photo.thumbnail || '')}`);
-  const photoThumb = (photo, index, kind = '') => `<button class="photo-thumb ${kind}" data-photo-index="${index}"><img src="${photoSource(photo)}" alt="촬영 사진"><span>${esc(photoLocation(photo))}</span></button>`;
+  // Render a lightweight thumbnail first; the full image is fetched only when opened.
+  const photoSource = (photo) => photo.loaded_url || photo.url || `data:image/jpeg;base64,${esc(photo.thumbnail || '')}`;
+  const photoThumbnailSource = (photo) => photo.thumbnail ? `data:image/jpeg;base64,${esc(photo.thumbnail)}` : photoSource(photo);
+  const photoThumb = (photo, index, kind = '') => `<button class="photo-thumb ${kind}" data-photo-index="${index}"><img src="${photoThumbnailSource(photo)}" alt="촬영 사진" loading="lazy" decoding="async"><span>${esc(photoLocation(photo))}</span></button>`;
   const bindPhotoClicks = () => document.querySelectorAll('[data-photo-index]').forEach((button) => button.onclick = () => {
     const photo = currentLog?.photos?.[Number(button.dataset.photoIndex)];
     if (!photo) return;
@@ -524,7 +516,6 @@ async function lifeLog() {
       const photosForDay = localPhotos.filter((photo) => dayFromTimestamp(photo.taken_at) === selectedDay);
       const allRecords = [...serverRecords, ...recordsForDay.filter((record) => !serverRecords.some((serverRecord) => serverRecord.client_record_id === record.client_record_id))].sort((a, b) => new Date(a.spoken_at) - new Date(b.spoken_at));
       const allPhotos = [...serverPhotos, ...photosForDay.filter((photo) => !serverPhotos.some((serverPhoto) => serverPhoto.client_photo_id === photo.client_photo_id))].sort((a, b) => new Date(a.taken_at) - new Date(b.taken_at));
-      await preloadOriginalPhotos(allPhotos);
       if (requestId !== loadRequestId || selectedDay !== day) return;
       currentLog = { ...response, records: allRecords, localRecords, photos: allPhotos };
     } catch {
@@ -639,9 +630,66 @@ function debug() {
   };
 }
 
+function intro() {
+  const header = document.querySelector('.brand-header');
+  const nav = document.querySelector('.bottom');
+  if (header) header.style.display = 'none';
+  if (nav) nav.style.display = 'none';
+
+  content.innerHTML = `
+<style>
+@keyframes introCameraScale { 0% { transform: scale(1); } 10% { transform: scale(1.05); } 100% { transform: scale(0.9); opacity: 0; } }
+@keyframes introOpenLeft { 0% { transform: rotateY(90deg); opacity: 0; } 100% { transform: rotateY(0deg); opacity: 1; } }
+@keyframes introOpenRight { 0% { transform: rotateY(-120deg); opacity: 0; } 100% { transform: rotateY(0deg); opacity: 1; } }
+@keyframes introFadeIn { 0% { opacity: 0; transform: scale(0.8) rotate(-45deg); } 100% { opacity: 1; transform: scale(1) rotate(-45deg); } }
+@keyframes introFlashAnim { 0% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: 0; } }
+</style>
+<div style="position:fixed; top:0; left:0; width:100vw; height:100vh; background: linear-gradient(135deg, #E3F2FD, #BBDEFB, #90CAF9); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden;">
+   <div id="intro-camera" style="display:flex; align-items:center; justify-content:center; animation: introCameraScale 0.6s ease-in-out forwards; animation-delay: 0.6s;">
+       <div style="width:236px; height:236px; background:#E8F4F8; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+           <div style="width:116px; height:116px; background:white; border-radius:38px; box-shadow: 0 18px 30px rgba(0,0,0,0.1); display:flex; align-items:center; justify-content:center;">
+               <img src="/app/static/assets/lifelens-app-icon.png" style="width:76px; height:76px;">
+           </div>
+       </div>
+   </div>
+   <div id="intro-diary" style="display:none; perspective: 1000px; width:240px; height:160px; position:absolute; top:50%; left:50%; margin-top:-80px; margin-left:-120px;">
+      <div style="position:absolute; right:50%; width:50%; height:100%; background:white; border-radius: 16px 0 0 16px; box-shadow: -5px 10px 20px rgba(0,0,0,0.1); padding:16px; box-sizing:border-box; transform-origin: right center; animation: introOpenLeft 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;">
+          <div style="width:90%; height:8px; background:#E0E0E0; border-radius:4px; margin-bottom:12px;"></div>
+          <div style="width:70%; height:8px; background:#E0E0E0; border-radius:4px; margin-bottom:12px;"></div>
+          <div style="width:85%; height:8px; background:#E0E0E0; border-radius:4px;"></div>
+      </div>
+      <div style="position:absolute; left:50%; width:50%; height:100%; background:#FDFDFD; border-radius: 0 16px 16px 0; box-shadow: 5px 10px 20px rgba(0,0,0,0.1); padding:16px; box-sizing:border-box; transform-origin: left center; animation: introOpenRight 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;">
+          <div style="width:80%; height:8px; background:#E0E0E0; border-radius:4px; margin-bottom:12px;"></div>
+          <div style="width:60%; height:8px; background:#E0E0E0; border-radius:4px; margin-bottom:12px;"></div>
+          <div style="width:90%; height:8px; background:#E0E0E0; border-radius:4px;"></div>
+          <div style="position:absolute; bottom:12px; right:12px; font-size:24px; animation: introFadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; animation-delay:0.4s; opacity:0; transform: rotate(-45deg);">✏️</div>
+      </div>
+   </div>
+   <div id="intro-flash" style="position:absolute; top:0; left:0; width:100%; height:100%; background:white; opacity:0; pointer-events:none; animation: introFlashAnim 0.3s ease-out forwards; animation-delay: 0.6s;"></div>
+   <div style="position:absolute; bottom: 40px; text-align:center;">
+        <div style="color:#37474F; font-weight:900; letter-spacing:4px; font-size:16px;">LIFELENS</div>
+        <div style="color:#546E7A; font-size:13px; margin-top:8px;">Ray-Ban Meta × 팀 김치찌개</div>
+   </div>
+</div>
+  `;
+
+  setTimeout(() => {
+      const cam = document.getElementById('intro-camera');
+      const diary = document.getElementById('intro-diary');
+      if (cam) cam.style.display = 'none';
+      if (diary) diary.style.display = 'block';
+  }, 900);
+
+  setTimeout(() => {
+    if (header) header.style.display = '';
+    if (nav) nav.style.display = '';
+    setPage(initialRequestedPage, false);
+  }, 2600);
+}
+
 function render() {
   document.querySelectorAll('.bottom button').forEach((button) => button.classList.toggle('active', button.dataset.page === page));
-  if (page === 'home') home(); else if (page === 'skills') skills(); else if (page === 'lifelog') lifeLog(); else if (page === 'iot') iot(); else debug();
+  if (page === 'home') home(); else if (page === 'skills') skills(); else if (page === 'lifelog') lifeLog(); else if (page === 'iot') iot(); else if (page === 'intro') intro(); else debug();
   window.setTimeout(() => applyCachedHeroCopy(page), 0);
 }
 document.querySelectorAll('.bottom button').forEach((button) => button.onclick = () => setPage(button.dataset.page));
@@ -649,4 +697,6 @@ window.setPage = setPage;
 render();
 refreshHeroCopiesAtLaunch();
 refreshVisionState();
-setInterval(refreshVisionState, 1000);
+setInterval(refreshVisionState, 1200);
+
+
