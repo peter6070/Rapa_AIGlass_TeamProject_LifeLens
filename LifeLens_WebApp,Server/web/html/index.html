@@ -1861,13 +1861,23 @@ button.primary:disabled::after{display:none}
 
 /* Keep the LifeLog panel stable. Only its body scrolls as live items arrive. */
 .lifelog-timeline-card{
-  height:clamp(320px,50dvh,500px);
-  min-height:0;
+  flex:1 1 420px;
+  height:auto;
+  min-height:360px;
   display:flex;
   flex-direction:column;
 }
 .lifelog-timeline-card>.panel-heading{flex:none}
 .lifelog-timeline-card>#records{flex:1;min-height:0;overflow-y:auto}
+body[data-page="lifelog"] #content{min-height:0}
+body[data-page="lifelog"] .mini-hero .actions{
+  width:100%;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:8px;
+  flex-wrap:nowrap;
+}
+body[data-page="lifelog"] .mini-hero .actions>button{width:100%;padding-left:10px;padding-right:10px;white-space:nowrap}
 
 .record{
   position:relative;
