@@ -10,6 +10,11 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 
 /** Latest-wins Korean TTS for one-shot gesture command feedback. */
 class GestureSpeechFeedback(context: Context) {
+  companion object {
+    private val ownerLock = Any()
+    private var latestSpeaker: GestureSpeechFeedback? = null
+  }
+
   private data class SpeechRequest(
       val text: String,
       val utteranceId: String,
@@ -77,6 +82,7 @@ class GestureSpeechFeedback(context: Context) {
       }
 
   private fun enqueue(request: SpeechRequest) {
+    claimLatestSpeech()
     var shouldSpeak = false
     val interrupted = synchronized(lock) {
       (pendingRequest ?: activeRequest).also {
@@ -89,6 +95,13 @@ class GestureSpeechFeedback(context: Context) {
   }
 
   fun cancel() {
+    synchronized(ownerLock) {
+      if (latestSpeaker === this) latestSpeaker = null
+    }
+    cancelLocal()
+  }
+
+  private fun cancelLocal() {
     val interrupted = synchronized(lock) {
       (pendingRequest ?: activeRequest).also {
         pendingRequest = null
@@ -111,6 +124,14 @@ class GestureSpeechFeedback(context: Context) {
     synchronized(lock) { activeRequest = request }
     val result = engine?.speak(request.text, TextToSpeech.QUEUE_FLUSH, null, request.utteranceId)
     if (result == TextToSpeech.ERROR) finish(request.utteranceId, false)
+  }
+
+  /** Cancels speech owned by another feedback instance before this instance speaks. */
+  private fun claimLatestSpeech() {
+    val previous = synchronized(ownerLock) {
+      latestSpeaker.also { latestSpeaker = this }
+    }
+    if (previous !== this) previous?.cancelLocal()
   }
 
   private fun finish(utteranceId: String, completed: Boolean) {

@@ -2,19 +2,9 @@ package com.example.kimchi_r1.camera
 
 import android.content.Context
 
-/** Persists the user's preferred camera transport independently of decoder fallback state. */
+/** Compatibility bridge for web bundles created before the stream was fixed to kimchi raw I420. */
 class CameraStreamSettings(context: Context) {
-  private val preferences =
-      context.applicationContext.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
+  fun isRawCompatibilityMode(): Boolean = true
 
-  fun isRawCompatibilityMode(): Boolean = preferences.getBoolean(RAW_COMPATIBILITY_MODE, false)
-
-  fun setRawCompatibilityMode(enabled: Boolean) {
-    preferences.edit().putBoolean(RAW_COMPATIBILITY_MODE, enabled).apply()
-  }
-
-  companion object {
-    private const val PREFERENCES_NAME = "camera_stream_settings"
-    private const val RAW_COMPATIBILITY_MODE = "raw_compatibility_mode"
-  }
+  fun setRawCompatibilityMode(enabled: Boolean) = Unit
 }
