@@ -24,9 +24,12 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.ImageFormat
 import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.RectF
+import android.graphics.YuvImage
 import android.os.Handler
 import android.os.HandlerThread
 import android.location.Location
@@ -67,9 +70,10 @@ import com.example.kimchi_r1.stream.VideoRecorder
 import com.example.kimchi_r1.vision.HandGestureRecognizer
 import com.example.kimchi_r1.vision.GestureControlSettings
 import com.example.kimchi_r1.vision.LeftPinchPhase
-import com.example.kimchi_r1.vision.OpenCvI420FrameConverter
+import com.example.kimchi_r1.vision.RightLightGesturePhase
 import com.example.kimchi_r1.wearables.WearablesViewModel
 import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.util.Locale
@@ -82,7 +86,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -98,11 +101,10 @@ class CameraViewModel(
 
   companion object {
     private const val TAG = "CameraAccess:CameraViewModel"
-    private const val FRAME_RATE = 30
+    // Match the low-latency kimchi DAT stream: uncompressed HIGH-quality I420 at 24 fps.
+    private const val FRAME_RATE = 24
     private const val KEYFRAME_WAIT_STEP_MS = 25L
     private const val KEYFRAME_WAIT_MAX_MS = 500L
-    // HIGH/30 remains enabled. 30ms accepts each 33ms source frame while conflate drops stale work.
-    private const val RAW_FRAME_INTERVAL_MS = 30L
     private const val SURFACE_SAMPLE_INTERVAL_MS = 83L
     private const val SURFACE_SAMPLE_MAX_SIDE = 480
     private const val WEB_PREVIEW_INTERVAL_MS = 200L
@@ -135,7 +137,6 @@ class CameraViewModel(
   private val videoRecorder = VideoRecorder(application, viewModelScope)
   private val gestureSpeechFeedback = GestureSpeechFeedback(application)
   private val gestureControlSettings = GestureControlSettings(application)
-  private val cameraStreamSettings = CameraStreamSettings(application)
 
   // Per-frame work (byte copy, NAL parsing, MediaMuxer writes, decoder feed) runs at frame rate and
   // must stay off the main thread. A single-threaded dispatcher keeps frames serialized so the
@@ -157,10 +158,8 @@ class CameraViewModel(
   @Volatile private var hevcDecoder: HevcDecoder? = null
   @Volatile private var decoderSurface: Surface? = null
   @Volatile private var isCompressedStream = false
-  @Volatile private var preferRawPreview = cameraStreamSettings.isRawCompatibilityMode()
-  @Volatile private var forceRawPreview = false
+  @Volatile private var forceRawPreview = true
   @Volatile private var decoderFallbackRequested = false
-  private val i420FrameConverter = OpenCvI420FrameConverter()
   private val rawPreviewPaint =
       Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply { isDither = true }
   private val handGestureRecognizer =
@@ -168,8 +167,8 @@ class CameraViewModel(
           application,
           onResult = ::onHandGesture,
           onLeftPinch = ::onLeftPinch,
+          onRightLightGesture = ::onRightLightGesture,
       )
-  private var lastRawFrameAtMs = 0L
   private var lastWebPreviewAtMs = 0L
   private var lastAutoSessionAttemptAtMs = 0L
   private var streamRecoveryAttempts = 0
@@ -210,15 +209,6 @@ class CameraViewModel(
       }
       when (label) {
         "주먹" -> if (armedFistAtMs == 0L) armedFistAtMs = now
-        "손바닥 펼침" -> if (
-            gestureControlSettings.isEnabled(GestureControlSettings.POWER) &&
-                armedFistAtMs != 0L &&
-                now - lastShortcutAtMs >= GESTURE_SHORTCUT_COOLDOWN_MS
-        ) {
-          shortcut = "toggle_lights"
-          armedFistAtMs = 0L
-          lastShortcutAtMs = now
-        }
         "브이 · 다음" -> if (
             gestureControlSettings.isEnabled(GestureControlSettings.PRESENTATION) &&
                 armedFistAtMs != 0L &&
@@ -563,35 +553,46 @@ class CameraViewModel(
     _uiState.update { it.copy(isPreviewVisible = true) }
   }
 
-  /** Changes the transport and reconnects the active stream so the setting takes effect now. */
+  /**
+   * LifeLens now always uses kimchi's raw-I420 transport. Keep this bridge method so older web
+   * bundles can still call it, but never reconnect to the higher-latency HEVC preview path.
+   */
   fun setRawCompatibilityMode(enabled: Boolean) {
-    if (preferRawPreview == enabled && !(forceRawPreview && !enabled)) return
-    cameraStreamSettings.setRawCompatibilityMode(enabled)
-    preferRawPreview = enabled
-    // A manual selection of HEVC must clear a previous automatic decoder fallback.
-    forceRawPreview = false
-    decoderFallbackRequested = false
-    val current = camera
-    if (current != null) {
-      Log.i(TAG, "Camera transport changed to ${if (enabled) "raw I420" else "HEVC"}; reconnecting")
-      _uiState.update { it.copy(streamState = StreamState.STOPPING) }
-      current.stop()
-    } else if (_isSessionEnabled.value && _uiState.value.isSessionActive) {
-      startStreaming()
+    if (!enabled) Log.i(TAG, "Ignoring HEVC request; kimchi raw I420 transport is fixed")
+  }
+
+  private fun onRightLightGesture(phase: RightLightGesturePhase) {
+    when (phase) {
+      RightLightGesturePhase.IDLE -> Unit
+      RightLightGesturePhase.ARMED ->
+          _uiState.update { it.copy(gestureName = "오른손 주먹 · 조명 장전", gestureConfidence = 100) }
+      RightLightGesturePhase.TRIGGERED -> {
+        if (!gestureControlSettings.isEnabled(GestureControlSettings.POWER)) return
+        synchronized(gestureShortcutLock) {
+          lastShortcutAtMs = System.currentTimeMillis()
+          armedFistAtMs = 0L
+        }
+        _uiState.update {
+          it.copy(
+              gestureName = "오른손 펼침 · 조명 전환",
+              gestureConfidence = 100,
+              iotShortcutAction = "toggle_lights",
+              iotShortcutSequence = it.iotShortcutSequence + 1,
+          )
+        }
+      }
     }
   }
 
   private fun beginStream() {
     val current = session ?: return
     if (stream != null) return
-    // Compressed HIGH/30 avoids the transport latency of full I420 frames. HevcDecoder preserves
-    // each DAT access unit intact; a codec startup failure still reconnects through optimized raw.
-    val useCompressedPreview = !preferRawPreview && !forceRawPreview
-    isCompressedStream = useCompressedPreview
+    // This is the same transport configuration as kimchi: raw DAT I420, HIGH, 24 fps.
+    isCompressedStream = false
     decoderFallbackRequested = false
     _uiState.update {
       it.copy(
-          usesSurfacePreview = true,
+          usesSurfacePreview = false,
           videoFrame = null,
           hasReceivedFirstFrame = false,
       )
@@ -603,9 +604,7 @@ class CameraViewModel(
             StreamConfiguration(
                 videoQuality = VideoQuality.HIGH,
                 frameRate = FRAME_RATE,
-                // HEVC keeps HIGH/30 transport compact; MediaCodec renders it straight to Surface.
-                // If the phone rejects this codec, onDecoderFatal reconnects once with raw I420.
-                compressVideo = useCompressedPreview,
+                compressVideo = false,
             )
         )
         .onSuccess { addedCamera ->
@@ -641,9 +640,7 @@ class CameraViewModel(
   private fun setupStreamListeners(stream: Stream) {
     videoJob =
         viewModelScope.launch(frameDispatcher) {
-          // After a brief capture/transport stall, keep only the newest frame instead of replaying
-          // stale frames and making the live view appear to buffer.
-          stream.videoStream.conflate().collect { handleVideoFrame(it) }
+          stream.videoStream.collect { handleVideoFrame(it) }
         }
     streamStateJob = viewModelScope.launch {
       // state replays its current value (STOPPED) on subscribe, and we subscribe before start().
@@ -669,73 +666,54 @@ class CameraViewModel(
   }
 
   private fun handleVideoFrame(videoFrame: VideoFrame) {
-    if (!videoFrame.isCompressed) {
-      handleRawI420Frame(videoFrame)
-      return
-    }
+    if (!videoFrame.isCompressed) return handleRawI420Frame(videoFrame)
 
+    // The configured stream is raw I420. Do not silently enter the old HEVC/PixelCopy gesture path.
+    Log.w(TAG, "Ignoring unexpected compressed frame in raw I420 stream")
+  }
+
+  /** Converts and analyzes frames exactly like kimchi's StreamViewModel. */
+  private fun handleRawI420Frame(videoFrame: VideoFrame) {
     val buffer = videoFrame.buffer
-    val width = videoFrame.width
-    val height = videoFrame.height
-    val presentationTimeUs = videoFrame.presentationTimeUs
-
     val byteArray = ByteArray(buffer.remaining())
     val originalPosition = buffer.position()
     buffer.get(byteArray)
     buffer.position(originalPosition)
 
-    // Accumulate the parameter sets so a recording (or decoder) started after stream start can be
-    // primed with a complete VPS+SPS+PPS set.
-    csdCollector.offer(byteArray)
-
-    // Append to the recorder (no-op unless recording); keeps writing while backgrounded.
-    videoRecorder.writeCompressedFrame(
-        byteArray,
-        presentationTimeUs,
-        width,
-        height,
-        videoFrame.isCodecConfig,
-    )
-
-    // Lazily create the decoder once a Surface is available; it renders directly to it. Prime it
-    // with the cached config in case the surface arrived after the config frame. Guarded so a
-    // concurrent setSurface(null) can't leave a decoder bound to a released Surface.
-    synchronized(decoderLock) {
-      val surface = decoderSurface
-      if (hevcDecoder == null && surface != null) {
-        hevcDecoder =
-            HevcDecoder(
-                    onFrameRendered = ::onDecoderFrameRendered,
-                    onFatalError = ::onDecoderFatal,
-                )
-                .also { decoder ->
-              decoder.start(width, height, surface)
-              csdCollector.complete()?.let { decoder.decodeFrame(it, 0) }
-            }
-      }
-      // Feed under the lock so teardown can't null the decoder between check and feed.
-      hevcDecoder?.decodeFrame(byteArray, presentationTimeUs)
-    }
-
-  }
-
-  /** Processes DAT's raw I420 buffer directly. This replaces unstable HEVC Surface snapshots. */
-  private fun handleRawI420Frame(videoFrame: VideoFrame) {
-    val now = System.currentTimeMillis()
-    if (now - lastRawFrameAtMs < RAW_FRAME_INTERVAL_MS) return
-    lastRawFrameAtMs = now
-
-    val buffer = videoFrame.buffer
-    val bitmap = i420FrameConverter.toBitmap(buffer, videoFrame.width, videoFrame.height) ?: return
-    renderRawFrame(bitmap)
+    val nv21 = convertI420ToNv21(byteArray, videoFrame.width, videoFrame.height)
+    val jpeg =
+        ByteArrayOutputStream().use { output ->
+          YuvImage(nv21, ImageFormat.NV21, videoFrame.width, videoFrame.height, null)
+              .compressToJpeg(Rect(0, 0, videoFrame.width, videoFrame.height), 50, output)
+          output.toByteArray()
+        }
+    val bitmap = BitmapFactory.decodeByteArray(jpeg, 0, jpeg.size) ?: return
+    val lowerHalf =
+        Bitmap.createBitmap(
+            bitmap,
+            0,
+            bitmap.height / 2,
+            bitmap.width,
+            bitmap.height - bitmap.height / 2,
+        )
     if (!_uiState.value.hasReceivedFirstFrame) {
       _uiState.update { it.copy(hasReceivedFirstFrame = true) }
     }
-    if (now - lastWebPreviewAtMs >= WEB_PREVIEW_INTERVAL_MS) {
-      lastWebPreviewAtMs = now
-      _uiState.update { it.copy(videoFrame = bitmap) }
+    _uiState.update { it.copy(videoFrame = lowerHalf) }
+    handGestureRecognizer.analyze(lowerHalf)
+  }
+
+  /** I420 (Y + U + V) to NV21 (Y + interleaved VU), matching kimchi. */
+  private fun convertI420ToNv21(input: ByteArray, width: Int, height: Int): ByteArray {
+    val output = ByteArray(input.size)
+    val ySize = width * height
+    val chromaSize = ySize / 4
+    input.copyInto(output, 0, 0, ySize)
+    for (index in 0 until chromaSize) {
+      output[ySize + index * 2] = input[ySize + chromaSize + index]
+      output[ySize + index * 2 + 1] = input[ySize + index]
     }
-    handGestureRecognizer.analyze(bitmap)
+    return output
   }
 
   /** Draws the newest raw frame straight to Surface; no frame-rate Compose recomposition. */
@@ -1105,7 +1083,6 @@ class CameraViewModel(
   override fun onCleared() {
     super.onCleared()
     clearStreamResources()
-    i420FrameConverter.close()
     handGestureRecognizer.close()
     gestureSpeechFeedback.close()
     pixelCopyThread.quitSafely()

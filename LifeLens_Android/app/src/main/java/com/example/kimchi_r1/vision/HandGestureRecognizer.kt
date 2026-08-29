@@ -14,9 +14,11 @@ class HandGestureRecognizer(
     context: Context,
     private val onResult: (label: String, confidence: Int) -> Unit,
     private val onLeftPinch: (phase: LeftPinchPhase) -> Unit = {},
+    private val onRightLightGesture: (phase: RightLightGesturePhase) -> Unit = {},
 ) {
   private var lastFrameTimeMs = 0L
   private val leftPinchStateMachine = LeftPinchStateMachine()
+  private val rightFistOpenStateMachine = RightFistOpenStateMachine()
   private val landmarker: HandLandmarker? =
       runCatching {
             HandLandmarker.createFromOptions(
@@ -55,6 +57,7 @@ class HandGestureRecognizer(
         result.landmarks().mapIndexedNotNull { index, landmarks ->
           if (handSpan(landmarks) >= MIN_HAND_SPAN) index to landmarks else null
         }
+    updateRightLightGesture(result, visibleHands)
     val hand = visibleHands.maxByOrNull { (_, landmarks) -> handSpan(landmarks) }?.second
     if (hand == null) {
       leftPinchStateMachine.reset()
@@ -100,6 +103,37 @@ class HandGestureRecognizer(
     )
   }
 
+  private fun updateRightLightGesture(
+      result: HandLandmarkerResult,
+      visibleHands: List<Pair<Int, List<NormalizedLandmark>>>,
+  ) {
+    val rightHand =
+        visibleHands.firstOrNull { (index, _) ->
+          result.handedness().getOrNull(index)?.firstOrNull()?.let { handedness ->
+            handedness.score() >= MIN_HANDEDNESS_CONFIDENCE &&
+                handedness.categoryName().equals(RIGHT_HAND_LABEL, ignoreCase = true)
+          } == true
+        }?.second
+    val pose =
+        if (rightHand == null) {
+          RightHandPose.ABSENT
+        } else {
+          val thumb = isFingerExtended(rightHand, 4, 3)
+          val index = isFingerExtended(rightHand, 8, 6)
+          val middle = isFingerExtended(rightHand, 12, 10)
+          val ring = isFingerExtended(rightHand, 16, 14)
+          val pinky = isFingerExtended(rightHand, 20, 18)
+          when {
+            !thumb && !index && !middle && !ring && !pinky -> RightHandPose.FIST
+            thumb && index && middle && ring && pinky && isRightPalmFacingCamera(rightHand) ->
+                RightHandPose.OPEN_PALM
+            else -> RightHandPose.OTHER
+          }
+        }
+    val phase = rightFistOpenStateMachine.update(pose, result.timestampMs())
+    if (phase != RightLightGesturePhase.IDLE) onRightLightGesture(phase)
+  }
+
   private fun handSpan(hand: List<NormalizedLandmark>): Float {
     val spanX = hand.maxOf { it.x() } - hand.minOf { it.x() }
     val spanY = hand.maxOf { it.y() } - hand.minOf { it.y() }
@@ -118,12 +152,24 @@ class HandGestureRecognizer(
     return tipDistance > pipDistance * EXTENDED_FINGER_RATIO
   }
 
+  private fun isRightPalmFacingCamera(hand: List<NormalizedLandmark>): Boolean {
+    val wrist = hand[0]
+    val indexMcp = hand[5]
+    val pinkyMcp = hand[17]
+    val normalZ =
+        (indexMcp.x() - wrist.x()) * (pinkyMcp.y() - wrist.y()) -
+            (indexMcp.y() - wrist.y()) * (pinkyMcp.x() - wrist.x())
+    return normalZ > PALM_FACING_MIN_NORMAL_Z
+  }
+
   private companion object {
     const val MODEL_NAME = "hand_landmarker.task"
-    const val FRAME_INTERVAL_MS = 66L
-    const val MIN_HAND_SPAN = 0.16f
+    const val FRAME_INTERVAL_MS = 41L
+    const val MIN_HAND_SPAN = 0.18f
     const val MIN_HANDEDNESS_CONFIDENCE = 0.6f
     const val EXTENDED_FINGER_RATIO = 1.18f
     const val LEFT_HAND_LABEL = "Left"
+    const val RIGHT_HAND_LABEL = "Right"
+    const val PALM_FACING_MIN_NORMAL_Z = 0.005f
   }
 }
